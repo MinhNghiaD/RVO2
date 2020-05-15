@@ -1,10 +1,12 @@
 package agents;
 
-public class AgentPeople extends AgentType {
+public class AgentPeople extends AgentType 
+{
 
 	private static final long serialVersionUID = 1L;
 	
-	public AgentPeople() {
+	public AgentPeople() 
+	{
 		super();
 	}
 
