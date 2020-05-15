@@ -1,0 +1,1 @@
+( ap-description  :name "td-ia04-main" :ap-services (set ( ap-service  :name fipa.mts.mtp.http.std :type fipa.mts.mtp.http.std :addresses (sequence http://Apolline:7778/acc))))
