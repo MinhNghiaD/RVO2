@@ -10,4 +10,8 @@ public class AgentPeople extends AgentType
 		super();
 	}
 
+	public AgentPeople(int x, int y) {
+		// TODO Auto-generated constructor stub
+	}
+
 }
