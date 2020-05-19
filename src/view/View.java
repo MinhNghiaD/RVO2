@@ -5,6 +5,7 @@ import java.awt.Color;
 import javax.swing.JFrame;
 
 import agents.*;
+import model.Model;
 import model.*;
 import sim.display.Controller;
 import sim.display.Display2D;
@@ -50,11 +51,6 @@ public class View extends GUIState
 	{
 		super.init(c);
 		
-		Model beings = (Model) state;
-
-		yardPortrayal.setField(beings.yard );
-		yardPortrayal.setPortrayalForClass( AgentPeople.class, getAgentPortrayal());
-		
 		display = new Display2D(FRAME_SIZE,FRAME_SIZE,this);
 		display.setClipping(false);
 		displayFrame = display.createFrame();
@@ -66,6 +62,9 @@ public class View extends GUIState
 		
 	public void setupPortrayals() 
 	{ 
+		Model model = (Model) state;
+		yardPortrayal.setField(model.yard);
+		yardPortrayal.setPortrayalForClass( AgentPeople.class, getAgentPortrayal());
 		display.reset(); 
 		display.setBackdrop(Color.WHITE);
 		display.repaint();
