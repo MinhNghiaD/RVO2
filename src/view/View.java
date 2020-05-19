@@ -18,8 +18,6 @@ import sim.portrayal.Inspector;
 
 public class View extends GUIState 
 {
-
-	public static int FRAME_SIZE = 600;
 	public Display2D display;
 	public JFrame displayFrame;
 	public SparseGridPortrayal2D yardPortrayal = new SparseGridPortrayal2D();
@@ -50,14 +48,17 @@ public class View extends GUIState
 	public void init(Controller c) 
 	{
 		super.init(c);
-		
-		display = new Display2D(FRAME_SIZE,FRAME_SIZE,this);
+				
+		display = new Display2D(Constants.FRAME_SIZE,Constants.FRAME_SIZE,this);
 		display.setClipping(false);
+		
+		
 		displayFrame = display.createFrame();
 		displayFrame.setTitle(View.getName());
+		
+		c.registerFrame(displayFrame);
 		displayFrame.setVisible(true);
 		display.attach( yardPortrayal, "Yard" );
-		c.registerFrame(displayFrame);
 	}
 		
 	public void setupPortrayals() 
@@ -66,7 +67,7 @@ public class View extends GUIState
 		yardPortrayal.setField(model.yard);
 		yardPortrayal.setPortrayalForClass( AgentPeople.class, getAgentPortrayal());
 		display.reset(); 
-		display.setBackdrop(Color.WHITE);
+		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();
 	}
 
