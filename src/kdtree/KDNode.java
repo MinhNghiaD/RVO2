@@ -14,6 +14,8 @@ public class KDNode
         nbDimension = dimension;
 
         assert splitAxis < dimension;
+        assert nodePos.length == dimension;
+        
         this.splitAxis = splitAxis;
 
         Left = Right = Parent = null;
