@@ -11,6 +11,9 @@ public class KDNode
     public KDNode(double[] nodePos, int splitAxis, int dimension)
     {
         position = nodePos.clone();
+        maxRange = nodePos.clone();
+        minRange = nodePos.clone();
+        
         nbDimension = dimension;
 
         assert splitAxis < dimension;
@@ -19,43 +22,7 @@ public class KDNode
         this.splitAxis = splitAxis;
 
         Left = Right = Parent = null;
-
-        checked = false;
-        id = 0;
     }
-
-    /**
-     * {@summary get parent of a given position}
-     * @param position0
-     * @return
-     */
-    public KDNode findParent(double[] position0)
-    {
-        KDNode parent = null;
-
-        KDNode currentNode = this;
-
-        int split;
-
-        while (currentNode != null)
-        {
-            split  = currentNode.splitAxis;
-            parent = currentNode;
-
-            if (position0[split] > currentNode.position[split])
-            {
-                currentNode = currentNode.Right;
-            }
-            else
-            {
-                currentNode = currentNode.Left;
-            }
-        }
-
-        return parent;
-    }
-
- 
 
     public KDNode insert(double[] nodePos)
     {
@@ -81,13 +48,10 @@ public class KDNode
         if (nodePos[parent.splitAxis] > parent.position[parent.splitAxis])
         {
             parent.Right = newNode;
-
-            newNode.orientation = true; //
         } 
         else
         {
             parent.Left = newNode;
-            newNode.orientation = false; //
         }
         
         return newNode;
@@ -141,14 +105,58 @@ public class KDNode
         return sum;
     }
     
+    /**
+     * {@summary get parent of a given position}
+     * @param position0
+     * @return
+     */
+    private KDNode findParent(double[] position0)
+    {
+        KDNode parent 	   = null;
+        KDNode currentNode = this;
+
+        while (currentNode != null)
+        {
+        	currentNode.updateRange(position0);
+        	
+        	int split  = currentNode.splitAxis;
+            parent     = currentNode;
+
+            if (position0[split] > currentNode.position[split])
+            {
+                currentNode = currentNode.Right;
+            }
+            else
+            {
+                currentNode = currentNode.Left;
+            }
+        }
+
+        return parent;
+    }
+    
+    private void updateRange(double[] position0)
+    {
+    	if (position0.length != nbDimension)
+    	{
+    		return;
+    	}
+    	
+    	for (int i = 0; i < nbDimension; ++i)
+    	{
+    		maxRange[i] = Math.max(maxRange[i], position0[i]);
+    		minRange[i] = Math.min(minRange[i], position0[i]);
+    	}
+    }
+    
     private int splitAxis;
-    private double[] position;
     private int nbDimension;
     
-    // TODO verify these
-    int id;
-    boolean checked;
-    boolean orientation;
+    private double[] position;
+    
+    // NOTE limit area sub-tree
+    private double[] maxRange;
+    private double[] minRange;
 
     KDNode Parent;
     KDNode Left;
