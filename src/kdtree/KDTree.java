@@ -12,6 +12,11 @@ public class KDTree
         nodeList = new Vector<KDNode>();
     }
 
+    /**
+     * Add a new Node to the tree
+     * @param position
+     * @return
+     */
     public boolean add(double[] position)
     {
         if (Root == null)
@@ -32,6 +37,13 @@ public class KDTree
         return true;
     }
     
+    /**
+     * 
+     * @param position
+     * @param sqRange
+     * @param maxNbNeighbors
+     * @return Map of N-nearest neighbors, sorted by distance
+     */
     public TreeMap<Double, KDNode> getClosestNeighbors(double[] position, double sqRange, int maxNbNeighbors)
     {
     	TreeMap<Double, KDNode> closestNeighbors = new TreeMap<Double, KDNode>();

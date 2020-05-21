@@ -58,6 +58,11 @@ public class KDNode
         
         return newNode;
     }
+    
+    public double[] getPosition()
+    {
+    	return position.clone();
+    }
 
     /***
      * 
