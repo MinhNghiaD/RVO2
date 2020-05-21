@@ -8,10 +8,19 @@ package clearpath;
  */
 public class Line 
 {
+	Line(double[] point, double[] direction)
+	{
+		assert (point.length == direction.length);
+		
+		this.dimension = point.length;
+		this.point 	   = point.clone();
+		this.direction = direction.clone();
+	}
+	
 	
 	static public double vectorProduct(double[] vector1, double[] vector2)
 	{
-		assert (vector1.length != vector2.length);
+		assert (vector1.length == vector2.length);
 		
 		double product = 0;
 		
@@ -25,7 +34,7 @@ public class Line
 	
 	static public double[] vectorSubstract(double[] vector1, double[] vector2)
 	{
-		assert (vector1.length != vector2.length);
+		assert (vector1.length == vector2.length);
 		
 		double[] result = new double[vector1.length];
 		
@@ -39,7 +48,7 @@ public class Line
 	
 	static public double[] vectorSubstract(double[] vector1, Double[] vector2)
 	{
-		assert (vector1.length != vector2.length);
+		assert (vector1.length == vector2.length);
 		
 		double[] result = new double[vector1.length];
 		
@@ -59,8 +68,8 @@ public class Line
 	 */
 	static public double det2D(double[] vector1, double[] vector2)
 	{
-		assert (vector1.length != 2);
-		assert (vector1.length != vector2.length);
+		assert (vector1.length == 2);
+		assert (vector1.length == vector2.length);
 		
 		return ( (vector1[0] * vector2[1]) - (vector1[1] * vector2[0]) );
 	}

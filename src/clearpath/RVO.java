@@ -1,6 +1,7 @@
 package clearpath;
 //import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RVO 
@@ -165,7 +166,7 @@ public class RVO
         	}
         }
 
-        for (int lineID = 0; lineID < lines.size(); lineID++) 
+        for (int lineID = 0; lineID < lines.size(); ++lineID) 
         {
             if (Line.det2D(lines.get(lineID).direction, Line.vectorSubstract(lines.get(lineID).point, newVelocity)) > 0.0) 
             {
@@ -183,5 +184,87 @@ public class RVO
         }
 
         return lines.size();
+    }
+    
+    /**
+     * Solves a two-dimensional linear program subject to linear constraints
+     * defined by lines and a circular constraint.
+     *
+     * @param numObstacleLines Count of obstacle lines.
+     * @param beginLine        The line on which the 2-D linear program failed.
+     */
+    private void linearProgram3(List<Line> lines, double maxSpeed, int numObstacleLines, int beginLine, Double[] newVelocity) 
+    {
+        double distance = 0.0;
+
+        for (int i = beginLine; i < lines.size(); ++i) 
+        {
+            if ( Line.det2D(lines.get(i).direction, (Line.vectorSubstract(lines.get(i).point, newVelocity))) > distance ) 
+            {
+                // Result does not satisfy constraint of line i.
+            	
+            	// Copy lines from 0 to numObstacleLines 
+                final List<Line> projectedLines = new ArrayList<>(lines);
+                projectedLines.subList(numObstacleLines, projectedLines.size()).clear();
+
+                for (int j = numObstacleLines; j < i; j++) 
+                {
+                    final double determinant = Line.det2D(lines.get(i).direction, lines.get(j).direction);
+                    
+                    double[] point = new double[lines.get(0).point.length];
+
+                    if (Math.abs(determinant) <= EPSILON) 
+                    {
+                        // Line i and line j are parallel.
+                        if (Line.vectorProduct(lines.get(i).direction, lines.get(j).direction) > 0.0) 
+                        {
+                            // Line i and line j point in the same direction.
+                            continue;
+                        }
+
+                        // Line i and line j point in opposite direction.
+                        for (int k = 0; k < point.length; ++k)
+                        {
+                        	point[k] = (lines.get(i).point[k] + lines.get(j).point[k]) * 0.5;
+                        }
+                    } 
+                    else 
+                    {
+                    	double scalar = Line.det2D(lines.get(j).direction, Line.vectorSubstract(lines.get(i).point, lines.get(j).point)) / determinant;
+                    	
+                    	for (int k = 0; k < point.length; ++k)
+                        {
+                        	point[k] = (lines.get(i).point[k] + lines.get(j).direction[k]) * scalar;
+                        }
+                    }
+
+                    final double[] direction = Line.vectorSubstract(lines.get(j).direction, lines.get(i).direction);
+                    
+                    double directionNorm = Math.sqrt(Line.vectorProduct(direction, direction));
+                    
+                    for (int k = 0; k < direction.length; ++k)
+                    {
+                    	direction[k] /= directionNorm;
+                    }
+
+                    projectedLines.add(new Line(point, direction));
+                }
+
+                final Double[] tempResult = newVelocity.clone();
+                
+                double[] optimizationVelocity = {-lines.get(i).direction[1], lines.get(i).direction[0]};
+                
+                if (linearProgram2(projectedLines, maxSpeed, optimizationVelocity, true, newVelocity) < projectedLines.size())
+                {
+                    // This should in principle not happen. The result is by
+                    // definition already in the feasible region of this linear
+                    // program. If it fails, it is due to small floating point
+                    // error, and the current result is kept.
+                    newVelocity = tempResult;
+                }
+
+                distance = Line.det2D(lines.get(i).direction, Line.vectorSubstract(lines.get(i).point, newVelocity));
+            }
+        }
     }
 }
