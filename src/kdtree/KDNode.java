@@ -134,7 +134,6 @@ public class KDNode
     	// sub-trees Traversal
     	double sqrDistanceLeftTree  = 0;
     	
-    	
     	if (Left == null)
     	{
     		sqrDistanceLeftTree = Double.MAX_VALUE;
@@ -147,7 +146,6 @@ public class KDNode
         								Math.pow(Math.max(0, (position0[i] - Left.maxRange[i])), 2));
         	}
     	}
-    	
     	
     	double sqrDistanceRightTree = 0;
     	
