@@ -47,9 +47,10 @@ public class KDTree
      * @param maxNbNeighbors
      * @return Map of N-nearest neighbors, sorted by distance
      */
-    public TreeMap<Double, KDNode> getClosestNeighbors(double[] position, double sqRange, int maxNbNeighbors)
+    public TreeMap<Double, Vector<KDNode> > getClosestNeighbors(double[] position, double sqRange, int maxNbNeighbors)
     {
-    	TreeMap<Double, KDNode> closestNeighbors = new TreeMap<Double, KDNode>();
+    	// Map of distance and nodes
+    	TreeMap<Double, Vector<KDNode> > closestNeighbors = new TreeMap<Double, Vector<KDNode> >();
     	
     	sqRange = Root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
     	
