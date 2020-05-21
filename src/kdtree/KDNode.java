@@ -1,5 +1,7 @@
 package kdtree;
 
+import java.util.TreeMap; 
+
 public class KDNode
 {
     /**
@@ -41,7 +43,7 @@ public class KDNode
         	return null;
         }
 
-        KDNode newNode = new KDNode(nodePos, parent.splitAxis%nbDimension, nbDimension);
+        KDNode newNode = new KDNode(nodePos, ((parent.splitAxis + 1) % nbDimension), nbDimension);
 
         newNode.Parent = parent;
  
@@ -57,6 +59,96 @@ public class KDNode
         return newNode;
     }
 
+    /***
+     * 
+     * @param neighborList
+     * @param position
+     * @param sqRange
+     * @param maxNbNeighbors
+     * @return TreeMap of distance and Node, sorted by distance
+     */
+    public double getClosestNeighbors(TreeMap<Double, KDNode> neighborList, double[] position0, double sqRange, int maxNbNeighbors)
+    {
+    	// add current node to the list
+    	double distanceToCurrentNode = Math.sqrt(sqrDistance(position0, this.position));
+    	
+    	neighborList.put(distanceToCurrentNode, this);
+    	
+    	// limit the size of the Map to maxNbNeighbors
+    	if (neighborList.size() > maxNbNeighbors)
+    	{
+    		neighborList.remove(neighborList.lastKey());
+    		
+    		// update the searching range
+    		sqRange = neighborList.lastKey();
+    	}
+    	
+    	// sub-trees Traversal
+    	double sqrDistanceLeftTree  = 0;
+    	
+    	
+    	if (Left == null)
+    	{
+    		sqrDistanceLeftTree = Double.MAX_VALUE;
+    	}
+    	else
+    	{
+    		for (int i = 0; i < nbDimension; i++)
+        	{
+        		sqrDistanceLeftTree += (Math.pow(Math.max(0, (Left.minRange[i] - position0[i])), 2) +
+        								Math.pow(Math.max(0, (position0[i] - Left.maxRange[i])), 2));
+        	}
+    	}
+    	
+    	
+    	double sqrDistanceRightTree = 0;
+    	
+    	if (Right == null)
+    	{
+    		sqrDistanceRightTree = Double.MAX_VALUE;
+    	}
+    	else
+    	{
+    		for (int i = 0; i < nbDimension; i++)
+        	{
+        		sqrDistanceRightTree += (Math.pow(Math.max(0, (Right.minRange[i] - position0[i])), 2) +
+        								 Math.pow(Math.max(0, (position0[i] - Right.maxRange[i])), 2));
+        	}
+    	}
+    	
+    	// traverse the closest area
+    	if (sqrDistanceLeftTree < sqrDistanceRightTree)
+    	{
+    		if (sqrDistanceLeftTree < sqRange)
+    		{
+    			// traverse Left Tree
+    			sqRange = Left.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
+    			
+    			if (sqrDistanceRightTree < sqRange)
+        		{
+    				sqRange = Right.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
+        		}
+    		}
+    	}
+    	else
+    	{
+    		if (sqrDistanceRightTree < sqRange)
+    		{
+    			// traverse right Tree
+    			sqRange = Right.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
+    			
+    			if (sqrDistanceLeftTree < sqRange)
+        		{
+    				sqRange = Left.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
+        		}
+    		}
+    	}   	
+    	
+    	return sqRange;
+    }
+    
+    
+    
  
     /**
      * {@summary verify if 2 vectors are equal}
@@ -99,7 +191,7 @@ public class KDNode
         
         for (int k = 0; k < position1.length; ++k)
         {
-        	sum += (position1[k] - position2[k]) * (position1[k] - position2[k]);
+        	sum += Math.pow((position1[k] - position2[k]), 2);
         }
             
         return sum;
@@ -154,7 +246,7 @@ public class KDNode
     
     private double[] position;
     
-    // NOTE limit area sub-tree
+    // NOTE: limit area sub-tree
     private double[] maxRange;
     private double[] minRange;
 

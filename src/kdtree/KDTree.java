@@ -1,28 +1,29 @@
 package kdtree;
 
+import java.util.TreeMap;
 import java.util.Vector;
 
 public class KDTree
 {   
     public KDTree(int dim)
     {
-        root = null;
+    	Root = null;
         nbDimension = dim;
         nodeList = new Vector<KDNode>();
     }
 
-    public boolean add(double[] x)
+    public boolean add(double[] position)
     {
-        if (root == null)
+        if (Root == null)
         {
-            root = new KDNode(x, 0, nbDimension);
-            nodeList.add(root);
+        	Root = new KDNode(position, 0, nbDimension);
+            nodeList.add(Root);
         } 
         else
         {
             KDNode pNode;
             
-            if ((pNode = root.insert(x)) != null)
+            if ((pNode = Root.insert(position)) != null)
             {
                 nodeList.add(pNode);
             }
@@ -31,7 +32,16 @@ public class KDTree
         return true;
     }
     
-    private KDNode root;
+    public TreeMap<Double, KDNode> getClosestNeighbors(double[] position, double sqRange, int maxNbNeighbors)
+    {
+    	TreeMap<Double, KDNode> closestNeighbors = new TreeMap<Double, KDNode>();
+    	
+    	sqRange = Root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
+    	
+    	return closestNeighbors;
+    }
+    
+    private KDNode Root;
     private int nbDimension;
     private Vector<KDNode> nodeList;
 }
