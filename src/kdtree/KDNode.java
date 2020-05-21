@@ -1,5 +1,6 @@
 package kdtree;
 
+import java.util.Arrays;
 import java.util.TreeMap; 
 
 public class KDNode
@@ -40,6 +41,7 @@ public class KDNode
         if (equal(nodePos, parent.position))
         {
         	// Node for this position already exist
+        	//System.out.println("node " + Arrays.toString(nodePos) + " is already exist.");
         	return null;
         }
 
@@ -47,13 +49,15 @@ public class KDNode
 
         newNode.Parent = parent;
  
-        if (nodePos[parent.splitAxis] > parent.position[parent.splitAxis])
+        if (nodePos[parent.splitAxis] >= parent.position[parent.splitAxis])
         {
             parent.Right = newNode;
+           // System.out.println("add " + Arrays.toString(nodePos) + " to the right of" + Arrays.toString(parent.position));
         } 
         else
         {
             parent.Left = newNode;
+            //System.out.println("add " + Arrays.toString(nodePos) + " to the left of" + Arrays.toString(parent.position));
         }
         
         return newNode;
@@ -77,15 +81,29 @@ public class KDNode
     	// add current node to the list
     	double distanceToCurrentNode = Math.sqrt(sqrDistance(position0, this.position));
     	
-    	neighborList.put(distanceToCurrentNode, this);
-    	
-    	// limit the size of the Map to maxNbNeighbors
-    	if (neighborList.size() > maxNbNeighbors)
+    	// Don't add self position to list of neighbors
+    	if (distanceToCurrentNode > 0)
     	{
-    		neighborList.remove(neighborList.lastKey());
-    		
-    		// update the searching range
-    		sqRange = neighborList.lastKey();
+    		neighborList.put(distanceToCurrentNode, this);
+    	/*
+        	System.out.println("insert " + Arrays.toString(this.position) + 
+        					   " to the closest neighbors of " + Arrays.toString(position0) + 
+        					   " with distance " + distanceToCurrentNode);
+       	*/
+        	// limit the size of the Map to maxNbNeighbors
+        	if (neighborList.size() > maxNbNeighbors)
+        	{
+        		double tailKey = neighborList.lastKey();
+        		
+        		KDNode removedNode = neighborList.remove(tailKey);
+        		// update the searching range
+        		sqRange = Math.pow(neighborList.lastKey(), 2);
+        	/*	
+        		System.out.println("pop " + Arrays.toString(removedNode.position) + 
+        						   " out of the closest neighbors of " + Arrays.toString(position0) + 
+        						   " with distance " + tailKey + ", new limit square range : " + sqRange);
+        	*/
+        	}
     	}
     	
     	// sub-trees Traversal
@@ -126,11 +144,20 @@ public class KDNode
     	{
     		if (sqrDistanceLeftTree < sqRange)
     		{
+    		/*
+    			System.out.println("left area square distance: " + sqrDistanceLeftTree + 
+						   		   " <  square range " + sqRange);
+    		*/
     			// traverse Left Tree
     			sqRange = Left.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
     			
     			if (sqrDistanceRightTree < sqRange)
         		{
+    			/*
+    				System.out.println("right area square distance: " + sqrDistanceRightTree + 
+					   		   		   " <  square range " + sqRange);
+    			*/
+    				// traverse Right Tree
     				sqRange = Right.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
         		}
     		}
@@ -139,11 +166,20 @@ public class KDNode
     	{
     		if (sqrDistanceRightTree < sqRange)
     		{
+    		/*
+    			System.out.println("right area square distance: " + sqrDistanceRightTree + 
+		   		   		   		   " <  square range " + sqRange);
+    		*/
     			// traverse right Tree
     			sqRange = Right.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
     			
     			if (sqrDistanceLeftTree < sqRange)
         		{
+    			/*
+    				System.out.println("left area square distance: " + sqrDistanceLeftTree + 
+					   		   		   " <  square range " + sqRange);
+    			*/
+    				// traverse Left Tree
     				sqRange = Left.getClosestNeighbors(neighborList, position0, sqRange, maxNbNeighbors);
         		}
     		}

@@ -1,5 +1,6 @@
 package kdtree;
 
+import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -22,6 +23,8 @@ public class KDTree
         if (Root == null)
         {
         	Root = new KDNode(position, 0, nbDimension);
+        	//System.out.println("Root : " + Arrays.toString(position));
+        	
             nodeList.add(Root);
         } 
         else

@@ -36,7 +36,7 @@ public class Test_KDTree {
 		tree.add(position8);
 		
 		
-		double[] currentPosition = {0, 0};
+		double[] currentPosition = {11, 2};
 		TreeMap<Double, KDNode> closestNodes = tree.getClosestNeighbors(currentPosition, Double.MAX_VALUE, 2);
 		
 		System.out.println("Closest neighbors to " + Arrays.toString(currentPosition) + ": ");
