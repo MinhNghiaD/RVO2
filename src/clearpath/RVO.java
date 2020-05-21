@@ -125,5 +125,63 @@ public class RVO
         return true;
     }
 	
-	
+	/**
+     * Solves a two-dimensional linear program subject to linear constraints
+     * defined by lines and a circular constraint.
+     *
+     * @param lines                Lines defining the linear constraints.
+     * @param optimizationVelocity The optimization velocity.
+     * @param optimizeDirection    True if the direction should be optimized.
+     * @return The number of the line on which it fails, or the number of lines
+     * if successful.
+     */
+    private int linearProgram2(List<Line> lines, double maxSpeed, double[] optimizationVelocity, boolean optimizeDirection, Double[] newVelocity) 
+    {
+        if (optimizeDirection) 
+        {
+            // Optimize direction. Note that the optimization velocity is of unit length in this case.
+        	for (int j = 0; j < newVelocity.length; ++j)
+        	{
+        		newVelocity[j] = optimizationVelocity[j] * maxSpeed;
+        	}
+        	
+        } 
+        else if ( Line.vectorProduct(optimizationVelocity, optimizationVelocity) > Math.pow(maxSpeed, 2) ) 
+        {
+            // Optimize closest point and outside circle.
+        	double norm = Math.sqrt(Line.vectorProduct(optimizationVelocity, optimizationVelocity));
+        	
+        	for (int j = 0; j < newVelocity.length; ++j)
+        	{
+        		newVelocity[j] = optimizationVelocity[j] * (maxSpeed / norm);
+        	}
+        } 
+        else 
+        {
+            // Optimize closest point and inside circle.
+        	for (int j = 0; j < newVelocity.length; ++j)
+        	{
+        		newVelocity[j] = optimizationVelocity[j];
+        	}
+        }
+
+        for (int lineID = 0; lineID < lines.size(); lineID++) 
+        {
+            if (Line.det2D(lines.get(lineID).direction, Line.vectorSubstract(lines.get(lineID).point, newVelocity)) > 0.0) 
+            {
+                // Result does not satisfy constraint i. Compute new optimal
+                // result.
+                final Double[] tempResult = newVelocity.clone();
+                
+                if (! linearProgram1(lines, lineID, maxSpeed, optimizationVelocity, optimizeDirection, newVelocity)) 
+                {
+                    newVelocity = tempResult;
+
+                    return lineID;
+                }
+            }
+        }
+
+        return lines.size();
+    }
 }

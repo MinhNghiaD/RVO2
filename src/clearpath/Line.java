@@ -37,6 +37,20 @@ public class Line
 		return result;
 	}
 	
+	static public double[] vectorSubstract(double[] vector1, Double[] vector2)
+	{
+		assert (vector1.length != vector2.length);
+		
+		double[] result = new double[vector1.length];
+		
+		for (int i = 0; i < vector1.length; ++i)
+		{
+			result[i] = vector1[i] - vector2[i];
+		}
+		
+		return result;
+	}
+	
 	/**
 	 * 
 	 * @param vector1
