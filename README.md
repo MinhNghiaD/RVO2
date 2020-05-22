@@ -32,6 +32,9 @@ Ces instructions vous permettront de lancer le projet sur votre ordinateur local
 - Sélectionner `Installed JREs... -> Add -> Standard VM`
 - Saisir le chemin du répertoire `dk-1.8.0.jdk/Contents/Home` dans le champs `JRE home`  et `Finir`
 
+**Config source**
+- Cliquer droit sur `src/ Build Path / Use as Source Folder`
+
 ### Execution
 - Cliquer droit sur `main/Main.java` et choisir `Run As Java Application`
 
