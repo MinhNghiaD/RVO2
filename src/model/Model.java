@@ -17,7 +17,8 @@ public class Model extends SimState
 		super(seed);
 		yard.clear();
 		numAgents = 0;
-		addRandomAgents();
+		int scenario = this.random.nextInt(4);
+		addRandomAgents(scenario);
 	}
 	
 	@Override
@@ -25,7 +26,8 @@ public class Model extends SimState
 	{
 		super.start();
 		yard.clear();
-		addRandomAgents();
+		int scenario = this.random.nextInt(4);
+		addRandomAgents(scenario);
 	}
 	
 	/**
@@ -66,16 +68,27 @@ public class Model extends SimState
 		return this.numAgents--;
 	}
 	
-	private void addRandomAgents() 
+	private void addRandomAgents(int nbScenario) 
 	{ 
-		for(int  i  =  0;  i  <  Constants.NUM_AGENT;  i++) 
-		{
-			Int2D position = randomPosition();
-			double angle = this.random.nextInt(360);
-			AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
-			yard.setObjectLocation(e, position);
-			schedule.scheduleRepeating(e);
-			numAgents++;
+		switch(nbScenario) {
+		case 0:
+			break;
+		case 1:
+			break;
+		case 2:
+			break;
+		case 3:
+			break;
+		default:
+			for(int  i  =  0;  i  <  Constants.NUM_AGENT;  i++) 
+			{
+				Int2D position = randomPosition();
+				double angle = this.random.nextInt(360);
+				AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
+				yard.setObjectLocation(e, position);
+				schedule.scheduleRepeating(e);
+				numAgents++;
+			}
 		}
 	}
 	
