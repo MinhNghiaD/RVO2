@@ -48,9 +48,9 @@ public class AgentType implements Steppable
 		Int2D direction = directionFromAngle(angle);
 		x += direction.x;
 		y += direction.y;
-		x = beings.yard.stx(x);
-		y = beings.yard.sty(y);
-		beings.yard.setObjectLocation(this, x, y);
+		x = beings.getYard().stx(x);
+		y = beings.getYard().sty(y);
+		beings.getYard().setObjectLocation(this, x, y);
 	}
 	
 	/**

@@ -64,7 +64,7 @@ public class View extends GUIState
 	public void setupPortrayals() 
 	{ 
 		Model model = (Model) state;
-		yardPortrayal.setField(model.yard);
+		yardPortrayal.setField(model.getYard());
 		yardPortrayal.setPortrayalForClass( AgentPeople.class, getAgentPortrayal());
 		display.reset(); 
 		display.setBackdrop(Color.LIGHT_GRAY);
@@ -73,7 +73,7 @@ public class View extends GUIState
 
 
 	private Portrayal getAgentPortrayal()
-	{ 
+	{
 		OvalPortrayal2D r = new OvalPortrayal2D();
 		r.paint = Color.DARK_GRAY;
 		r.filled = true;

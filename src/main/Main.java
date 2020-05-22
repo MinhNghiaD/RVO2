@@ -14,5 +14,3 @@ public class Main
 		console.setVisible(true);
 	}
 }
-
-
