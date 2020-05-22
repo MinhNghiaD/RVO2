@@ -9,7 +9,7 @@ import sim.util.Int2D;
 public class Model extends SimState 
 {
 	private static final long serialVersionUID = 1L;
-	public SparseGrid2D yard = new SparseGrid2D(Constants.GRID_SIZE,Constants.GRID_SIZE);
+	private SparseGrid2D yard = new SparseGrid2D(Constants.GRID_SIZE,Constants.GRID_SIZE);
 	private int numAgents = 0;
 	
 	public Model(long seed) 
@@ -17,16 +17,10 @@ public class Model extends SimState
 		super(seed);
 		yard.clear();
 		numAgents = 0;
-		for(int nbAgent = 0; nbAgent < Constants.NUM_AGENT; ++nbAgent) {
-			 int x = this.random.nextInt(Constants.GRID_SIZE);
-			 int y = this.random.nextInt(Constants.GRID_SIZE);
-			 // TODO: Constructeur d'AgentPeople prenant en param�tre les coordonn�es
-			 AgentPeople people = new AgentPeople(x, y);
-			 yard.setObjectLocation(people, x, y);
-			 numAgents++;
-		}
+		addRandomAgents();
 	}
 	
+	@Override
 	public void start() 
 	{
 		super.start();
@@ -37,47 +31,56 @@ public class Model extends SimState
 	/**
 	 * @return the grid
 	 */
-	public SparseGrid2D getYard() {
+	public SparseGrid2D getYard() 
+	{
 		return yard;
 	}
 	
 	/**
-	 * @param grid the grid to set
+	 * @param yard the grid to set
 	 */
-	public void setYard(SparseGrid2D yard) {
+	public void setYard(SparseGrid2D yard) 
+	{
 		this.yard = yard;
 	}
 	
 	/**
-	 * @return the numInsects
+	 * @return the numAgents
 	 */
-	public int getNumAgents() {
+	public int getNumAgents() 
+	{
 		return numAgents;
 	}
 
 
 	/**
-	 * @param numInsects the numInsects to set
+	 * @param numAgents the numAgents to set
 	 */
-	public void setNumAgents(int numAgents) {
+	public void setNumAgents(int numAgents) 
+	{
 		this.numAgents = numAgents;
 	}
 	
-	public int decrementNumAgents() {
+	public int decrementNumAgents() 
+	{
 		return this.numAgents--;
 	}
 	
-	private void addRandomAgents() { 
-		for(int  i  =  0;  i  <  Constants.NUM_AGENT;  i++) {
+	private void addRandomAgents() 
+	{ 
+		for(int  i  =  0;  i  <  Constants.NUM_AGENT;  i++) 
+		{
 			Int2D position = randomPosition();
 			double angle = this.random.nextInt(360);
-			AgentType e = new AgentType(position.x, position.y, 1, 1, angle);
+			AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
 			yard.setObjectLocation(e, position);
 			schedule.scheduleRepeating(e);
+			numAgents++;
 		}
 	}
 	
-	public Int2D randomPosition() {
+	public Int2D randomPosition() 
+	{
 		int x = this.random.nextInt(Constants.GRID_SIZE);
 		int y = this.random.nextInt(Constants.GRID_SIZE);
 		return new Int2D(x, y);
