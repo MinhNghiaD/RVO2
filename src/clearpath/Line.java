@@ -74,7 +74,15 @@ public class Line
 		return ( (vector1[0] * vector2[1]) - (vector1[1] * vector2[0]) );
 	}
 	
+	public double[] getPosition()
+	{
+		return point;
+	}
 	
+	public double[] getVelocity()
+	{
+		return direction;
+	}
 	
 	
 	int dimension;
