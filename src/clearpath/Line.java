@@ -8,7 +8,7 @@ package clearpath;
  */
 public class Line 
 {
-	Line(double[] point, double[] direction)
+	public Line(double[] point, double[] direction)
 	{
 		assert (point.length == direction.length);
 		
@@ -79,7 +79,7 @@ public class Line
 		return point;
 	}
 	
-	public double[] getVelocity()
+	public double[] getDirection()
 	{
 		return direction;
 	}
