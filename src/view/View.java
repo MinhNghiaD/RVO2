@@ -12,7 +12,7 @@ import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
 import sim.portrayal.Portrayal;
-import sim.portrayal.grid.SparseGridPortrayal2D;
+import sim.portrayal.continuous.ContinuousPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.Inspector;
 
@@ -20,7 +20,7 @@ public class View extends GUIState
 {
 	public Display2D display;
 	public JFrame displayFrame;
-	public SparseGridPortrayal2D yardPortrayal = new SparseGridPortrayal2D();
+	public ContinuousPortrayal2D yardPortrayal = new ContinuousPortrayal2D();
 	
 		
 	public View(SimState state) 

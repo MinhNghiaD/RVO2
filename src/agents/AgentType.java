@@ -3,21 +3,21 @@ package agents;
 import model.Model;
 import sim.engine.SimState;
 import sim.engine.Steppable;
-import sim.util.Int2D;
+import sim.util.Double2D;
 
 public class AgentType implements Steppable 
 {
 
 	private static final long serialVersionUID = 1L;
-	public int x;
-	public int y;
+	public double x;
+	public double y;
 	public double velocity;
 	public double radius;
 	public double angle;
 	
 	protected Model beings;
 	
-	public AgentType(int x, int y)
+	public AgentType(double x, double y)
 	{
 		super();
 		this.x = x;
@@ -27,7 +27,7 @@ public class AgentType implements Steppable
 		this.angle = 0;
 	}
 	
-	public AgentType(int x, int y, double velocity, double radius, double angle)
+	public AgentType(double x, double y, double velocity, double radius, double angle)
 	{
 		super();
 		this.x = x;
@@ -45,12 +45,12 @@ public class AgentType implements Steppable
 	}
 	
 	public void move(Model beings) {
-		Int2D direction = directionFromAngle(angle);
+		Double2D direction = directionFromAngle(angle);
 		x += direction.x;
 		y += direction.y;
 		x = beings.getYard().stx(x);
 		y = beings.getYard().sty(y);
-		beings.getYard().setObjectLocation(this, x, y);
+		beings.getYard().setObjectLocation(this, new Double2D(x, y));
 	}
 	
 	/**
@@ -66,19 +66,19 @@ public class AgentType implements Steppable
 	 * @param angle in degrees
 	 * @return direction in (x,y)
 	 */
-	public Int2D directionFromAngle(double angle)
+	public Double2D directionFromAngle(double angle)
 	{
 		setAngle(angle);
-		Int2D [] directions = {
-				new Int2D( 0,-1),
-				new Int2D( 1,-1),
-				new Int2D( 1, 0),
-				new Int2D( 1, 1),
-				new Int2D( 0, 1),
-				new Int2D(-1, 1),
-				new Int2D(-1, 0),
-				new Int2D(-1,-1),
-				new Int2D( 0,-1),
+		Double2D [] directions = {
+				new Double2D( 0,-1),
+				new Double2D( 1,-1),
+				new Double2D( 1, 0),
+				new Double2D( 1, 1),
+				new Double2D( 0, 1),
+				new Double2D(-1, 1),
+				new Double2D(-1, 0),
+				new Double2D(-1,-1),
+				new Double2D( 0,-1),
 		};
 		
 		return directions[(int) Math.round(angle/45)];
