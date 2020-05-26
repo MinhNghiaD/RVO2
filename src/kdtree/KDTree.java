@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import clearpath.CollisionAvoidanceManager;
+
 public class KDTree
 {   
     public KDTree(int dim)
@@ -18,11 +20,11 @@ public class KDTree
      * @param position
      * @return
      */
-    public boolean add(double[] position)
+    public boolean add(CollisionAvoidanceManager client)
     {
         if (Root == null)
         {
-        	Root = new KDNode(position, 0, nbDimension);
+        	Root = new KDNode(client, 0, nbDimension);
         	//System.out.println("Root : " + Arrays.toString(position));
         	
             nodeList.add(Root);
@@ -31,7 +33,7 @@ public class KDTree
         {
             KDNode pNode;
             
-            if ((pNode = Root.insert(position)) != null)
+            if ((pNode = Root.insert(client)) != null)
             {
                 nodeList.add(pNode);
             }
@@ -57,7 +59,7 @@ public class KDTree
     	return closestNeighbors;
     }
     
-    private KDNode Root;
-    private int nbDimension;
-    private Vector<KDNode> nodeList;
+    private KDNode 			Root;
+    private int 			nbDimension;
+    private Vector<KDNode> 	nodeList;
 }

@@ -77,7 +77,7 @@ public class RVO
      * @param directionOptimal     True if the direction should be optimized.
      * @return True if successful.
      */
-	private boolean avoidCollisionWithLine(List<Line> lines, int lineID, double maxSpeed, double[] optimizationVelocity, boolean directionOptimal, Double[] newVelocity)
+	static private boolean avoidCollisionWithLine(List<Line> lines, int lineID, double maxSpeed, double[] optimizationVelocity, boolean directionOptimal, Double[] newVelocity)
 	{
         final double dotProduct = vectorProduct(lines.get(lineID).point, lines.get(lineID).direction);
         
@@ -179,7 +179,7 @@ public class RVO
      * @param directionOptimal     True if the direction should be optimized.
      * @return The number of the line on which it fails, or the number of lines if successful.
      */
-    private int checkCollision(List<Line> lines, double maxSpeed, double[] optimizationVelocity, boolean directionOptimal, Double[] newVelocity) 
+    static int checkCollision(List<Line> lines, double maxSpeed, double[] optimizationVelocity, boolean directionOptimal, Double[] newVelocity) 
     {
         if (directionOptimal) 
         {
@@ -246,7 +246,7 @@ public class RVO
      * 
      * @return new velocity
      */
-    private Double[] collisionFreeVelocity(List<Line> lines, int beginLine, double maxSpeed, int numObstacleLines, Double[] velocity) 
+    static Double[] collisionFreeVelocity(List<Line> lines, int beginLine, double maxSpeed, int numObstacleLines, Double[] velocity) 
     {
     	// range of avoidance
         double distance = 0.0;

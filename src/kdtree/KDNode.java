@@ -2,7 +2,9 @@ package kdtree;
 
 import java.util.Arrays;
 import java.util.TreeMap;
-import java.util.Vector; 
+import java.util.Vector;
+
+import clearpath.CollisionAvoidanceManager; 
 
 public class KDNode
 {
@@ -12,11 +14,13 @@ public class KDNode
      * @param splitAxis
      * @param dimension
      */
-    public KDNode(double[] nodePos, int splitAxis, int dimension)
+    public KDNode(CollisionAvoidanceManager client, int splitAxis, int dimension)
     {
+    	double[] nodePos = client.getPosition();
         position = nodePos.clone();
         maxRange = nodePos.clone();
         minRange = nodePos.clone();
+        agent    = client;
         
         nbDimension = dimension;
 
@@ -28,8 +32,10 @@ public class KDNode
         Left = Right = Parent = null;
     }
 
-    public KDNode insert(double[] nodePos)
+    public KDNode insert(CollisionAvoidanceManager client)
     {
+    	double[] nodePos = client.getPosition();
+    	
     	if (nodePos.length != nbDimension)
     	{
     		return null;
@@ -46,7 +52,7 @@ public class KDNode
         	return null;
         }
 
-        KDNode newNode = new KDNode(nodePos, ((parent.splitAxis + 1) % nbDimension), nbDimension);
+        KDNode newNode = new KDNode(client, ((parent.splitAxis + 1) % nbDimension), nbDimension);
 
         newNode.Parent = parent;
  
@@ -313,6 +319,8 @@ public class KDNode
     // NOTE: limit area sub-tree
     private double[] maxRange;
     private double[] minRange;
+    
+    private CollisionAvoidanceManager agent;
 
     KDNode Parent;
     KDNode Left;
