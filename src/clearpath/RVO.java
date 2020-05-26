@@ -11,7 +11,61 @@ public class RVO
      */
     static final double EPSILON = 0.00001;
 	
+    static public double vectorProduct(double[] vector1, double[] vector2)
+	{
+		assert (vector1.length == vector2.length);
+		
+		double product = 0;
+		
+		for (int i = 0; i < vector1.length; ++i)
+		{
+			product += vector1[i] * vector2[i];
+		}
+		
+		return product;
+	}
 	
+	static public double[] vectorSubstract(double[] vector1, double[] vector2)
+	{
+		assert (vector1.length == vector2.length);
+		
+		double[] result = new double[vector1.length];
+		
+		for (int i = 0; i < vector1.length; ++i)
+		{
+			result[i] = vector1[i] - vector2[i];
+		}
+		
+		return result;
+	}
+	
+	static public double[] vectorSubstract(double[] vector1, Double[] vector2)
+	{
+		assert (vector1.length == vector2.length);
+		
+		double[] result = new double[vector1.length];
+		
+		for (int i = 0; i < vector1.length; ++i)
+		{
+			result[i] = vector1[i] - vector2[i];
+		}
+		
+		return result;
+	}
+	
+	/**
+	 * 
+	 * @param vector1
+	 * @param vector2
+	 * @return determinant of matrix from 2 2D vectors
+	 */
+	static public double det2D(double[] vector1, double[] vector2)
+	{
+		assert (vector1.length == 2);
+		assert (vector1.length == vector2.length);
+		
+		return ( (vector1[0] * vector2[1]) - (vector1[1] * vector2[0]) );
+	}
 	
     /**
      * Solves a one-dimensional linear program on a specified line subject to
@@ -20,14 +74,14 @@ public class RVO
      * @param lines                Lines defining the linear constraints.
      * @param lineNo               The specified line constraint.
      * @param optimizationVelocity The optimization velocity.
-     * @param optimizeDirection    True if the direction should be optimized.
+     * @param directionOptimal     True if the direction should be optimized.
      * @return True if successful.
      */
-	private boolean linearProgram1(List<Line> lines, int lineID, double maxSpeed, double[] optimizationVelocity, boolean optimizeDirection, Double[] newVelocity)
+	private boolean avoidCollisionWithLine(List<Line> lines, int lineID, double maxSpeed, double[] optimizationVelocity, boolean directionOptimal, Double[] newVelocity)
 	{
-        final double dotProduct = Line.vectorProduct(lines.get(lineID).point, lines.get(lineID).direction);
+        final double dotProduct = vectorProduct(lines.get(lineID).point, lines.get(lineID).direction);
         
-        final double discriminant = Math.pow(dotProduct, 2) + Math.pow(maxSpeed, 2) - Line.vectorProduct(lines.get(lineID).point, lines.get(lineID).point);
+        final double discriminant = Math.pow(dotProduct, 2) + Math.pow(maxSpeed, 2) - vectorProduct(lines.get(lineID).point, lines.get(lineID).point);
 
         if (discriminant < 0.0) 
         {
@@ -36,53 +90,57 @@ public class RVO
         }
 
         final double sqrtDiscriminant = Math.sqrt(discriminant);
-        double tLeft = -sqrtDiscriminant - dotProduct;
-        double tRight = sqrtDiscriminant - dotProduct;
+        double scalarLeft  = -sqrtDiscriminant - dotProduct;
+        double scalarRight =  sqrtDiscriminant - dotProduct;
 
+        // Check if there is any collision between obstacle with lineID and other obstacles before it
         for (int i = 0; i < lineID; ++i) 
         {
-            final double denominator = Line.det2D(lines.get(lineID).direction, lines.get(i).direction);
-            final double numerator = Line.det2D(lines.get(i).direction, Line.vectorSubstract(lines.get(lineID).point, lines.get(i).point));
+            final double denominator = det2D(lines.get(lineID).direction, lines.get(i).direction);
+            final double numerator   = det2D(lines.get(i).direction, vectorSubstract(lines.get(lineID).point, lines.get(i).point));
 
+            // Check if is there any objects going in opposite direction
             if (Math.abs(denominator) <= EPSILON) 
             {
                 // Lines lineID and i are (almost) parallel.
                 if (numerator < 0.0) 
                 {
+                	// 2 objects go in opposite direction
                     return false;
                 }
 
                 continue;
             }
 
-            final double t = numerator / denominator;
+            final double scalar = numerator / denominator;
 
             if (denominator >= 0.0) 
             {
                 // Line i bounds line lineID on the right.
-                tRight = Math.min(tRight, t);
+                scalarRight = Math.min(scalarRight, scalar);
             } 
             else 
             {
                 // Line i bounds line lineID on the left.
-                tLeft = Math.max(tLeft, t);
+                scalarLeft = Math.max(scalarLeft, scalar);
             }
 
-            if (tLeft > tRight) 
+            if (scalarLeft > scalarRight) 
             {
                 return false;
             }
         }
 
-        if (optimizeDirection) 
+        // Optimize direction.
+        if (directionOptimal) 
         {
-            // Optimize direction.
-            if (Line.vectorProduct(optimizationVelocity, lines.get(lineID).direction) > 0.0) 
+        	// if optVelocity and lines[lineID].direction on the same direction
+            if (vectorProduct(optimizationVelocity, lines.get(lineID).direction) > 0.0) 
             {
                 // Take right extreme.
             	for (int j = 0; j < lines.get(lineID).point.length; ++j)
             	{
-            		newVelocity[j] = lines.get(lineID).point[j] + (tRight * lines.get(lineID).direction[j]);
+            		newVelocity[j] = lines.get(lineID).point[j] + (scalarRight * lines.get(lineID).direction[j]);
             	}
             }
             else 
@@ -90,36 +148,22 @@ public class RVO
                 // Take left extreme.
             	for (int j = 0; j < lines.get(lineID).point.length; ++j)
             	{
-            		newVelocity[j] = lines.get(lineID).point[j] + (tLeft * lines.get(lineID).direction[j]);
+            		newVelocity[j] = lines.get(lineID).point[j] + (scalarLeft * lines.get(lineID).direction[j]);
             	}
             }
         } 
         else 
         {
             // Optimize closest point.
-            final double t = Line.vectorProduct(lines.get(lineID).direction, 
-            									Line.vectorSubstract(optimizationVelocity, lines.get(lineID).point));
+            double scalar = vectorProduct(lines.get(lineID).direction, 
+            							  vectorSubstract(optimizationVelocity, lines.get(lineID).point));
 
-            if (t < tLeft) 
+            scalar = Math.max(scalarLeft, scalar);
+            scalar = Math.min(scalarRight, scalar);
+            
+            for (int j = 0; j < lines.get(lineID).point.length; ++j)
             {
-            	for (int j = 0; j < lines.get(lineID).point.length; ++j)
-            	{
-            		newVelocity[j] = lines.get(lineID).point[j] + (tLeft * lines.get(lineID).direction[j]);
-            	}
-            } 
-            else if (t > tRight) 
-            {
-            	for (int j = 0; j < lines.get(lineID).point.length; ++j)
-            	{
-            		newVelocity[j] = lines.get(lineID).point[j] + (tRight * lines.get(lineID).direction[j]);
-            	}
-            } 
-            else 
-            {
-            	for (int j = 0; j < lines.get(lineID).point.length; ++j)
-            	{
-            		newVelocity[j] = lines.get(lineID).point[j] + (t * lines.get(lineID).direction[j]);
-            	}
+            	newVelocity[j] = lines.get(lineID).point[j] + (scalar * lines.get(lineID).direction[j]);
             }
         }
 
@@ -132,13 +176,12 @@ public class RVO
      *
      * @param lines                Lines defining the linear constraints.
      * @param optimizationVelocity The optimization velocity.
-     * @param optimizeDirection    True if the direction should be optimized.
-     * @return The number of the line on which it fails, or the number of lines
-     * if successful.
+     * @param directionOptimal     True if the direction should be optimized.
+     * @return The number of the line on which it fails, or the number of lines if successful.
      */
-    private int linearProgram2(List<Line> lines, double maxSpeed, double[] optimizationVelocity, boolean optimizeDirection, Double[] newVelocity) 
+    private int checkCollision(List<Line> lines, double maxSpeed, double[] optimizationVelocity, boolean directionOptimal, Double[] newVelocity) 
     {
-        if (optimizeDirection) 
+        if (directionOptimal) 
         {
             // Optimize direction. Note that the optimization velocity is of unit length in this case.
         	for (int j = 0; j < newVelocity.length; ++j)
@@ -147,10 +190,10 @@ public class RVO
         	}
         	
         } 
-        else if ( Line.vectorProduct(optimizationVelocity, optimizationVelocity) > Math.pow(maxSpeed, 2) ) 
+        else if ( vectorProduct(optimizationVelocity, optimizationVelocity) > Math.pow(maxSpeed, 2) ) 
         {
-            // Optimize closest point and outside circle.
-        	double norm = Math.sqrt(Line.vectorProduct(optimizationVelocity, optimizationVelocity));
+        	// if optVelocity points to outside the circle => retrive to the closest point outside the circle on the direction of optVelocity
+        	double norm = Math.sqrt(vectorProduct(optimizationVelocity, optimizationVelocity));
         	
         	for (int j = 0; j < newVelocity.length; ++j)
         	{
@@ -166,24 +209,29 @@ public class RVO
         	}
         }
 
-        for (int lineID = 0; lineID < lines.size(); ++lineID) 
+        int lineID = 0;
+        
+        while (lineID < lines.size()) 
         {
-            if (Line.det2D(lines.get(lineID).direction, Line.vectorSubstract(lines.get(lineID).point, newVelocity)) > 0.0) 
+        	// Verify Linear constraint
+        	if (det2D(lines.get(lineID).direction, vectorSubstract(lines.get(lineID).point, newVelocity)) > 0.0) 
             {
-                // Result does not satisfy constraint i. Compute new optimal
-                // result.
+                // There will be collision with lineID, try to compute new velocity to avoid collision
                 final Double[] tempResult = newVelocity.clone();
                 
-                if (! linearProgram1(lines, lineID, maxSpeed, optimizationVelocity, optimizeDirection, newVelocity)) 
+                if (! avoidCollisionWithLine(lines, lineID, maxSpeed, optimizationVelocity, directionOptimal, newVelocity)) 
                 {
+                	// If can not find another result that satisfy an obstacle i => return the id of obstacle where it fails
                     newVelocity = tempResult;
 
-                    return lineID;
+                    break;
                 }
             }
+        	
+        	++lineID;
         }
 
-        return lines.size();
+        return lineID;
     }
     
     /**
@@ -192,14 +240,21 @@ public class RVO
      *
      * @param numObstacleLines Count of obstacle lines.
      * @param beginLine        The line on which the 2-D linear program failed.
+     * @param maxSpeed         Limit of speed.
+     * @param numObstacleLines Number of obstacles
+     * @param velocity		   Current velocity to optimize
+     * 
+     * @return new velocity
      */
-    private void linearProgram3(List<Line> lines, double maxSpeed, int numObstacleLines, int beginLine, Double[] newVelocity) 
+    private Double[] collisionFreeVelocity(List<Line> lines, int beginLine, double maxSpeed, int numObstacleLines, Double[] velocity) 
     {
+    	// range of avoidance
         double distance = 0.0;
 
         for (int i = beginLine; i < lines.size(); ++i) 
         {
-            if ( Line.det2D(lines.get(i).direction, (Line.vectorSubstract(lines.get(i).point, newVelocity))) > distance ) 
+        	// verify constraint with obstacle i
+            if ( det2D(lines.get(i).direction, (vectorSubstract(lines.get(i).point, velocity))) > distance ) 
             {
                 // Result does not satisfy constraint of line i.
             	
@@ -209,20 +264,22 @@ public class RVO
 
                 for (int j = numObstacleLines; j < i; j++) 
                 {
-                    final double determinant = Line.det2D(lines.get(i).direction, lines.get(j).direction);
+                    final double determinant = det2D(lines.get(i).direction, lines.get(j).direction);
                     
                     double[] point = new double[lines.get(0).point.length];
 
+                    // Check if the object going in opposite direction
                     if (Math.abs(determinant) <= EPSILON) 
                     {
                         // Line i and line j are parallel.
-                        if (Line.vectorProduct(lines.get(i).direction, lines.get(j).direction) > 0.0) 
+                        if (vectorProduct(lines.get(i).direction, lines.get(j).direction) > 0.0) 
                         {
                             // Line i and line j point in the same direction.
                             continue;
                         }
 
                         // Line i and line j point in opposite direction.
+                        // get the middle of 2 points
                         for (int k = 0; k < point.length; ++k)
                         {
                         	point[k] = (lines.get(i).point[k] + lines.get(j).point[k]) * 0.5;
@@ -230,7 +287,7 @@ public class RVO
                     } 
                     else 
                     {
-                    	double scalar = Line.det2D(lines.get(j).direction, Line.vectorSubstract(lines.get(i).point, lines.get(j).point)) / determinant;
+                    	double scalar = det2D(lines.get(j).direction, vectorSubstract(lines.get(i).point, lines.get(j).point)) / determinant;
                     	
                     	for (int k = 0; k < point.length; ++k)
                         {
@@ -238,9 +295,9 @@ public class RVO
                         }
                     }
 
-                    final double[] direction = Line.vectorSubstract(lines.get(j).direction, lines.get(i).direction);
+                    final double[] direction = vectorSubstract(lines.get(j).direction, lines.get(i).direction);
                     
-                    double directionNorm = Math.sqrt(Line.vectorProduct(direction, direction));
+                    double directionNorm = Math.sqrt(vectorProduct(direction, direction));
                     
                     for (int k = 0; k < direction.length; ++k)
                     {
@@ -250,21 +307,24 @@ public class RVO
                     projectedLines.add(new Line(point, direction));
                 }
 
-                final Double[] tempResult = newVelocity.clone();
+                final Double[] tempResult = velocity.clone();
                 
                 double[] optimizationVelocity = {-lines.get(i).direction[1], lines.get(i).direction[0]};
                 
-                if (linearProgram2(projectedLines, maxSpeed, optimizationVelocity, true, newVelocity) < projectedLines.size())
+                // Final check if there will be any collision
+                if (checkCollision(projectedLines, maxSpeed, optimizationVelocity, true, velocity) < projectedLines.size())
                 {
                     // This should in principle not happen. The result is by
                     // definition already in the feasible region of this linear
                     // program. If it fails, it is due to small floating point
                     // error, and the current result is kept.
-                    newVelocity = tempResult;
+                    velocity = tempResult;
                 }
 
-                distance = Line.det2D(lines.get(i).direction, Line.vectorSubstract(lines.get(i).point, newVelocity));
+                distance = det2D(lines.get(i).direction, vectorSubstract(lines.get(i).point, velocity));
             }
         }
+        
+        return velocity;
     }
 }
