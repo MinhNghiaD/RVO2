@@ -120,6 +120,36 @@ public class CollisionAvoidanceManager
 		}
 	}
 	
+	private void computeNewVelocity()
+	{
+		orcaLines.clear();
+		// TODO addObstacleOrcaLine
+		
+		// TODO: Get N closest neighbors and searchrange
+		double searchRange = Double.MAX_VALUE;
+		int    nbNeighbors = 10;
+		
+		TreeMap<Double, Vector<KDNode> > neighbors = getClosestNeighbors(searchRange, nbNeighbors);
+		addNeighborOrcaLine(neighbors);
+		
+		// TODO get new velocity
+		Double[] newVelocity = new Double[2];
+		
+		int lineFail = RVO.checkCollision(orcaLines, maxSpeed, preferenceVelocity, false, newVelocity);
+		
+		if (lineFail < orcaLines.size())
+        {
+			// start optimizing from the first colision
+			newVelocity = RVO.collisionFreeVelocity(orcaLines, lineFail, maxSpeed, 0, newVelocity);
+		}
+	}
+	
+	private TreeMap<Double, Vector<KDNode>> getClosestNeighbors(double searchRange, int nbNeighbors)
+	{
+		return obstaclesTree.getClosestNeighbors(position, searchRange, nbNeighbors);
+	}
+	
+	
 	private int 	id;
 	
 	private double 	timeHorizon;
@@ -131,6 +161,7 @@ public class CollisionAvoidanceManager
 	private double[] velocity;
 	private double[] preferenceVelocity;
 	
+	// constrain lines
 	private List<Line> orcaLines;
 	private KDTree obstaclesTree;
 	
