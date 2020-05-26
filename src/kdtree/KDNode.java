@@ -74,6 +74,11 @@ public class KDNode
     {
     	return position.clone();
     }
+    
+    public CollisionAvoidanceManager getAgent()
+    {
+    	return agent;
+    }
 
     /***
      * 

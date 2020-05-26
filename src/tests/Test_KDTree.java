@@ -13,31 +13,31 @@ public class Test_KDTree {
 		KDTree tree = new KDTree(2);
 		
 		double[] position1 = {11, 2};
-		tree.add(position1);
+		//tree.add(position1);
 		
 		double[] position2 = {2, 12};
-		tree.add(position2);
+		//tree.add(position2);
 		
 		double[] position3 = {3, 12};
-		tree.add(position3);
+		//tree.add(position3);
 		
 		double[] position4 = {25, 0};
-		tree.add(position4);
+		//tree.add(position4);
 		
 		double[] position5 = {1, 12};
-		tree.add(position5);
+		//tree.add(position5);
 		
 		double[] position6 = {12, 1};
-		tree.add(position6);
+		//tree.add(position6);
 		
 		double[] position7 = {11, 4};
-		tree.add(position7);
+		//tree.add(position7);
 		
 		double[] position8 = {2, 6};
-		tree.add(position8);
+		//tree.add(position8);
 		
 		double[] position9 = {6, 2};
-		tree.add(position9);
+		//tree.add(position9);
 		
 		
 		double[] currentPosition = {0, 0};

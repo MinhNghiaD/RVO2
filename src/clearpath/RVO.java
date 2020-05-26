@@ -67,6 +67,18 @@ public class RVO
 		return ( (vector1[0] * vector2[1]) - (vector1[1] * vector2[0]) );
 	}
 	
+	static public double[] scalarProduct(double[] vector, double scalar)
+	{
+		double[] result = vector.clone();
+		
+		for (int i = 0; i < result.length; ++i)
+		{
+			result[i] *= scalar;
+		}
+		
+		return result;
+	}
+	
     /**
      * Solves a one-dimensional linear program on a specified line subject to
      * linear constraints defined by lines and a circular constraint.
