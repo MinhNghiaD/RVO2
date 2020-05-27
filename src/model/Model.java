@@ -17,7 +17,6 @@ public class Model extends SimState
 		super(seed);
 		yard.clear();
 		numAgents = 0;
-		//addRandomAgents();
 	}
 	
 	@Override
@@ -26,7 +25,7 @@ public class Model extends SimState
 		super.start();
 		yard.clear();
 		int scenario = this.random.nextInt(4);
-		addRandomAgents(scenario);
+		addRandomAgents(0);
 	}
 	
 	/**
@@ -67,10 +66,21 @@ public class Model extends SimState
 		return this.numAgents--;
 	}
 	
+	
+	/**
+	 * Initialize the agent according to the scenario
+	 * Case 0 : The agent moves in a circular orbit
+	 * Case 1 : Two groups of opposite agents passing through each other
+	 * Case 2 : Fixed obstacles in the middle of the yard
+	 * Case 3 : Crossroads
+	 * Default : Agent random move
+	 * @param nbScenario
+	 */
 	private void addRandomAgents(int nbScenario) 
 	{ 
 		switch(nbScenario) {
 		case 0:
+			addAgentInCircle();
 			break;
 		case 1:
 			break;
@@ -81,7 +91,7 @@ public class Model extends SimState
 		default:
 			for(int  i  =  0;  i  <  Constants.NUM_AGENT;  i++) 
 			{
-				Int2D position = randomPosition();
+				Double2D position = randomPosition();
 				double angle = this.random.nextInt(360);
 				AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
 				yard.setObjectLocation(e, position);
@@ -91,6 +101,41 @@ public class Model extends SimState
 		}
 	}
 	
+	private void addAgentInCircle() {
+		double radius = (this.random.nextDouble() + 0.1 ) * Constants.GRID_SIZE / 2;
+		Double2D center = new Double2D(yard.getWidth()/2, yard.getHeight()/2);
+		
+		for(int  i  =  0;  i  <  Constants.NUM_AGENT;  i++) 
+		{
+			Double2D position = randomPosition(radius, center);
+			double angle = this.random.nextInt(360);
+			AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
+			yard.setObjectLocation(e, position);
+			schedule.scheduleRepeating(e);
+			numAgents++;
+		}
+		
+	}
+		
+	private Double2D randomPosition(double radius, Double2D center) {
+		double x = 0;
+		double y = 0;
+		boolean free = false;
+		
+		while (!free) {
+			double theta =  this.random.nextDouble() * 2 * Math.PI;
+			x = center.x + radius * Math.cos(theta);
+			y = center.y + radius * Math.sin(theta); 
+			
+			if(yard.numObjectsAtLocation(new Double2D(x,y)) == 0) {
+				free = true;
+			}
+		}
+		
+		return new Double2D(x,y);
+	}
+
+
 	public Double2D randomPosition() 
 	{
 		double x = this.random.nextInt(Constants.GRID_SIZE);
