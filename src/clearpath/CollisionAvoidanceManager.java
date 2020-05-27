@@ -125,15 +125,7 @@ public class CollisionAvoidanceManager
 		orcaLines.clear();
 		// TODO addObstacleOrcaLine
 		
-		// TODO: Get N closest neighbors and searchrange
-		double searchRange = Double.MAX_VALUE;
-		int    nbNeighbors = 10;
-		
-		TreeMap<Double, Vector<KDNode> > neighbors = getClosestNeighbors(searchRange, nbNeighbors);
-		addNeighborOrcaLine(neighbors);
-		
-		// TODO get new velocity
-		Double[] newVelocity = new Double[2];
+		addNeighborOrcaLine(getClosestNeighbors());
 		
 		int lineFail = RVO.checkCollision(orcaLines, maxSpeed, preferenceVelocity, false, newVelocity);
 		
@@ -144,21 +136,33 @@ public class CollisionAvoidanceManager
 		}
 	}
 	
-	private TreeMap<Double, Vector<KDNode>> getClosestNeighbors(double searchRange, int nbNeighbors)
+	private TreeMap<Double, Vector<KDNode>> getClosestNeighbors()
 	{
-		return obstaclesTree.getClosestNeighbors(position, searchRange, nbNeighbors);
+		double searchRange = Math.pow(neighborDistance, 2);
+		
+		return obstaclesTree.getClosestNeighbors(position, searchRange, maxNeighbors);
 	}
 	
+	private void update()
+	{
+		for (int i = 0; i < 2; ++i)
+		{
+			velocity[i]  = newVelocity[i];
+			position[i] += velocity[i] * timeStep;
+		}
+	}
 	
 	private int 	id;
 	
 	private double 	timeHorizon;
 	private double  maxSpeed;
+	private double  neighborDistance;
 	private double  timeStep;
 	private int 	maxNeighbors;
 	
 	private double[] position;
 	private double[] velocity;
+	private Double[] newVelocity;
 	private double[] preferenceVelocity;
 	
 	// constrain lines

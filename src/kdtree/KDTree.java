@@ -10,9 +10,9 @@ public class KDTree
 {   
     public KDTree(int dim)
     {
-    	Root = null;
+    	Root 		= null;
         nbDimension = dim;
-        nodeList = new Vector<KDNode>();
+        agents 		= new Vector<CollisionAvoidanceManager>();
     }
 
     /**
@@ -27,15 +27,19 @@ public class KDTree
         	Root = new KDNode(client, 0, nbDimension);
         	//System.out.println("Root : " + Arrays.toString(position));
         	
-            nodeList.add(Root);
+        	if (! agents.contains(client))
+        	{
+        		agents.add(client);
+        	}
         } 
         else
         {
-            KDNode pNode;
-            
-            if ((pNode = Root.insert(client)) != null)
+            if (Root.insert(client) != null)
             {
-                nodeList.add(pNode);
+            	if (! agents.contains(client))
+            	{
+            		agents.add(client);
+            	}
             }
         }
         
@@ -59,7 +63,7 @@ public class KDTree
     	return closestNeighbors;
     }
     
-    private KDNode 			Root;
-    private int 			nbDimension;
-    private Vector<KDNode> 	nodeList;
+    private KDNode 								Root;
+    private int 								nbDimension;
+    private Vector<CollisionAvoidanceManager> 	agents;
 }
