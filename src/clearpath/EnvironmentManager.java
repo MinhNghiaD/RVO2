@@ -96,6 +96,7 @@ public class EnvironmentManager
 		globalTime += timeStep;
 	}
 	
+	// TODO: queryVisibility with static obstacle
 	
 	
 	

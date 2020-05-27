@@ -22,7 +22,6 @@ public class CollisionAvoidanceManager
 	{
 		this.position		= position.clone();
 		this.velocity		= velocity.clone();
-		
 		this.timeHorizon 	= timeHorizon;
 		this.timeStep		= timeStep;
 		this.maxSpeed		= maxSpeed;
@@ -36,12 +35,12 @@ public class CollisionAvoidanceManager
 	
 	public double[] getPosition()
 	{
-		return position;
+		return position.clone();
 	}
 	
 	public double[] getVelocity()
 	{
-		return velocity;
+		return velocity.clone();
 	}
 
 	private void addNeighborOrcaLine(TreeMap<Double, Vector<KDNode> > neighbors)
@@ -183,6 +182,6 @@ public class CollisionAvoidanceManager
 	
 	// constrain lines
 	private List<Line> orcaLines;
-	private KDTree obstaclesTree;
+	private KDTree 	   obstaclesTree;
 	
 }
