@@ -10,7 +10,7 @@ public class KDTree
 {   
     public KDTree(int dim)
     {
-    	Root 		= null;
+    	root 		= null;
         nbDimension = dim;
         agents 		= new Vector<CollisionAvoidanceManager>();
     }
@@ -22,10 +22,10 @@ public class KDTree
      */
     public boolean add(CollisionAvoidanceManager client)
     {
-        if (Root == null)
+        if (root == null)
         {
-        	Root = new KDNode(client, 0, nbDimension);
-        	//System.out.println("Root : " + Arrays.toString(position));
+        	root = new KDNode(client, 0, nbDimension);
+        	//System.out.println("root : " + Arrays.toString(position));
         	
         	if (! agents.contains(client))
         	{
@@ -34,7 +34,7 @@ public class KDTree
         } 
         else
         {
-            if (Root.insert(client) != null)
+            if (root.insert(client) != null)
             {
             	if (! agents.contains(client))
             	{
@@ -58,12 +58,28 @@ public class KDTree
     	// Map of distance and nodes
     	TreeMap<Double, Vector<KDNode> > closestNeighbors = new TreeMap<Double, Vector<KDNode> >();
     	
-    	sqRange = Root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
+    	sqRange = root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
     	
     	return closestNeighbors;
     }
     
-    private KDNode 								Root;
+    public void update()
+    {
+    	// clean old tree and construct new one
+    	root = null;
+    	
+    	for (CollisionAvoidanceManager agent : agents)
+    	{
+    		add(agent);
+    	}
+    }
+    
+    public Vector<CollisionAvoidanceManager> getAgents()
+    {
+    	return agents;
+    }
+    
+    private KDNode 								root;
     private int 								nbDimension;
     private Vector<CollisionAvoidanceManager> 	agents;
 }

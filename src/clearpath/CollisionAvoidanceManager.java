@@ -11,11 +11,24 @@ import kdtree.KDTree;
 
 public class CollisionAvoidanceManager 
 {
-	CollisionAvoidanceManager(int id, double timeHorizon, double timeStep, KDTree tree)
+	CollisionAvoidanceManager(	double[] position, 
+								double[] velocity,  
+								double timeHorizon, 
+								double timeStep,
+								double maxSpeed,
+								double neighborDistance,
+								int    maxNeighbors,
+								KDTree tree)
 	{
-		this.id 			= id;
+		this.position		= position.clone();
+		this.velocity		= velocity.clone();
+		
 		this.timeHorizon 	= timeHorizon;
 		this.timeStep		= timeStep;
+		this.maxSpeed		= maxSpeed;
+		this.maxNeighbors	= maxNeighbors;
+		this.neighborDistance = neighborDistance;
+		
 		this.orcaLines 	 	= new ArrayList<Line>();
 		this.obstaclesTree 	= tree;
 	}
@@ -143,16 +156,19 @@ public class CollisionAvoidanceManager
 		return obstaclesTree.getClosestNeighbors(position, searchRange, maxNeighbors);
 	}
 	
-	private void update()
+	// TODO: implement static obstacle and function getClosestObstacles()
+	
+	public void update()
 	{
+		computeNewVelocity();
+		
 		for (int i = 0; i < 2; ++i)
 		{
 			velocity[i]  = newVelocity[i];
 			position[i] += velocity[i] * timeStep;
 		}
 	}
-	
-	private int 	id;
+
 	
 	private double 	timeHorizon;
 	private double  maxSpeed;
