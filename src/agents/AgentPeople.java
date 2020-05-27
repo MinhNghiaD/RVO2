@@ -10,6 +10,7 @@ public class AgentPeople extends AgentType
 	private static final long serialVersionUID = 1L;
 	public double velocity;
 	public double radius;
+	public double angle;
 	public Line line;
 
 	public AgentPeople(double x, double y) 
@@ -22,13 +23,16 @@ public class AgentPeople extends AgentType
 		super(x, y);
 		this.velocity = velocity;
 		this.radius = radius;
+		this.angle = getRadianAngle(angle);
 		
 		Double2D direction2D = directionFromAngle(angle);
+		
 		double[] point = {x,y};
 		double[] direction = {direction2D.x, direction2D.y};
 		this.line = new Line(point, direction);
 	}
 	
+
 	public AgentPeople(double sourceX, double sourceY, double velocity, double radius, double directionX, double directionY)
 	{
 		super(sourceX, sourceY);
@@ -50,12 +54,17 @@ public class AgentPeople extends AgentType
 	
 	public void move(Model beings) 
 	{
+		double currX = this.x;
+		double currY = this.y;
 		
 		x += this.line.getDirection()[0];
 		y += this.line.getDirection()[1];
+		
 		x = beings.getYard().stx(x);
 		y = beings.getYard().sty(y);
+		
 		beings.getYard().setObjectLocation(this, new Double2D(x, y));
+		this.angle = angleFromDirection(y, x, currY, currX);
 	}
 	
 	/**
@@ -67,6 +76,16 @@ public class AgentPeople extends AgentType
 	{
 		return angle % 360;
 	}
+	
+	/**
+	 * Degrees to radians angle
+	 * @param angle
+	 * @return
+	 */
+	private double getRadianAngle(double angle) {
+		return clampAngle(angle)/(2*3.14);
+	}
+	
 	
 	/**
 	 * Turn 360 degrees angle into discrete direction
@@ -89,6 +108,20 @@ public class AgentPeople extends AgentType
 		};
 		
 		return directions[(int)Math.round(angle/45)];
+	}
+	
+	/**
+	 * Get radian angle from agent's position
+	 * @param y
+	 * @param x
+	 * @param currY
+	 * @param currX
+	 * @return
+	 */
+	public Double angleFromDirection(double y, double x, double currY, double currX) {
+		double res = Math.atan2(y-currY, x-currX);
+		
+		return res;
 	}
 
 }

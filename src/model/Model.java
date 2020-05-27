@@ -17,7 +17,7 @@ public class Model extends SimState
 		super(seed);
 		yard.clear();
 		numAgents = 0;
-		addRandomAgents();
+		//addRandomAgents();
 	}
 	
 	@Override
