@@ -4,13 +4,15 @@ import java.util.Arrays;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import clearpath.CollisionAvoidanceManager;
+
 public class KDTree
 {   
     public KDTree(int dim)
     {
-    	Root = null;
+    	root 		= null;
         nbDimension = dim;
-        nodeList = new Vector<KDNode>();
+        agents 		= new Vector<CollisionAvoidanceManager>();
     }
 
     /**
@@ -18,22 +20,26 @@ public class KDTree
      * @param position
      * @return
      */
-    public boolean add(double[] position)
+    public boolean add(CollisionAvoidanceManager client)
     {
-        if (Root == null)
+        if (root == null)
         {
-        	Root = new KDNode(position, 0, nbDimension);
-        	//System.out.println("Root : " + Arrays.toString(position));
+        	root = new KDNode(client, 0, nbDimension);
+        	//System.out.println("root : " + Arrays.toString(position));
         	
-            nodeList.add(Root);
+        	if (! agents.contains(client))
+        	{
+        		agents.add(client);
+        	}
         } 
         else
         {
-            KDNode pNode;
-            
-            if ((pNode = Root.insert(position)) != null)
+            if (root.insert(client) != null)
             {
-                nodeList.add(pNode);
+            	if (! agents.contains(client))
+            	{
+            		agents.add(client);
+            	}
             }
         }
         
@@ -52,12 +58,28 @@ public class KDTree
     	// Map of distance and nodes
     	TreeMap<Double, Vector<KDNode> > closestNeighbors = new TreeMap<Double, Vector<KDNode> >();
     	
-    	sqRange = Root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
+    	sqRange = root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
     	
     	return closestNeighbors;
     }
     
-    private KDNode Root;
-    private int nbDimension;
-    private Vector<KDNode> nodeList;
+    public void update()
+    {
+    	// clean old tree and construct new one
+    	root = null;
+    	
+    	for (CollisionAvoidanceManager agent : agents)
+    	{
+    		add(agent);
+    	}
+    }
+    
+    public Vector<CollisionAvoidanceManager> getAgents()
+    {
+    	return agents;
+    }
+    
+    private KDNode 								root;
+    private int 								nbDimension;
+    private Vector<CollisionAvoidanceManager> 	agents;
 }
