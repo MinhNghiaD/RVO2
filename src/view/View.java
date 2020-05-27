@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 
 import javax.swing.JFrame;
 
@@ -11,16 +12,18 @@ import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
-import sim.portrayal.Portrayal;
-import sim.portrayal.grid.SparseGridPortrayal2D;
+import sim.portrayal.continuous.ContinuousPortrayal2D;
+import sim.portrayal.simple.MovablePortrayal2D;
+import sim.portrayal.simple.OrientedPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
+import sim.portrayal.DrawInfo2D;
 import sim.portrayal.Inspector;
 
 public class View extends GUIState 
 {
 	public Display2D display;
 	public JFrame displayFrame;
-	public SparseGridPortrayal2D yardPortrayal = new SparseGridPortrayal2D();
+	public ContinuousPortrayal2D yardPortrayal = new ContinuousPortrayal2D();
 	
 		
 	public View(SimState state) 
@@ -65,21 +68,33 @@ public class View extends GUIState
 	{ 
 		Model model = (Model) state;
 		yardPortrayal.setField(model.getYard());
-		yardPortrayal.setPortrayalForClass( AgentPeople.class, getAgentPortrayal());
+		yardPortrayal.setPortrayalForClass(AgentPeople.class,
+			new MovablePortrayal2D(
+				new OrientedPortrayal2D( 
+                    new OvalPortrayal2D(){
+						private static final long serialVersionUID = 1L;
+						public void draw(Object object, Graphics2D graphics, DrawInfo2D info){
+							paint = Color.DARK_GRAY;
+                        	filled = true;
+                    		super.draw(object, graphics, info);
+						}
+					}
+                 ) {
+						private static final long serialVersionUID = 1L;
+						@Override
+						public double getOrientation(Object object, DrawInfo2D info) {
+							AgentPeople a = (AgentPeople) object;
+							return a.angle;
+						}
+					}
+			)
+		);
 		display.reset(); 
 		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();
 	}
 
-
-	private Portrayal getAgentPortrayal()
-	{
-		OvalPortrayal2D r = new OvalPortrayal2D();
-		r.paint = Color.DARK_GRAY;
-		r.filled = true;
-		return r;
-	}
-
+	
 	public Object getSimulationInspectedObject()
 	{
 		return state;
