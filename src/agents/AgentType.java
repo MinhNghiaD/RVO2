@@ -15,6 +15,7 @@ public abstract class AgentType implements Steppable
 	public AgentType(double x, double y)
 	{
 		super();
+		
 		this.x = x;
 		this.y = y;
 	}	

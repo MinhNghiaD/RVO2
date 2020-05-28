@@ -84,11 +84,12 @@ public class View extends GUIState
 						@Override
 						public double getOrientation(Object object, DrawInfo2D info) {
 							AgentPeople a = (AgentPeople) object;
-							return a.angle;
+							return a.getAngle();
 						}
 					}
 			)
 		);
+		
 		display.reset(); 
 		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();
@@ -104,6 +105,7 @@ public class View extends GUIState
 	{
 		Inspector i= super.getInspector();
 		i.setVolatile(true);
+		
 		return i;
 	}
 	
