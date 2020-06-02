@@ -13,12 +13,10 @@ public class AgentPeople extends AgentType
         super(x, y);
     }
 
-    public AgentPeople(double x, double y, double velocity, double radius, double angle)
+    public AgentPeople(double x, double y, double angle)
     {
         super(x, y);
-        
-        this.velocity = velocity;
-        this.radius   = radius;
+
         this.angle    = getRadianAngle(angle);
 
         Double2D direction2D = directionFromAngle(angle);
@@ -30,20 +28,22 @@ public class AgentPeople extends AgentType
 
     public AgentPeople(double sourceX, 
                        double sourceY, 
-                       double velocity, 
-                       double radius, 
                        double directionX,
                        double directionY)
     {
         super(sourceX, sourceY);
         
-        this.velocity = velocity;
-        this.radius   = radius;
-
         double[] point     = { sourceX, sourceY };
         double[] direction = { directionX, directionY };
         this.line          = new Line(point, direction);
-
+    }
+    
+    public AgentPeople(CollisionAvoidanceManager controller)
+    {
+        super(controller.getPosition()[0], controller.getPosition()[1]);
+        
+        this.controller = controller;
+        
     }
 
     @Override
@@ -130,8 +130,7 @@ public class AgentPeople extends AgentType
     }
     
     private static final long serialVersionUID = 1L;
-    private double            velocity;
-    private double            radius;
     private double            angle;
     private Line              line;
+    private CollisionAvoidanceManager controller;
 }

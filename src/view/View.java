@@ -71,22 +71,27 @@ public class View extends GUIState
 		yardPortrayal.setPortrayalForClass(AgentPeople.class,
 			new MovablePortrayal2D(
 				new OrientedPortrayal2D( 
-                    new OvalPortrayal2D(){
+                    new OvalPortrayal2D()
+                    {
 						private static final long serialVersionUID = 1L;
-						public void draw(Object object, Graphics2D graphics, DrawInfo2D info){
+						public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
+						{
 							paint = Color.DARK_GRAY;
                         	filled = true;
                     		super.draw(object, graphics, info);
 						}
 					}
-                 ) {
-						private static final long serialVersionUID = 1L;
-						@Override
-						public double getOrientation(Object object, DrawInfo2D info) {
-							AgentPeople a = (AgentPeople) object;
-							return a.getAngle();
-						}
-					}
+                ) 
+				{
+    				private static final long serialVersionUID = 1L;
+    				
+    				@Override
+    				public double getOrientation(Object object, DrawInfo2D info)
+    				{
+    					AgentPeople a = (AgentPeople) object;
+    					return a.getAngle();
+    				}
+				}
 			)
 		);
 		

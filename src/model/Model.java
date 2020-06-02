@@ -46,44 +46,27 @@ public class Model extends SimState
         return yard;
     }
     
-    
-// NOTE: don't create setter and getter if not necessary
-//    /**
-//     * @param yard the grid to set
-//     */
-//    public void setYard(Continuous2D yard)
-//    {
-//        this.yard = yard;
-//    }
-//
-//    /**
-//     * @return the numAgents
-//     */
-//    public int getNumAgents()
-//    {
-//        return numAgents;
-//    }
-//
-//    /**
-//     * @param numAgents the numAgents to set
-//     */
-//    public void setNumAgents(int numAgents) 
-//    {
-//        this.numAgents = numAgents;
-//    }
 
     public int decrementNumAgents() 
     {
         return numAgents--;
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
     private void addRandomAgents()
     {
         for (int i = 0; i < Constants.NUM_AGENT; i++)
         {
             Double2D position   = randomPosition();
             double angle        = this.random.nextInt(360);
-            AgentType e         = new AgentPeople(position.x, position.y, 1, 1, angle);
+            AgentType e         = new AgentPeople(position.x, position.y, angle);
             
             yard.setObjectLocation(e, position);
             schedule.scheduleRepeating(e);
