@@ -114,7 +114,42 @@ public class Model extends SimState
 			schedule.scheduleRepeating(e);
 			numAgents++;
 		}
-		
+	}
+	
+	/**
+	 * Create obstacle with position, size and type of obstacle
+	 * Case 0 : Square obstacle
+	 * Case 1 : Horizontal line
+	 * Case 2 : Vertical line
+	 * @param nbScenario
+	 */
+	private void addObstacle(Double2D position, int taille, int type) {
+		switch(type) {
+		case 0:
+			for(int  i  =  0;  i  <=  taille;  i++) 
+			{
+				for(int  j  =  0;  j  <=  taille;  j++) 
+				{
+					AgentType obs = new AgentObstacle(position.x+i, position.y+j);
+				    yard.setObjectLocation(obs, new Double2D(position.x+i, position.y+j));
+				}
+			}	
+			break;
+		case 1:
+			for(int  i  =  0;  i  <=  taille;  i++) 
+			{
+				AgentType obs = new AgentObstacle(position.x+i, position.y);
+			    yard.setObjectLocation(obs, new Double2D(position.x+i, position.y));
+			}	
+			break;
+		case 2:
+			for(int  i  =  0;  i  <=  taille;  i++) 
+			{
+				AgentType obs = new AgentObstacle(position.x, position.y+i);
+			    yard.setObjectLocation(obs, new Double2D(position.x, position.y+i));
+			}	
+			break;
+		}
 	}
 		
 	private Double2D randomPosition(double radius, Double2D center) {
