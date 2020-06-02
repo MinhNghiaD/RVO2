@@ -97,8 +97,7 @@ public class RVO
     {
         final double dotProduct = vectorProduct(lines.get(lineID).point, lines.get(lineID).direction);
 
-        final double discriminant = Math.pow(dotProduct, 2) + Math.pow(maxSpeed, 2)
-                - vectorProduct(lines.get(lineID).point, lines.get(lineID).point);
+        final double discriminant = Math.pow(dotProduct, 2) + Math.pow(maxSpeed, 2) - vectorProduct(lines.get(lineID).point, lines.get(lineID).point);
 
         if (discriminant < 0.0)
         {
@@ -200,10 +199,10 @@ public class RVO
      *         successful.
      */
     static int checkCollision(List<Line> lines, 
-                              double maxSpeed, 
-                              double[] optimizationVelocity,
-                              boolean directionOptimal, 
-                              Double[] newVelocity)
+                              double    maxSpeed, 
+                              double[]  optimizationVelocity,
+                              boolean   directionOptimal, 
+                              Double[]  newVelocity)
     {
         if (directionOptimal)
         {
@@ -276,9 +275,9 @@ public class RVO
      * @return new velocity
      */
     static Double[] collisionFreeVelocity(List<Line> lines, 
-                                          int beginLine,
-                                          double maxSpeed,
-                                          int numObstacleLines,
+                                          int      beginLine,
+                                          double   maxSpeed,
+                                          int      numObstacleLines,
                                           Double[] velocity)
     {
         // range of avoidance
@@ -320,8 +319,8 @@ public class RVO
                     } 
                     else
                     {
-                        double scalar = det2D(lines.get(j).direction,
-                                vectorSubstract(lines.get(i).point, lines.get(j).point)) / determinant;
+                        double scalar = ( det2D(lines.get(j).direction,
+                                                vectorSubstract(lines.get(i).point, lines.get(j).point)) ) / determinant;
 
                         for (int k = 0; k < point.length; ++k)
                         {

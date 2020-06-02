@@ -17,7 +17,7 @@ public class CollisionAvoidanceManager
                               double timeStep,                       
                               double maxSpeed, 
                               double neighborDistance,
-                              int maxNeighbors, 
+                              int    maxNeighbors, 
                               KDTree tree)
     {
         this.position         = position.clone();
@@ -122,7 +122,7 @@ public class CollisionAvoidanceManager
                     final double wLength = Math.sqrt(RVO.vectorProduct(w, w));
                     final double[] unitW = RVO.scalarProduct(w, 1 / wLength);
 
-                    line.direction[0] = unitW[1];
+                    line.direction[0] =  unitW[1];
                     line.direction[1] = -unitW[0];
 
                     u                 = RVO.scalarProduct(unitW, (combinedmaxSpeed * invTimeStep - wLength));
@@ -147,7 +147,7 @@ public class CollisionAvoidanceManager
 
         if (lineFail < orcaLines.size())
         {
-            // start optimizing from the first colision
+            // start optimizing from the first collision
             newVelocity = RVO.collisionFreeVelocity(orcaLines, lineFail, maxSpeed, 0, newVelocity);
         }
     }

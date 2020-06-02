@@ -3,15 +3,12 @@ package model;
 import model.Constants;
 import agents.*;
 import sim.engine.SimState;
+import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;
 import sim.util.Double2D;
 
 public class Model extends SimState
 {
-    private static final long serialVersionUID = 1L;
-    private Continuous2D      yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
-    private int               numAgents        = 0;
-
     public Model(long seed)
     {
         super(seed);
@@ -90,4 +87,8 @@ public class Model extends SimState
         
         return new Double2D(x, y);
     }
+    
+    private static final long serialVersionUID = 1L;
+    private Continuous2D      yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
+    private int               numAgents        = 0;
 }

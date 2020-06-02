@@ -5,14 +5,9 @@ import clearpath.*;
 import sim.engine.SimState;
 import sim.util.Double2D;
 
+
 public class AgentPeople extends AgentType
 {
-    private static final long serialVersionUID = 1L;
-    private double            velocity;
-    private double            radius;
-    private double            angle;
-    private Line              line;
-
     public AgentPeople(double x, double y)
     {
         super(x, y);
@@ -133,4 +128,10 @@ public class AgentPeople extends AgentType
     {
         return angle;
     }
+    
+    private static final long serialVersionUID = 1L;
+    private double            velocity;
+    private double            radius;
+    private double            angle;
+    private Line              line;
 }
