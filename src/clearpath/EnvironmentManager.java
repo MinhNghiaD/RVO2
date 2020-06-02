@@ -1,5 +1,7 @@
 package clearpath;
 
+import java.util.Vector;
+
 import kdtree.KDTree;
 
 /**
@@ -105,7 +107,7 @@ public class EnvironmentManager
                                               double timeStep,
                                               double maxSpeed,
                                               double neighborDistance,
-                                              int maxNeighbors) 
+                                              int    maxNeighbors) 
     {
         CollisionAvoidanceManager agent = new CollisionAvoidanceManager(position, 
                                                                         velocity, 
@@ -127,13 +129,20 @@ public class EnvironmentManager
     public void doStep() 
     {
         obstaclesTree.update();
-
+/*
         for (CollisionAvoidanceManager agent : obstaclesTree.getAgents())
         {
             agent.update();
         }
-
+*/
         globalTime += timeStep;
+        
+        System.out.println("Glocal controller at " + globalTime);
+    }
+    
+    public Vector<CollisionAvoidanceManager> getAgents()
+    {
+        return obstaclesTree.getAgents();
     }
 
     // TODO: queryVisibility with static obstacle

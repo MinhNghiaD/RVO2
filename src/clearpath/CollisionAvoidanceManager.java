@@ -22,6 +22,9 @@ public class CollisionAvoidanceManager
     {
         this.position         = position.clone();
         this.velocity         = velocity.clone();
+        this.newVelocity      = new Double[2];
+        this.newVelocity[0]   = 0.0;
+        this.newVelocity[1]   = 0.0;
         this.timeHorizon      = timeHorizon;
         this.timeStep         = timeStep;
         this.maxSpeed         = maxSpeed;
@@ -170,6 +173,11 @@ public class CollisionAvoidanceManager
             velocity[i]  = newVelocity[i];
             position[i] += velocity[i] * timeStep;
         }
+    }
+    
+    public void setPreferenceVelocity(double[] prefVelocity)
+    {
+        preferenceVelocity = prefVelocity.clone();
     }
 
     private double     timeHorizon;

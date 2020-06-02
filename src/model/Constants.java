@@ -11,4 +11,5 @@ public final class Constants
     public static int    DISCRETIZATION = 2;
 
     public static int    NUM_AGENT      = 10;
+    public static double PI             = 3.14159265358979323846f;
 }
