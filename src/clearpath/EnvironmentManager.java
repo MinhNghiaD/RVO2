@@ -13,7 +13,7 @@ public class EnvironmentManager
 
     public static final EnvironmentManager init(double timeStep,
                                                 double neighborDistance, 
-                                                int maxNeighbors,
+                                                int    maxNeighbors,
                                                 double timeHorizon,
                                                 double radius, 
                                                 double maxSpeed,
@@ -32,12 +32,14 @@ public class EnvironmentManager
 
     public static final EnvironmentManager getInstance() 
     {
+        assert (instance != null);
+        
         return instance;
     }
 
     private EnvironmentManager(double timeStep, 
                                double neighborDistance,
-                               int maxNeighbors, 
+                               int    maxNeighbors, 
                                double timeHorizon,
                                double radius,
                                double maxSpeed, 
