@@ -12,6 +12,7 @@ public class Test_Schedule
         Model model = new Model(System.currentTimeMillis());
         
         model.start();
+        
         do
         {
             if (!model.schedule.step(model)) 
