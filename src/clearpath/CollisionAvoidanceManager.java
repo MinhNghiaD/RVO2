@@ -3,15 +3,18 @@ package clearpath;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.Vector;
 
 import kdtree.KDNode;
 import kdtree.KDTree;
+import model.Constants;
 
 public class CollisionAvoidanceManager
 {
     CollisionAvoidanceManager(double[] position, 
+                              double[] destination,
                               double[] velocity, 
                               double timeHorizon, 
                               double timeStep,                       
@@ -21,6 +24,7 @@ public class CollisionAvoidanceManager
                               KDTree tree)
     {
         this.position         = position.clone();
+        this.destination      = destination.clone();
         this.velocity         = velocity.clone();
         this.newVelocity      = new Double[2];
         this.newVelocity[0]   = 0.0;
@@ -166,6 +170,7 @@ public class CollisionAvoidanceManager
 
     public void update()
     {
+        setPreferenceVelocity();
         computeNewVelocity();
 
         for (int i = 0; i < 2; ++i)
@@ -175,9 +180,49 @@ public class CollisionAvoidanceManager
         }
     }
     
-    public void setPreferenceVelocity(double[] prefVelocity)
+    private void setPreferenceVelocity()
     {
-        preferenceVelocity = prefVelocity.clone();
+        // TODO: replace this by random generator of MASON for compactible
+        final Random random = new Random();
+        
+        double[] goalVector = RVO.vectorSubstract(destination, position);
+
+        double absSqrGoalVector = RVO.vectorProduct(goalVector, goalVector);
+        
+        if (absSqrGoalVector > 1) 
+        {
+            goalVector = RVO.scalarProduct(goalVector, 1/Math.sqrt(absSqrGoalVector));
+        }
+
+        /*
+         * pivot a little to avoid deadlocks due to perfect symmetry.
+         */
+        final double angle    = random.nextDouble() * 2 * Constants.PI;
+        final double distance = random.nextDouble() * 0.0001;
+
+        goalVector[0] += distance * Math.cos(angle);
+        goalVector[1] += distance * Math.sin(angle);
+                
+        preferenceVelocity = goalVector.clone();
+    }
+    
+    public void setDestination(double[] goal)
+    {
+        destination = goal.clone();
+    }
+    
+    public boolean reachedGoal()
+    {
+        double[] distanceToGoal = RVO.vectorSubstract(position, destination);
+        
+        final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
+        
+        if (sqrDistance > 400) 
+        {
+            return false;
+        }
+        
+        return true;
     }
 
     private double     timeHorizon;
@@ -187,6 +232,7 @@ public class CollisionAvoidanceManager
     private int        maxNeighbors;
 
     private double[]   position;
+    private double[]   destination;
     private double[]   velocity;
     private Double[]   newVelocity;
     private double[]   preferenceVelocity;

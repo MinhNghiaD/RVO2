@@ -21,7 +21,7 @@ public class ScenarioBlock
         do 
         {
             environment.doStep();
-            setPreferredVelocities(environment);
+            
             
             Vector<CollisionAvoidanceManager> agents = environment.getAgents();
             
@@ -53,66 +53,28 @@ public class ScenarioBlock
             {
                 // Agent 1 
                 double[] position1 = {55 + i * 10,  55 + j * 10};
-                environment.addAgent(position1);
                 double[] destination1 = {-75, -75};
-                goals.add(destination1);
-
+                environment.addAgent(position1, destination1);
                 
                 // Agent 2
                 double[] position2 = {-55 - i * 10,  55 + j * 10};
-                environment.addAgent(position2);
                 double[] destination2 = {75, -75};
-                goals.add(destination2);
+                environment.addAgent(position2, destination2);
                 
                 // Agent 3
                 double[] position3 = {55 + i * 10, -55 - j * 10};
-                environment.addAgent(position3);
                 double[] destination3 = {-75, 75};
-                goals.add(destination3);
-
+                environment.addAgent(position3, destination3);
 
                 // Agent 4
                 double[] position4 = {-55 - i * 10, -55 - j * 10};
-                environment.addAgent(position4);
                 double[] destination4 = {75, 75};
-                goals.add(destination4);
+                environment.addAgent(position4, destination4);
+                
             }
         }
         
         return environment;
-    }
-    
-    static private void setPreferredVelocities(EnvironmentManager environment)
-    {
-        /*
-         * Set the preferred velocity to be a vector of unit magnitude (speed) in the
-         * direction of the goal.
-         */
-        
-        Vector<CollisionAvoidanceManager> agents = environment.getAgents();
-        
-        for (int i = 0; i < agents.size(); ++i) 
-        {
-            double[] goalVector = RVO.vectorSubstract(goals.get(i), agents.get(i).getPosition());
-
-            double absSqrGoalVector = RVO.vectorProduct(goalVector, goalVector);
-            
-            if (absSqrGoalVector > 1) 
-            {
-                goalVector = RVO.scalarProduct(goalVector, 1/Math.sqrt(absSqrGoalVector));
-            }
-
-            /*
-             * pivot a little to avoid deadlocks due to perfect symmetry.
-             */
-            final double angle    = random.nextDouble() * 2 * Constants.PI;
-            final double distance = random.nextDouble() * 0.0001;
-
-            goalVector[0] += distance * Math.cos(angle);
-            goalVector[1] += distance * Math.sin(angle);
-            
-            agents.get(i).setPreferenceVelocity(goalVector);
-        }
     }
     
     static private boolean reachedGoal(EnvironmentManager environment)
@@ -121,14 +83,8 @@ public class ScenarioBlock
         
         /* Check if all agents have reached their goals. */
         for (int i = 0; i < agents.size(); ++i) 
-        {
-            double[] distanceToGoal = RVO.vectorSubstract(agents.get(i).getPosition(), goals.get(i));
-            
-            final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
-            
-            //System.out.println("distance from agent " + i + " to is goal: " + sqrDistance);
-            
-            if (sqrDistance > 400) 
+        {   
+            if (! agents.get(i).reachedGoal()) 
             {
                 return false;
             }
@@ -136,9 +92,6 @@ public class ScenarioBlock
 
         return true;
     }
-    
-    static private List<double[]> goals = new ArrayList<>();
-    static private final Random random = new Random();
 }
 
 
