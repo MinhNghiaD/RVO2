@@ -2,6 +2,7 @@ package model;
 
 import model.Constants;
 import agents.*;
+import clearpath.EnvironmentManager;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;
@@ -64,6 +65,19 @@ public class Model extends SimState
     {
         return numAgents--;
     }
+    
+    private void initEnvironment()
+    {
+    /*    
+        environmentData = EnvironmentManager.init(double timeStep,
+                double neighborDistance, 
+                int    maxNeighbors,
+                double timeHorizon,
+                double radius, 
+                double maxSpeed,
+                double[] velocity)
+    */            
+    }
 
     private void addRandomAgents()
     {
@@ -88,7 +102,8 @@ public class Model extends SimState
         return new Double2D(x, y);
     }
     
-    private static final long serialVersionUID = 1L;
-    private Continuous2D      yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
-    private int               numAgents        = 0;
+    private static final long  serialVersionUID = 1L;
+    private Continuous2D       yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
+    private int                numAgents        = 0;
+    private EnvironmentManager environmentData;
 }
