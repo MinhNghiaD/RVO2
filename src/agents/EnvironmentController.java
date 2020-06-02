@@ -22,6 +22,11 @@ public class EnvironmentController implements Steppable
         manager.doStep();
     }
     
+    public EnvironmentManager getEnvironment()
+    {
+        return manager;
+    }
+    
     
     private static final long serialVersionUID = 1L;
     private EnvironmentManager manager;

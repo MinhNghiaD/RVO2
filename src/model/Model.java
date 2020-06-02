@@ -1,7 +1,11 @@
 package model;
 
 import model.Constants;
+
+import java.util.Vector;
+
 import agents.*;
+import clearpath.CollisionAvoidanceManager;
 import clearpath.EnvironmentManager;
 import sim.engine.SimState;
 import sim.engine.Steppable;
@@ -14,8 +18,7 @@ public class Model extends SimState
     {
         super(seed);
         yard.clear();
-        numAgents = 0;
-        // addRandomAgents();
+        numAgents = 0;    
     }
 
     @Override
@@ -23,6 +26,14 @@ public class Model extends SimState
     {
         super.start();
         yard.clear();
+        
+        // schedule EnvironmentController execution at before every step
+        EnvironmentController envController = new EnvironmentController();
+        schedule.addBefore(envController);
+        
+        Vector<CollisionAvoidanceManager> agentControllers = envController.getEnvironment().getAgents();
+        
+        // TODO create agent to content agentControllers
         
         addRandomAgents();
     }
@@ -65,19 +76,6 @@ public class Model extends SimState
     {
         return numAgents--;
     }
-    
-    private void initEnvironment()
-    {
-    /*    
-        environmentData = EnvironmentManager.init(double timeStep,
-                double neighborDistance, 
-                int    maxNeighbors,
-                double timeHorizon,
-                double radius, 
-                double maxSpeed,
-                double[] velocity)
-    */            
-    }
 
     private void addRandomAgents()
     {
@@ -105,5 +103,4 @@ public class Model extends SimState
     private static final long  serialVersionUID = 1L;
     private Continuous2D       yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
     private int                numAgents        = 0;
-    private EnvironmentManager environmentData;
 }

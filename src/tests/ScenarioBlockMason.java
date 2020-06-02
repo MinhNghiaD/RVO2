@@ -1,17 +1,27 @@
 package tests;
 
-
 import java.util.Arrays;
 import java.util.Vector;
+
 import clearpath.CollisionAvoidanceManager;
 import clearpath.EnvironmentManager;
+import model.Model;
+import sim.display.Console;
+import view.View;
 
-public class ScenarioBlock
+public class ScenarioBlockMason
 {
-    // TODO: add obstacles
+ // TODO: add obstacles
     public static void main(String[] args) 
     {
         EnvironmentManager environment = setupScenario();
+        
+        Model   model   = new Model(System.currentTimeMillis());
+        
+        View    gui     = new View(model);
+        Console console = new Console(gui);
+        
+        console.setVisible(true);
         
         do 
         {
@@ -86,5 +96,3 @@ public class ScenarioBlock
         return true;
     }
 }
-
-
