@@ -25,20 +25,14 @@ public class AgentPeople extends AgentType
 
     public void move(Model beings) 
     {
-        double[] velocity = controller.getVelocity();
-
-        synchronized(beings.random) 
-        { 
-            // NOTE: don't use another random generator in order to be compatible with MASON
-            controller.update(beings.random);
-        }
+        controller.update(beings.random);
 
         double[] position = controller.getPosition();
+        double[] velocity = controller.getVelocity();
 
-        x  = beings.getYard().stx(position[0]);
-        y  = beings.getYard().sty(position[1]);
-
-        beings.getYard().setObjectLocation(this, new Double2D(position[0], position[1]));
+        x  = position[0];
+        y  = position[1];
+        beings.getYard().setObjectLocation(this, new Double2D(x, y));
         
         this.angle = angleFromDirection(velocity);
     }
@@ -64,7 +58,6 @@ public class AgentPeople extends AgentType
 
         return res;
     }
-    
     
     private static final long serialVersionUID = 1L;
     private double            angle;

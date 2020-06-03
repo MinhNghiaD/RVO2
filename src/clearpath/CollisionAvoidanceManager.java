@@ -169,7 +169,7 @@ public class CollisionAvoidanceManager
 
     public void update(MersenneTwisterFast random)
     {   
-        setPreferenceVelocity(random);
+        reorient(random);
         computeNewVelocity();
 
         for (int i = 0; i < 2; ++i)
@@ -179,28 +179,29 @@ public class CollisionAvoidanceManager
         }
     }
     
-    private void setPreferenceVelocity(MersenneTwisterFast random)
+    private void reorient(MersenneTwisterFast random)
     {   
-        double[] goalVector = RVO.vectorSubstract(destination, position);
+        preferenceVelocity = RVO.vectorSubstract(destination, position);
 
-        double absSqrGoalVector = RVO.vectorProduct(goalVector, goalVector);
+        double absSqrGoalVector = RVO.vectorProduct(preferenceVelocity, preferenceVelocity);
         
         if (absSqrGoalVector > 1) 
         {
-            goalVector = RVO.scalarProduct(goalVector, 1/Math.sqrt(absSqrGoalVector));
+            preferenceVelocity = RVO.scalarProduct(preferenceVelocity, 1/Math.sqrt(absSqrGoalVector));
         }
 
         /*
          * pivot a little to avoid deadlocks due to perfect symmetry.
          */
-        
-        final double angle    = random.nextGaussian() * 2 * Constants.PI;
-        final double distance = random.nextGaussian() * 1;
-
-        goalVector[0] += distance * Math.cos(angle);
-        goalVector[1] += distance * Math.sin(angle);
-                
-        preferenceVelocity = goalVector.clone();
+        synchronized(random) 
+        { 
+            // NOTE: don't use another random generator in order to be compatible with MASON
+            final double angle    = random.nextGaussian() * 2 * Constants.PI;
+            final double distance = random.nextGaussian() * 1;
+            
+            preferenceVelocity[0] += distance * Math.cos(angle);
+            preferenceVelocity[1] += distance * Math.sin(angle);
+        }
     }
     
     public void setDestination(double[] goal)
