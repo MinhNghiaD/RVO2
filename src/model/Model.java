@@ -81,6 +81,10 @@ public class Model extends SimState
 		switch(nbScenario) {
 		case 0:
 			addAgentInCircle();
+			//Use example for obstacles
+			addObstacle(new Double2D(0,0), 10, 0);
+			addObstacle(new Double2D(20,10), 10, 1);
+			addObstacle(new Double2D(20,10), 10, 2);
 			break;
 		case 1:
 			break;
