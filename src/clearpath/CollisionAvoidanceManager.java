@@ -101,18 +101,14 @@ public class CollisionAvoidanceManager
                         if (RVO.det2D(relativePosition, w) > 0.0f)
                         {
                             /* Project on left leg. */
-                            line.direction[0] = (relativePosition[0] * leg - relativePosition[1] * combinedmaxSpeed)
-                                    / distSq;
-                            line.direction[1] = (relativePosition[1] * leg + relativePosition[0] * combinedmaxSpeed)
-                                    / distSq;
+                            line.direction[0] = (relativePosition[0] * leg - relativePosition[1] * combinedmaxSpeed) / distSq;
+                            line.direction[1] = (relativePosition[1] * leg + relativePosition[0] * combinedmaxSpeed) / distSq;
                         } 
                         else
                         {
                             /* Project on right leg. */
-                            line.direction[0] = -(relativePosition[0] * leg + relativePosition[1] * combinedmaxSpeed)
-                                    / distSq;
-                            line.direction[1] = -(relativePosition[1] * leg - relativePosition[0] * combinedmaxSpeed)
-                                    / distSq;
+                            line.direction[0] = -(relativePosition[0] * leg + relativePosition[1] * combinedmaxSpeed) / distSq;
+                            line.direction[1] = -(relativePosition[1] * leg - relativePosition[0] * combinedmaxSpeed) / distSq;
                         }
 
                         final double dotProduct2 = RVO.vectorProduct(relativeVelocity, line.direction);
