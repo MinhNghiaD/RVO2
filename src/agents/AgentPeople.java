@@ -1,5 +1,6 @@
 package agents;
 
+import model.Constants;
 import model.Model;
 import clearpath.*;
 import sim.engine.SimState;
@@ -139,4 +140,6 @@ public class AgentPeople extends AgentType
     private double            angle;
     //private Line              line;
     private CollisionAvoidanceManager controller;
+    
+    public static double SCALE =  Constants.SCALE_AGENT;
 }
