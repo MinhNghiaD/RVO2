@@ -44,13 +44,27 @@ public class Model extends SimState
     {
         return yard;
     }
-    
+	
+	/**
+	 * @param yard the grid to set
+	 */
+	public void setYard(Continuous2D yard) 
+	{
+		this.yard = yard;
+	}
+	
+	/**
+	 * @return the numAgents
+	 */
+	public int getNumAgents() 
+	{
+		return numAgents;
+	}
 
     public int decrementNumAgents() 
     {
         return numAgents--;
     }
-
     
     private void addAgents(Vector<CollisionAvoidanceManager> agentControllers)
     {
