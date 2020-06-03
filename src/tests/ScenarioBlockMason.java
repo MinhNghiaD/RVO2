@@ -1,9 +1,5 @@
 package tests;
 
-import java.util.Arrays;
-import java.util.Vector;
-
-import clearpath.CollisionAvoidanceManager;
 import clearpath.EnvironmentManager;
 import model.Model;
 import sim.display.Console;
@@ -62,21 +58,5 @@ public class ScenarioBlockMason
         }
         
         return environment;
-    }
-    
-    static private boolean reachedGoal(EnvironmentManager environment)
-    {
-        Vector<CollisionAvoidanceManager> agents = environment.getAgents();
-        
-        /* Check if all agents have reached their goals. */
-        for (int i = 0; i < agents.size(); ++i) 
-        {   
-            if (! agents.get(i).reachedGoal()) 
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
