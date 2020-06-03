@@ -7,6 +7,7 @@ import java.util.Vector;
 import agents.*;
 import clearpath.CollisionAvoidanceManager;
 import clearpath.EnvironmentManager;
+import sim.engine.ParallelSequence;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;
@@ -33,9 +34,7 @@ public class Model extends SimState
         
         Vector<CollisionAvoidanceManager> agentControllers = envController.getEnvironment().getAgents();
         
-        // TODO create agent to content agentControllers
-        
-        addRandomAgents();
+        addAgents(agentControllers);
     }
 
     /**
@@ -53,35 +52,55 @@ public class Model extends SimState
     }
 
     
-    
-    
-    
-    
-    
-    
-    
-    private void addRandomAgents()
+    private void addAgents(Vector<CollisionAvoidanceManager> agentControllers)
     {
-        for (int i = 0; i < Constants.NUM_AGENT; i++)
+        if (agentControllers == null || agentControllers.size() == 0)
         {
-            Double2D position   = randomPosition();
-            double angle        = this.random.nextInt(360);
-            AgentType e         = new AgentPeople(position.x, position.y, angle);
-            
-            yard.setObjectLocation(e, position);
-            schedule.scheduleRepeating(e);
-            
-            numAgents++;
+            System.out.println("agents controllers are null");
+            return;
         }
-    }
-
-    private Double2D randomPosition() 
-    {
-        double x = this.random.nextInt(Constants.GRID_SIZE);
-        double y = this.random.nextInt(Constants.GRID_SIZE);
         
-        return new Double2D(x, y);
+        numAgents = agentControllers.size();
+        
+        Steppable[] agents = new Steppable[numAgents];
+        
+        for (int i = 0; i < numAgents; ++i)
+        {
+            agents[i] = new AgentPeople(agentControllers.get(i));
+            
+            Double2D position = new Double2D(agentControllers.get(i).getPosition()[0],
+                                             agentControllers.get(i).getPosition()[1]);
+            
+            yard.setObjectLocation(agents[i], position);
+        }
+        
+        ParallelSequence parellelAgents = new ParallelSequence(agents);
+        
+        schedule.scheduleRepeating(parellelAgents);
     }
+    
+//    private void addRandomAgents()
+//    {
+//        for (int i = 0; i < Constants.NUM_AGENT; i++)
+//        {
+//            Double2D position   = randomPosition();
+//            double angle        = this.random.nextInt(360);
+//            AgentType e         = new AgentPeople(position.x, position.y, angle);
+//            
+//            yard.setObjectLocation(e, position);
+//            schedule.scheduleRepeating(e);
+//            
+//            numAgents++;
+//        }
+//    }
+//
+//    private Double2D randomPosition() 
+//    {
+//        double x = this.random.nextInt(Constants.GRID_SIZE);
+//        double y = this.random.nextInt(Constants.GRID_SIZE);
+//        
+//        return new Double2D(x, y);
+//    }
     
     private static final long  serialVersionUID = 1L;
     private Continuous2D       yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);

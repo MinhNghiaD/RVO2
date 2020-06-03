@@ -22,22 +22,6 @@ public class ScenarioBlockMason
         Console console = new Console(gui);
         
         console.setVisible(true);
-        
-        do 
-        {
-            environment.doStep();
-            
-            Vector<CollisionAvoidanceManager> agents = environment.getAgents();
-            
-            for (int i = 0; i < agents.size(); i++)
-            {
-                agents.get(i).update();
-                System.out.println("agent " + i + "move to : " + Arrays.toString(agents.get(i).getPosition()));
-            }
-        }
-        while (!reachedGoal(environment));
-        
-        System.out.println("Finish !!!");
     }
     
     static private EnvironmentManager setupScenario()
