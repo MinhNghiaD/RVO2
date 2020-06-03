@@ -1,9 +1,7 @@
 package clearpath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -12,7 +10,6 @@ import ec.util.MersenneTwisterFast;
 import kdtree.KDNode;
 import kdtree.KDTree;
 import model.Constants;
-import sim.engine.SimState;
 
 public class CollisionAvoidanceManager
 {
@@ -50,6 +47,37 @@ public class CollisionAvoidanceManager
     public double[] getVelocity() 
     {
         return velocity.clone();
+    }
+    
+    public void setDestination(double[] goal)
+    {
+        destination = goal.clone();
+    }
+    
+    public boolean reachedGoal()
+    {
+        double[] distanceToGoal = RVO.vectorSubstract(position, destination);
+        
+        final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
+        
+        if (sqrDistance > 400) 
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public void update(MersenneTwisterFast random)
+    {   
+        orient(random);
+        computeNewVelocity();
+
+        for (int i = 0; i < 2; ++i)
+        {
+            velocity[i]  = newVelocity[i];
+            position[i] += velocity[i] * timeStep;
+        }
     }
 
     private void addNeighborOrcaLine(TreeMap<Double, Vector<KDNode>> neighbors) 
@@ -101,18 +129,14 @@ public class CollisionAvoidanceManager
                         if (RVO.det2D(relativePosition, w) > 0.0f)
                         {
                             /* Project on left leg. */
-                            line.direction[0] = (relativePosition[0] * leg - relativePosition[1] * combinedmaxSpeed)
-                                    / distSq;
-                            line.direction[1] = (relativePosition[1] * leg + relativePosition[0] * combinedmaxSpeed)
-                                    / distSq;
+                            line.direction[0] = (relativePosition[0] * leg - relativePosition[1] * combinedmaxSpeed) / distSq;
+                            line.direction[1] = (relativePosition[1] * leg + relativePosition[0] * combinedmaxSpeed) / distSq;
                         } 
                         else
                         {
                             /* Project on right leg. */
-                            line.direction[0] = -(relativePosition[0] * leg + relativePosition[1] * combinedmaxSpeed)
-                                    / distSq;
-                            line.direction[1] = -(relativePosition[1] * leg - relativePosition[0] * combinedmaxSpeed)
-                                    / distSq;
+                            line.direction[0] = -(relativePosition[0] * leg + relativePosition[1] * combinedmaxSpeed) / distSq;
+                            line.direction[1] = -(relativePosition[1] * leg - relativePosition[0] * combinedmaxSpeed) / distSq;
                         }
 
                         final double dotProduct2 = RVO.vectorProduct(relativeVelocity, line.direction);
@@ -171,59 +195,30 @@ public class CollisionAvoidanceManager
 
     // TODO: implement static obstacle and function getClosestObstacles()
 
-    public void update(MersenneTwisterFast random)
-    {   
-        setPreferenceVelocity(random);
-        computeNewVelocity();
-
-        for (int i = 0; i < 2; ++i)
-        {
-            velocity[i]  = newVelocity[i];
-            position[i] += velocity[i] * timeStep;
-        }
-    }
     
-    private void setPreferenceVelocity(MersenneTwisterFast random)
+    private void orient(MersenneTwisterFast random)
     {   
-        double[] goalVector = RVO.vectorSubstract(destination, position);
+        preferenceVelocity = RVO.vectorSubstract(destination, position);
 
-        double absSqrGoalVector = RVO.vectorProduct(goalVector, goalVector);
+        double absSqrGoalVector = RVO.vectorProduct(preferenceVelocity, preferenceVelocity);
         
         if (absSqrGoalVector > 1) 
         {
-            goalVector = RVO.scalarProduct(goalVector, 1/Math.sqrt(absSqrGoalVector));
+            preferenceVelocity = RVO.scalarProduct(preferenceVelocity, 1/Math.sqrt(absSqrGoalVector));
         }
 
         /*
          * pivot a little to avoid deadlocks due to perfect symmetry.
          */
-        
-        final double angle    = random.nextGaussian() * 2 * Constants.PI;
-        final double distance = random.nextGaussian() * 1;
-
-        goalVector[0] += distance * Math.cos(angle);
-        goalVector[1] += distance * Math.sin(angle);
-                
-        preferenceVelocity = goalVector.clone();
-    }
-    
-    public void setDestination(double[] goal)
-    {
-        destination = goal.clone();
-    }
-    
-    public boolean reachedGoal()
-    {
-        double[] distanceToGoal = RVO.vectorSubstract(position, destination);
-        
-        final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
-        
-        if (sqrDistance > 400) 
-        {
-            return false;
+        synchronized(random) 
+        { 
+            // NOTE: don't use another random generator in order to be compatible with MASON
+            final double angle    = random.nextGaussian() * 2 * Constants.PI;
+            final double distance = random.nextGaussian() * 1;
+            
+            preferenceVelocity[0] += distance * Math.cos(angle);
+            preferenceVelocity[1] += distance * Math.sin(angle);
         }
-        
-        return true;
     }
 
     private double     timeHorizon;

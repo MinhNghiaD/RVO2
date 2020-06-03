@@ -44,13 +44,27 @@ public class Model extends SimState
     {
         return yard;
     }
-    
+	
+	/**
+	 * @param yard the grid to set
+	 */
+	public void setYard(Continuous2D yard) 
+	{
+		this.yard = yard;
+	}
+	
+	/**
+	 * @return the numAgents
+	 */
+	public int getNumAgents() 
+	{
+		return numAgents;
+	}
 
     public int decrementNumAgents() 
     {
         return numAgents--;
     }
-
     
     private void addAgents(Vector<CollisionAvoidanceManager> agentControllers)
     {
@@ -80,29 +94,6 @@ public class Model extends SimState
 //        Sequence sequenceAgent = new Sequence(agents);
 //        schedule.scheduleRepeating(sequenceAgent);
     }
-    
-//    private void addRandomAgents()
-//    {
-//        for (int i = 0; i < Constants.NUM_AGENT; i++)
-//        {
-//            Double2D position   = randomPosition();
-//            double angle        = this.random.nextInt(360);
-//            AgentType e         = new AgentPeople(position.x, position.y, angle);
-//            
-//            yard.setObjectLocation(e, position);
-//            schedule.scheduleRepeating(e);
-//            
-//            numAgents++;
-//        }
-//    }
-//
-//    private Double2D randomPosition() 
-//    {
-//        double x = this.random.nextInt(Constants.GRID_SIZE);
-//        double y = this.random.nextInt(Constants.GRID_SIZE);
-//        
-//        return new Double2D(x, y);
-//    }
     
     private static final long  serialVersionUID = 1L;
     private Continuous2D       yard             = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
