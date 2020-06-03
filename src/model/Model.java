@@ -1,6 +1,9 @@
 package model;
 
 import model.Constants;
+
+import java.util.ArrayList;
+
 import agents.*;
 import sim.engine.SimState;
 import sim.field.continuous.Continuous2D;
@@ -11,6 +14,7 @@ public class Model extends SimState
 	private static final long serialVersionUID = 1L;
 	private Continuous2D yard = new Continuous2D(Constants.DISCRETIZATION,Constants.GRID_SIZE,Constants.GRID_SIZE);
 	private int numAgents = 0;
+	private ArrayList<Obstacle> obstacles;
 	
 	public Model(long seed) 
 	{
@@ -26,6 +30,9 @@ public class Model extends SimState
 		yard.clear();
 		int scenario = this.random.nextInt(4);
 		addRandomAgents(0);
+		for (Obstacle obs : this.obstacles) {
+			addObstacle(obs.getPosition(), obs.getTaille(), obs.getType());
+		}
 	}
 	
 	/**
@@ -42,6 +49,20 @@ public class Model extends SimState
 	public void setYard(Continuous2D yard) 
 	{
 		this.yard = yard;
+	}
+	
+	/**
+	 * @return the obstacles ArrayList
+	 */
+	public ArrayList<Obstacle> getObstacles() {
+		return obstacles;
+	}
+
+	/**
+	 * @param obstacles the obstacles ArrayList to set
+	 */
+	public void setObstacles(ArrayList<Obstacle> obstacles) {
+		this.obstacles = obstacles;
 	}
 	
 	/**
@@ -150,13 +171,6 @@ public class Model extends SimState
 			}	
 			break;
 		}
-	}
-	
-	private void testObstacles() {
-		//Use example for obstacles
-		addObstacle(new Double2D(0,0), 10, 0);
-		addObstacle(new Double2D(20,10), 10, 1);
-		addObstacle(new Double2D(20,10), 10, 2);
 	}
 		
 	private Double2D randomPosition(double radius, Double2D center) {
