@@ -14,7 +14,7 @@ public class ScenarioBlockMason
  // TODO: add obstacles
     public static void main(String[] args) 
     {
-        EnvironmentManager environment = setupScenario();
+        setupScenario();
         
         Model   model   = new Model(System.currentTimeMillis());
         
@@ -29,7 +29,7 @@ public class ScenarioBlockMason
         double[] defaultVelocity = {0, 0};
         
         /* Specify the default parameters for agents that are subsequently added. */
-        EnvironmentManager environment = EnvironmentManager.init(0.25, 15, 10, 5, 2, 2, defaultVelocity);
+        EnvironmentManager environment = EnvironmentManager.init(0.25, 15, 10, 5, 0.5, 0.5, defaultVelocity);
         
         /*
          * Add agents, specifying their start position, and store their goals on the
