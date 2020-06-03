@@ -1,9 +1,13 @@
 package tests;
 
+import java.util.ArrayList;
+
 import clearpath.EnvironmentManager;
 import model.Constants;
 import model.Model;
+import model.Obstacle;
 import sim.display.Console;
+import sim.util.Double2D;
 import view.View;
 
 public class ScenarioBlockMason
@@ -14,6 +18,7 @@ public class ScenarioBlockMason
         setupScenario();
         
         Model   model   = new Model(System.currentTimeMillis());
+        model.setObstacles(addObstacles());
         
         View    gui     = new View(model);
         Console console = new Console(gui);
@@ -21,7 +26,22 @@ public class ScenarioBlockMason
         console.setVisible(true);
     }
     
-    static private EnvironmentManager setupScenario()
+    
+    /**
+     * Create a list of obstacles with defined positions and defined types
+     * 
+     * @return obstacles
+     */
+    private static ArrayList<Obstacle> addObstacles() {
+        ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+		obstacles.add(new Obstacle(new Double2D(0,0), 10, 0));
+		obstacles.add(new Obstacle(new Double2D(20,10), 10, 1));
+		obstacles.add(new Obstacle(new Double2D(20,10), 10, 2));
+		
+		return obstacles;
+}
+
+	static private EnvironmentManager setupScenario()
     {   
         /* Specify the default parameters for agents that are subsequently added. */
         EnvironmentManager environment = EnvironmentManager.init(Constants.TIME_STEP, Constants.DIST_NEIGHBOR, Constants.MAX_NEIGHBOR,Constants.TIME_HORIZON, Constants.SCALE_AGENT, Constants.MAX_SPEED, Constants.VELOCITY);
