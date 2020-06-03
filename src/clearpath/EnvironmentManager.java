@@ -1,8 +1,6 @@
 package clearpath;
 
-import java.util.Random;
 import java.util.Vector;
-
 import kdtree.KDTree;
 
 /**
@@ -12,8 +10,6 @@ import kdtree.KDTree;
  */
 public class EnvironmentManager
 {
-    private static EnvironmentManager instance = null;
-
     // construct environment
     public static final EnvironmentManager init()
     {
@@ -47,35 +43,6 @@ public class EnvironmentManager
         assert (instance != null);
         
         return instance;
-    }
-    
-    // default constructor
-    private EnvironmentManager()
-    {
-        globalTime    = 0;
-        timeStep      = 0;
-        obstaclesTree = new KDTree(2);
-    }
-
-    private EnvironmentManager(double timeStep, 
-                               double neighborDistance,
-                               int    maxNeighbors, 
-                               double timeHorizon,
-                               double radius,
-                               double maxSpeed, 
-                               double[] velocity)
-    {
-        this.timeStep         = timeStep;
-        this.globalTime       = 0;
-        this.neighborDistance = neighborDistance;
-        this.maxNeighbors     = maxNeighbors;
-        this.timeHorizon      = timeHorizon;
-        this.radius           = radius;
-        this.maxSpeed         = maxSpeed;
-        this.velocity         = velocity.clone();
-
-        obstaclesTree         = new KDTree(2);
-
     }
     
     public void setTimeStep(double period)
@@ -133,35 +100,65 @@ public class EnvironmentManager
     public void doStep() 
     {
         obstaclesTree.update();
-/*
-        for (CollisionAvoidanceManager agent : obstaclesTree.getAgents())
-        {
-            agent.update();
-        }
-*/
+
         globalTime += timeStep;
         
         //System.out.println("Global controller at " + globalTime);
+    }
+    
+    public double getAgentRadius()
+    {
+        return radius;
     }
     
     public Vector<CollisionAvoidanceManager> getAgents()
     {
         return obstaclesTree.getAgents();
     }
+    
+    // default constructor
+    private EnvironmentManager()
+    {
+        globalTime    = 0;
+        timeStep      = 0;
+        obstaclesTree = new KDTree(2);
+    }
+
+    private EnvironmentManager(double timeStep, 
+                               double neighborDistance,
+                               int    maxNeighbors, 
+                               double timeHorizon,
+                               double radius,
+                               double maxSpeed, 
+                               double[] velocity)
+    {
+        this.timeStep         = timeStep;
+        this.globalTime       = 0;
+        this.neighborDistance = neighborDistance;
+        this.maxNeighbors     = maxNeighbors;
+        this.timeHorizon      = timeHorizon;
+        this.radius           = radius;
+        this.maxSpeed         = maxSpeed;
+        this.velocity         = velocity.clone();
+
+        obstaclesTree         = new KDTree(2);
+    }
 
     // TODO: queryVisibility with static obstacle
-
+    
     // Default parameters of simulation
-    double         timeStep;
-    double         globalTime;
-    double         neighborDistance;
-    int            maxNeighbors;
-    double         timeHorizon;
+    private double   timeStep;
+    private double   globalTime;
+    private double   neighborDistance;
+    private int      maxNeighbors;
+    private double   timeHorizon;
     // double timeHorizonObst;
-    double         radius;
-    double         maxSpeed;
-    double[]       velocity;
+    private double   radius;
+    private double   maxSpeed;
+    private double[] velocity;
 
     // Partition agents position in space using KD-Tree
     private KDTree obstaclesTree;
+    
+    private static EnvironmentManager instance = null;
 }

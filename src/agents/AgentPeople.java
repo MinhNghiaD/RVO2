@@ -26,119 +26,23 @@ public class AgentPeople extends AgentType
 
     public void move(Model beings) 
     {
-        double[] velocity = controller.getVelocity();
-
-        synchronized(beings.random) 
-        { 
-            // NOTE: don't use another random generator in order to be compatible with MASON
-            controller.update(beings.random);
-        }
+        controller.update(beings.random);
 
         double[] position = controller.getPosition();
-
-        x  = beings.getYard().stx(position[0]);
-        y  = beings.getYard().sty(position[1]);
-
-        beings.getYard().setObjectLocation(this, new Double2D(position[0], position[1]));
+        x  = position[0];
+        y  = position[1];
         
-        this.angle = angleFromDirection(velocity);
+        beings.getYard().setObjectLocation(this, new Double2D(x, y));
     }
     
     public double getAngle()
     {
-        return angle;
+        double[] velocity = controller.getVelocity();
+        
+        return Math.atan2(velocity[1], velocity[0]);
     }
-    
-
-    /**
-     * Get radian angle from agent's position
-     * 
-     * @param y
-     * @param x
-     * @param currY
-     * @param currX
-     * @return
-     */
-    public static Double angleFromDirection(double[] velocity) 
-    {
-        double res = Math.atan2(velocity[1], velocity[0]);
-
-        return res;
-    }
-    
-    public AgentPeople(double x, double y)
-    {
-        super(x, y);
-    }
-
-//    public AgentPeople(double x, double y, double angle)
-//    {
-//        super(x, y);
-//
-//        this.angle    = getRadianAngle(angle);
-//
-//        Double2D direction2D = directionFromAngle(angle);
-//
-//        double[] point     = { x, y };
-//        double[] direction = { direction2D.x, direction2D.y };
-//        this.line          = new Line(point, direction);
-//    }
-//
-//    public AgentPeople(double sourceX, 
-//                       double sourceY, 
-//                       double directionX,
-//                       double directionY)
-//    {
-//        super(sourceX, sourceY);
-//        
-//        double[] point     = { sourceX, sourceY };
-//        double[] direction = { directionX, directionY };
-//        this.line          = new Line(point, direction);
-//    }
-//    
-//    /**
-//     * Ensure angle is within 0-360 degrees
-//     * 
-//     * @param angle
-//     * @return modulated angle
-//     */
-//    private static double clampAngle(double angle) 
-//    {
-//        return angle % 360;
-//    }
-//
-//    /**
-//     * Degrees to radians angle
-//     * 
-//     * @param angle
-//     * @return
-//     */
-//    private double getRadianAngle(double angle) 
-//    {
-//        return clampAngle(angle) / (2 * 3.14);
-//    }
-//
-//    /**
-//     * Turn 360 degrees angle into discrete direction
-//     * 
-//     * @param angle in degrees
-//     * @return direction in (x,y)
-//     */
-//    private Double2D directionFromAngle(double angle) 
-//    {
-//        angle = clampAngle(angle);
-//        
-//        Double2D[] directions = { new Double2D(0, -1), new Double2D(1, -1), new Double2D(1, 0), new Double2D(1, 1), new Double2D(0, 1),  
-//                                  new Double2D(-1, 1), new Double2D(-1, 0), new Double2D(-1, -1), new Double2D(0, -1), };
-//
-//        return directions[(int) Math.round(angle / 45)];
-//    }
-    
-    
     
     private static final long serialVersionUID = 1L;
-    private double            angle;
-    //private Line              line;
     private CollisionAvoidanceManager controller;
     
     public static double SCALE =  Constants.SCALE_AGENT;
