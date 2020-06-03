@@ -29,7 +29,7 @@ public class ScenarioBlockMason
         double[] defaultVelocity = {0, 0};
         
         /* Specify the default parameters for agents that are subsequently added. */
-        EnvironmentManager environment = EnvironmentManager.init(0.25, 15, 10, 5, 0.5, 0.5, defaultVelocity);
+        EnvironmentManager environment = EnvironmentManager.init(0.25, 15, 10, 5, 0.5, 1, defaultVelocity);
         
         /*
          * Add agents, specifying their start position, and store their goals on the
@@ -40,22 +40,22 @@ public class ScenarioBlockMason
             for (int j = 0; j < 5; ++j) 
             {
                 // Agent 1 
-                double[] position1 = {55 + i * 10,  55 + j * 10};
+                double[] position1 = {55 + i * 1,  55 + j * 1};
                 double[] destination1 = {-75, -75};
                 environment.addAgent(position1, destination1);
                 
                 // Agent 2
-                double[] position2 = {-55 - i * 10,  55 + j * 10};
+                double[] position2 = {-55 - i * 1,  55 + j * 1};
                 double[] destination2 = {75, -75};
                 environment.addAgent(position2, destination2);
                 
                 // Agent 3
-                double[] position3 = {55 + i * 10, -55 - j * 10};
+                double[] position3 = {55 + i * 1, -55 - j * 1};
                 double[] destination3 = {-75, 75};
                 environment.addAgent(position3, destination3);
 
                 // Agent 4
-                double[] position4 = {-55 - i * 10, -55 - j * 10};
+                double[] position4 = {-55 - i * 1, -55 - j * 1};
                 double[] destination4 = {75, 75};
                 environment.addAgent(position4, destination4);
             }
