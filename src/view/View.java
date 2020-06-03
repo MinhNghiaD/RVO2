@@ -78,6 +78,7 @@ public class View extends GUIState
 						{
 							paint = Color.DARK_GRAY;
                         	filled = true;
+                        	scale = Constants.SCALE_AGENT;
                     		super.draw(object, graphics, info);
 						}
 					}
