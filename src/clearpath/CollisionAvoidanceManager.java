@@ -1,9 +1,7 @@
 package clearpath;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -12,7 +10,6 @@ import ec.util.MersenneTwisterFast;
 import kdtree.KDNode;
 import kdtree.KDTree;
 import model.Constants;
-import sim.engine.SimState;
 
 public class CollisionAvoidanceManager
 {
@@ -50,6 +47,37 @@ public class CollisionAvoidanceManager
     public double[] getVelocity() 
     {
         return velocity.clone();
+    }
+    
+    public void setDestination(double[] goal)
+    {
+        destination = goal.clone();
+    }
+    
+    public boolean reachedGoal()
+    {
+        double[] distanceToGoal = RVO.vectorSubstract(position, destination);
+        
+        final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
+        
+        if (sqrDistance > 400) 
+        {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public void update(MersenneTwisterFast random)
+    {   
+        orient(random);
+        computeNewVelocity();
+
+        for (int i = 0; i < 2; ++i)
+        {
+            velocity[i]  = newVelocity[i];
+            position[i] += velocity[i] * timeStep;
+        }
     }
 
     private void addNeighborOrcaLine(TreeMap<Double, Vector<KDNode>> neighbors) 
@@ -167,19 +195,8 @@ public class CollisionAvoidanceManager
 
     // TODO: implement static obstacle and function getClosestObstacles()
 
-    public void update(MersenneTwisterFast random)
-    {   
-        reorient(random);
-        computeNewVelocity();
-
-        for (int i = 0; i < 2; ++i)
-        {
-            velocity[i]  = newVelocity[i];
-            position[i] += velocity[i] * timeStep;
-        }
-    }
     
-    private void reorient(MersenneTwisterFast random)
+    private void orient(MersenneTwisterFast random)
     {   
         preferenceVelocity = RVO.vectorSubstract(destination, position);
 
@@ -202,25 +219,6 @@ public class CollisionAvoidanceManager
             preferenceVelocity[0] += distance * Math.cos(angle);
             preferenceVelocity[1] += distance * Math.sin(angle);
         }
-    }
-    
-    public void setDestination(double[] goal)
-    {
-        destination = goal.clone();
-    }
-    
-    public boolean reachedGoal()
-    {
-        double[] distanceToGoal = RVO.vectorSubstract(position, destination);
-        
-        final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
-        
-        if (sqrDistance > 400) 
-        {
-            return false;
-        }
-        
-        return true;
     }
 
     private double     timeHorizon;

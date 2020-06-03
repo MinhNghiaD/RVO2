@@ -110,7 +110,6 @@ public class View extends GUIState
 		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();
 	}
-
 	
 	public Object getSimulationInspectedObject()
 	{
