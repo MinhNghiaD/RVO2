@@ -12,6 +12,7 @@ public class ScenarioBlock
     public static void main(String[] args) 
     {
         EnvironmentManager environment = setupScenario();
+        int nbStep = 0;
         
         do 
         {
@@ -24,10 +25,12 @@ public class ScenarioBlock
                 agents.get(i).update();
                 System.out.println("agent " + i + "move to : " + Arrays.toString(agents.get(i).getPosition()));
             }
+            
+            nbStep++;
         }
         while (!reachedGoal(environment));
         
-        System.out.println("Finish !!!");
+        System.out.println("Finish with "+ nbStep + " !!!");
     }
     
     static private EnvironmentManager setupScenario()
