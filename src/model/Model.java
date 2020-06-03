@@ -6,8 +6,8 @@ import java.util.Vector;
 
 import agents.*;
 import clearpath.CollisionAvoidanceManager;
-import clearpath.EnvironmentManager;
 import sim.engine.ParallelSequence;
+import sim.engine.Sequence;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;
@@ -75,8 +75,10 @@ public class Model extends SimState
         }
         
         ParallelSequence parellelAgents = new ParallelSequence(agents);
-        
         schedule.scheduleRepeating(parellelAgents);
+        
+//        Sequence sequenceAgent = new Sequence(agents);
+//        schedule.scheduleRepeating(sequenceAgent);
     }
     
 //    private void addRandomAgents()

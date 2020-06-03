@@ -1,5 +1,6 @@
 package clearpath;
 
+import java.util.Random;
 import java.util.Vector;
 
 import kdtree.KDTree;
@@ -140,7 +141,7 @@ public class EnvironmentManager
 */
         globalTime += timeStep;
         
-        System.out.println("Glocal controller at " + globalTime);
+        //System.out.println("Global controller at " + globalTime);
     }
     
     public Vector<CollisionAvoidanceManager> getAgents()

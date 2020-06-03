@@ -2,9 +2,11 @@ package tests;
 
 
 import java.util.Arrays;
+import java.util.Random;
 import java.util.Vector;
 import clearpath.CollisionAvoidanceManager;
 import clearpath.EnvironmentManager;
+import ec.util.MersenneTwisterFast;
 
 public class ScenarioBlock
 {
@@ -22,11 +24,11 @@ public class ScenarioBlock
             
             for (int i = 0; i < agents.size(); i++)
             {
-                agents.get(i).update();
+                agents.get(i).update(random);
                 System.out.println("agent " + i + "move to : " + Arrays.toString(agents.get(i).getPosition()));
             }
             
-            nbStep++;
+            System.out.println("Step "+ nbStep++ + " :");
         }
         while (!reachedGoal(environment));
         
@@ -88,6 +90,8 @@ public class ScenarioBlock
 
         return true;
     }
+    
+    static final MersenneTwisterFast random = new MersenneTwisterFast(System.currentTimeMillis());
 }
 
 

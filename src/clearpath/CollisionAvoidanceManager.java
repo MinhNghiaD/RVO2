@@ -7,9 +7,12 @@ import java.util.Random;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import ec.util.MersenneTwisterFast;
+
 import kdtree.KDNode;
 import kdtree.KDTree;
 import model.Constants;
+import sim.engine.SimState;
 
 public class CollisionAvoidanceManager
 {
@@ -168,9 +171,9 @@ public class CollisionAvoidanceManager
 
     // TODO: implement static obstacle and function getClosestObstacles()
 
-    public void update()
-    {
-        setPreferenceVelocity();
+    public void update(MersenneTwisterFast random)
+    {   
+        setPreferenceVelocity(random);
         computeNewVelocity();
 
         for (int i = 0; i < 2; ++i)
@@ -180,11 +183,8 @@ public class CollisionAvoidanceManager
         }
     }
     
-    private void setPreferenceVelocity()
-    {
-        // TODO: replace this by random generator of MASON for compactible
-        final Random random = new Random();
-        
+    private void setPreferenceVelocity(MersenneTwisterFast random)
+    {   
         double[] goalVector = RVO.vectorSubstract(destination, position);
 
         double absSqrGoalVector = RVO.vectorProduct(goalVector, goalVector);
@@ -197,8 +197,9 @@ public class CollisionAvoidanceManager
         /*
          * pivot a little to avoid deadlocks due to perfect symmetry.
          */
-        final double angle    = random.nextDouble() * 2 * Constants.PI;
-        final double distance = random.nextDouble() * 0.0001;
+        
+        final double angle    = random.nextGaussian() * 2 * Constants.PI;
+        final double distance = random.nextGaussian() * 1;
 
         goalVector[0] += distance * Math.cos(angle);
         goalVector[1] += distance * Math.sin(angle);
@@ -240,5 +241,4 @@ public class CollisionAvoidanceManager
     // constrain lines
     private List<Line> orcaLines;
     private KDTree     obstaclesTree;
-
 }

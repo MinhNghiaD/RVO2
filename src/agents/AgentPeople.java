@@ -26,8 +26,12 @@ public class AgentPeople extends AgentType
     public void move(Model beings) 
     {
         double[] velocity = controller.getVelocity();
-        
-        controller.update();
+
+        synchronized(beings.random) 
+        { 
+            // NOTE: don't use another random generator in order to be compatible with MASON
+            controller.update(beings.random);
+        }
 
         double[] position = controller.getPosition();
 
