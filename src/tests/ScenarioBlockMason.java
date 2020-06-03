@@ -1,6 +1,7 @@
 package tests;
 
 import clearpath.EnvironmentManager;
+import model.Constants;
 import model.Model;
 import sim.display.Console;
 import view.View;
@@ -35,24 +36,31 @@ public class ScenarioBlockMason
         {
             for (int j = 0; j < 5; ++j) 
             {
+                /** 
+                 * Grid view
+                 * 
+                 * Agent 4          Agent 3
+                 * Agent 2          Agent 1
+                 * 
+                 */
                 // Agent 1 
-                double[] position1 = {55 + i * 1,  55 + j * 1};
-                double[] destination1 = {-75, -75};
+                double[] position1 = {Constants.GRID_SIZE * 0.75 + i * 1,  Constants.GRID_SIZE * 0.75 + j * 1};
+                double[] destination1 = {Constants.GRID_SIZE *  0.1, Constants.GRID_SIZE *  0.1};
                 environment.addAgent(position1, destination1);
                 
                 // Agent 2
-                double[] position2 = {-55 - i * 1,  55 + j * 1};
-                double[] destination2 = {75, -75};
+                double[] position2 = {Constants.GRID_SIZE *  0.25  - i * 1,  Constants.GRID_SIZE * 0.75 + j * 1};
+                double[] destination2 = {Constants.GRID_SIZE *  0.9,Constants.GRID_SIZE *  0.1};
                 environment.addAgent(position2, destination2);
                 
                 // Agent 3
-                double[] position3 = {55 + i * 1, -55 - j * 1};
-                double[] destination3 = {-75, 75};
+                double[] position3 = {Constants.GRID_SIZE * 0.75 + i * 1, Constants.GRID_SIZE * 0.25 - j * 1};
+                double[] destination3 = {Constants.GRID_SIZE *  0.1, Constants.GRID_SIZE *  0.9};
                 environment.addAgent(position3, destination3);
 
                 // Agent 4
-                double[] position4 = {-55 - i * 1, -55 - j * 1};
-                double[] destination4 = {75, 75};
+                double[] position4 = {Constants.GRID_SIZE *  0.25  - i * 1, Constants.GRID_SIZE *  0.25  - j * 1};
+                double[] destination4 = {Constants.GRID_SIZE *  0.9, Constants.GRID_SIZE *  0.9};
                 environment.addAgent(position4, destination4);
             }
         }
