@@ -67,7 +67,8 @@ public class View extends GUIState {
 					private static final long serialVersionUID = 1L;
 
 					public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
-						paint = Color.DARK_GRAY;
+						AgentPeople a = (AgentPeople) object;
+						paint = a.getColorType();
 						filled = true;
 						scale = Constants.SCALE_AGENT;
 						super.draw(object, graphics, info);

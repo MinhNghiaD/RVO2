@@ -20,8 +20,9 @@ public class CollisionAvoidanceManager
                               double timeStep,                       
                               double maxSpeed, 
                               double neighborDistance,
-                              int    maxNeighbors, 
-                              KDTree tree)
+                              int    maxNeighbors,
+                              KDTree tree,
+                              int 	 type)
     {
         this.position         = position.clone();
         this.destination      = destination.clone();
@@ -37,6 +38,8 @@ public class CollisionAvoidanceManager
 
         this.orcaLines        = new ArrayList<Line>();
         this.obstaclesTree    = tree;
+        
+        this.type			  = type;
     }
 
     public double[] getPosition() 
@@ -49,7 +52,11 @@ public class CollisionAvoidanceManager
         return velocity.clone();
     }
     
-    public void setDestination(double[] goal)
+    public int getType() {
+		return type;
+	}
+
+	public void setDestination(double[] goal)
     {
         destination = goal.clone();
     }
@@ -236,4 +243,7 @@ public class CollisionAvoidanceManager
     // constrain lines
     private List<Line> orcaLines;
     private KDTree     obstaclesTree;
+    
+    // type of agent
+    private int		   type;
 }

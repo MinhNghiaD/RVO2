@@ -1,8 +1,6 @@
 package main;
 
 import sim.display.Console;
-import sim.engine.SimState;
-import sim.engine.Steppable;
 import view.View;
 import clearpath.EnvironmentManager;
 import model.Model;
