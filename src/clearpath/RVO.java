@@ -174,7 +174,7 @@ public class RVO
         {
             // Optimize closest point.
             double scalar = vectorProduct(lines.get(lineID).direction,
-                    vectorSubstract(optimizationVelocity, lines.get(lineID).point));
+                            vectorSubstract(optimizationVelocity, lines.get(lineID).point));
 
             scalar = Math.max(scalarLeft, scalar);
             scalar = Math.min(scalarRight, scalar);
