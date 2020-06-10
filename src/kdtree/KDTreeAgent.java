@@ -6,9 +6,9 @@ import java.util.Vector;
 
 import clearpath.CollisionAvoidanceManager;
 
-public class KDTree
+public class KDTreeAgent
 {
-    public KDTree(int dim)
+    public KDTreeAgent(int dim)
     {
         root        = null;
         nbDimension = dim;
@@ -25,7 +25,7 @@ public class KDTree
     {
         if (root == null)
         {
-            root = new KDNode(client, 0, nbDimension);
+            root = new KDNodeAgent(client, 0, nbDimension);
             // System.out.println("root : " + Arrays.toString(position));
 
             if (!agents.contains(client))
@@ -54,10 +54,10 @@ public class KDTree
      * @param maxNbNeighbors
      * @return Map of N-nearest neighbors, sorted by distance
      */
-    public TreeMap<Double, Vector<KDNode>> getClosestNeighbors(double[] position, double sqRange, int maxNbNeighbors) 
+    public TreeMap<Double, Vector<KDNodeAgent>> getClosestNeighbors(double[] position, double sqRange, int maxNbNeighbors) 
     {
         // Map of distance and nodes
-        TreeMap<Double, Vector<KDNode>> closestNeighbors = new TreeMap<Double, Vector<KDNode>>();
+        TreeMap<Double, Vector<KDNodeAgent>> closestNeighbors = new TreeMap<Double, Vector<KDNodeAgent>>();
 
         sqRange = root.getClosestNeighbors(closestNeighbors, position, sqRange, maxNbNeighbors);
 
@@ -80,7 +80,7 @@ public class KDTree
         return agents;
     }
 
-    private KDNode                            root;
+    private KDNodeAgent                            root;
     private int                               nbDimension;
     private Vector<CollisionAvoidanceManager> agents;
 }

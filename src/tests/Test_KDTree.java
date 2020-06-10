@@ -11,7 +11,7 @@ public class Test_KDTree
 
     public static void main(String[] args)
     {
-        KDTree tree = new KDTree(2);
+        KDTreeAgent tree = new KDTreeAgent(2);
 
         double[] position1 = { 11, 2 };
         // tree.add(position1);
@@ -41,13 +41,13 @@ public class Test_KDTree
         // tree.add(position9);
 
         double[] currentPosition = { 0, 0 };
-        TreeMap<Double, Vector<KDNode>> closestNodes = tree.getClosestNeighbors(currentPosition, Double.MAX_VALUE, 2);
+        TreeMap<Double, Vector<KDNodeAgent>> closestNodes = tree.getClosestNeighbors(currentPosition, Double.MAX_VALUE, 2);
 
         System.out.println("Closest neighbors to " + Arrays.toString(currentPosition) + ": ");
 
         for (Double key : closestNodes.keySet())
         {
-            for (KDNode node : closestNodes.get(key))
+            for (KDNodeAgent node : closestNodes.get(key))
             {
                 System.out.println(Arrays.toString(node.getPosition()) + ", distance = " + key);
             }

@@ -1,7 +1,7 @@
 package clearpath;
 
 import java.util.Vector;
-import kdtree.KDTree;
+import kdtree.KDTreeAgent;
 
 /**
  * 
@@ -121,7 +121,7 @@ public class EnvironmentManager
     {
         globalTime    = 0;
         timeStep      = 0;
-        obstaclesTree = new KDTree(2);
+        obstaclesTree = new KDTreeAgent(2);
     }
 
     private EnvironmentManager(double timeStep, 
@@ -141,7 +141,7 @@ public class EnvironmentManager
         this.maxSpeed         = maxSpeed;
         this.velocity         = velocity.clone();
 
-        obstaclesTree         = new KDTree(2);
+        obstaclesTree         = new KDTreeAgent(2);
     }
 
     // TODO: queryVisibility with static obstacle
@@ -158,7 +158,7 @@ public class EnvironmentManager
     private double[] velocity;
 
     // Partition agents position in space using KD-Tree
-    private KDTree obstaclesTree;
+    private KDTreeAgent obstaclesTree;
     
     private static EnvironmentManager instance = null;
 }

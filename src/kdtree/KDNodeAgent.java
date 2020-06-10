@@ -6,7 +6,7 @@ import java.util.Vector;
 
 import clearpath.CollisionAvoidanceManager;
 
-public class KDNode
+public class KDNodeAgent
 {
     /**
      * {@summary default constructor}
@@ -15,7 +15,7 @@ public class KDNode
      * @param splitAxis
      * @param dimension
      */
-    public KDNode(CollisionAvoidanceManager client, int splitAxis, int dimension)
+    public KDNodeAgent(CollisionAvoidanceManager client, int splitAxis, int dimension)
     {
         double[] nodePos = client.getPosition();
         position    = nodePos.clone();
@@ -33,7 +33,7 @@ public class KDNode
         Left = Right = Parent = null;
     }
 
-    public KDNode insert(CollisionAvoidanceManager client) 
+    public KDNodeAgent insert(CollisionAvoidanceManager client) 
     {
         double[] nodePos = client.getPosition();
 
@@ -44,7 +44,7 @@ public class KDNode
 
         // position = new double[2];
 
-        KDNode parent = findParent(nodePos);
+        KDNodeAgent parent = findParent(nodePos);
 
         if (equal(nodePos, parent.position))
         {
@@ -54,7 +54,7 @@ public class KDNode
             return null;
         }
 
-        KDNode newNode = new KDNode(client, ((parent.splitAxis + 1) % nbDimension), nbDimension);
+        KDNodeAgent newNode = new KDNodeAgent(client, ((parent.splitAxis + 1) % nbDimension), nbDimension);
 
         newNode.Parent = parent;
 
@@ -92,7 +92,7 @@ public class KDNode
      * @param maxNbNeighbors
      * @return TreeMap of distance and Node, sorted by distance
      */
-    public double getClosestNeighbors(TreeMap<Double, Vector<KDNode>> 
+    public double getClosestNeighbors(TreeMap<Double, Vector<KDNodeAgent>> 
                                       neighborList, 
                                       double[] position0, 
                                       double sqRange,
@@ -106,7 +106,7 @@ public class KDNode
         {
             if (!neighborList.containsKey(distanceToCurrentNode))
             {
-                Vector<KDNode> nodes = new Vector<KDNode>();
+                Vector<KDNodeAgent> nodes = new Vector<KDNodeAgent>();
                 nodes.add(this);
 
                 neighborList.put(distanceToCurrentNode, nodes);
@@ -133,7 +133,7 @@ public class KDNode
             {
                 double tailKey = neighborList.lastKey();
 
-                Vector<KDNode> farthesNodes = neighborList.get(tailKey);
+                Vector<KDNodeAgent> farthesNodes = neighborList.get(tailKey);
 
                 if (farthesNodes.size() == 1)
                 {
@@ -284,10 +284,10 @@ public class KDNode
      * @param position0
      * @return
      */
-    private KDNode findParent(double[] position0) 
+    private KDNodeAgent findParent(double[] position0) 
     {
-        KDNode parent       = null;
-        KDNode currentNode  = this;
+        KDNodeAgent parent       = null;
+        KDNodeAgent currentNode  = this;
 
         while (currentNode != null)
         {
@@ -334,7 +334,7 @@ public class KDNode
 
     private CollisionAvoidanceManager agent;
 
-    KDNode                            Parent;
-    KDNode                            Left;
-    KDNode                            Right;
+    KDNodeAgent                       Parent;
+    KDNodeAgent                       Left;
+    KDNodeAgent                       Right;
 }

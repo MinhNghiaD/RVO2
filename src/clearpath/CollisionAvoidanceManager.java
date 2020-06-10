@@ -7,8 +7,8 @@ import java.util.Vector;
 
 import ec.util.MersenneTwisterFast;
 
-import kdtree.KDNode;
-import kdtree.KDTree;
+import kdtree.KDNodeAgent;
+import kdtree.KDTreeAgent;
 import model.Constants;
 
 public class CollisionAvoidanceManager
@@ -21,7 +21,7 @@ public class CollisionAvoidanceManager
                               double maxSpeed, 
                               double neighborDistance,
                               int    maxNeighbors, 
-                              KDTree tree)
+                              KDTreeAgent tree)
     {
         this.position         = position.clone();
         this.destination      = destination.clone();
@@ -80,13 +80,13 @@ public class CollisionAvoidanceManager
         }
     }
 
-    private void addNeighborOrcaLine(TreeMap<Double, Vector<KDNode>> neighbors) 
+    private void addNeighborOrcaLine(TreeMap<Double, Vector<KDNodeAgent>> neighbors) 
     {
         final double invTimeHorizon = 1 / timeHorizon;
 
         for (Double key : neighbors.keySet())
         {
-            for (KDNode node : neighbors.get(key))
+            for (KDNodeAgent node : neighbors.get(key))
             {
                 CollisionAvoidanceManager neighbor = node.getAgent();
 
@@ -104,7 +104,7 @@ public class CollisionAvoidanceManager
                 {
                     /* No collision. */
                     final double[] w = RVO.vectorSubstract(relativeVelocity,
-                            RVO.scalarProduct(relativePosition, invTimeHorizon));
+                                       RVO.scalarProduct(relativePosition, invTimeHorizon));
                     /* Vector from cutoff center to relative velocity. */
                     final double wLengthSq = RVO.vectorProduct(w, w);
 
@@ -119,7 +119,7 @@ public class CollisionAvoidanceManager
                         line.direction[0] = unitW[1];
                         line.direction[1] = -unitW[0];
 
-                        u                 = RVO.scalarProduct(unitW, (combinedmaxSpeed * invTimeHorizon - wLength));
+                        u  = RVO.scalarProduct(unitW, (combinedmaxSpeed * invTimeHorizon - wLength));
                     } 
                     else
                     {
@@ -151,7 +151,7 @@ public class CollisionAvoidanceManager
 
                     /* Vector from cutoff center to relative velocity. */
                     final double[] w = RVO.vectorSubstract(relativeVelocity,
-                            RVO.scalarProduct(relativePosition, invTimeStep));
+                                                           RVO.scalarProduct(relativePosition, invTimeStep));
 
                     final double wLength = Math.sqrt(RVO.vectorProduct(w, w));
                     final double[] unitW = RVO.scalarProduct(w, 1 / wLength);
@@ -186,7 +186,7 @@ public class CollisionAvoidanceManager
         }
     }
 
-    private TreeMap<Double, Vector<KDNode>> getClosestNeighbors() 
+    private TreeMap<Double, Vector<KDNodeAgent>> getClosestNeighbors() 
     {
         double searchRange = Math.pow(neighborDistance, 2);
 
@@ -235,5 +235,5 @@ public class CollisionAvoidanceManager
 
     // constrain lines
     private List<Line> orcaLines;
-    private KDTree     obstaclesTree;
+    private KDTreeAgent     obstaclesTree;
 }
