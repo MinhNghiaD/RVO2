@@ -11,11 +11,26 @@ public class ObstacleVertex
         this.isConvex       = false;
     }
     
+    public boolean isConvex()
+    {
+        return isConvex;
+    }
+    
+    public double[] position()
+    {
+        return position.clone();
+    }
+    
+    public double[] unitDirection()
+    {
+        return unitDirection.clone();
+    }
+    
     
     boolean isConvex;
     double[] position;
     double[] unitDirection;
     
-    ObstacleVertex nextVertex;
-    ObstacleVertex previousVertex;
+    public ObstacleVertex nextVertex;
+    public ObstacleVertex previousVertex;
 }

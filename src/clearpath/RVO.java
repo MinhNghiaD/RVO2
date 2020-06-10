@@ -8,7 +8,7 @@ public class RVO
     /**
      * A sufficiently small positive number.
      */
-    static final double EPSILON = 0.00001;
+    static public final double EPSILON = 0.00001;
 
     static public double vectorProduct(double[] vector1, double[] vector2) 
     {
