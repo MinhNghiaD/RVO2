@@ -22,7 +22,6 @@ public class KDNodeAgent
         maxRange    = nodePos.clone();
         minRange    = nodePos.clone();
         agent       = client;
-
         nbDimension = dimension;
 
         assert splitAxis < dimension;

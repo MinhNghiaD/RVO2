@@ -33,7 +33,7 @@ public class KDNodeObstacle
     
     public void getClosestNeighbors(TreeMap<Double, Vector<KDNodeObstacle>> neighborList, 
                                     double[] position0, 
-                                    double sqRange)
+                                    double   sqRange)
     {
         final ObstacleVertex nextVertex = vertex.nextVertex;
 
@@ -185,12 +185,12 @@ public class KDNodeObstacle
                 ObstacleVertex vertexB = vertexA.nextVertex;
 
                 final double AtoEdge = Obstacle.distanceToLine(optimalSplit.position(), 
-                        nextOfOptimalSplit.position(), 
-                        vertexA.position());
+                                                               nextOfOptimalSplit.position(), 
+                                                               vertexA.position());
 
                 final double BtoEdge = Obstacle.distanceToLine(optimalSplit.position(), 
-                        nextOfOptimalSplit.position(), 
-                        vertexB.position());
+                                                               nextOfOptimalSplit.position(), 
+                                                               vertexB.position());
 
                 if (AtoEdge >= -RVO.EPSILON && BtoEdge >= -RVO.EPSILON)
                 {
@@ -202,12 +202,12 @@ public class KDNodeObstacle
                 }
                 else
                 {
-                    double[] splitLine = RVO.vectorSubstract(nextOfOptimalSplit.position(), optimalSplit.position());
+                    double[] splitLine       = RVO.vectorSubstract(nextOfOptimalSplit.position(), optimalSplit.position());
                     double[] AtoOptimalSplit = RVO.vectorSubstract(vertexA.position(), optimalSplit.position());
-                    double[] ABLine = RVO.vectorSubstract(vertexA.position(), vertexB.position());
+                    double[] ABLine          = RVO.vectorSubstract(vertexA.position(), vertexB.position());
 
                     // Split edge AB
-                    final double splitRatio = RVO.det2D(splitLine, AtoOptimalSplit) / RVO.det2D(splitLine, ABLine);
+                    final double splitRatio  = RVO.det2D(splitLine, AtoOptimalSplit) / RVO.det2D(splitLine, ABLine);
 
                     ObstacleVertex newVertex = Obstacle.splitEdge(vertexA, vertexB, splitRatio);
 
@@ -238,7 +238,7 @@ public class KDNodeObstacle
     {
         double[] pointToEndpoint1 = RVO.vectorSubstract(point, endpoint1);
         double[] pointToEndpoint2 = RVO.vectorSubstract(point, endpoint2);
-        double[] line             =  RVO.vectorSubstract(endpoint2, endpoint1);
+        double[] line             = RVO.vectorSubstract(endpoint2, endpoint1);
         
         final double ratio = RVO.vectorProduct(pointToEndpoint1, line) / RVO.vectorProduct(line, line);
         

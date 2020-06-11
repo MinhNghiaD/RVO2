@@ -64,7 +64,6 @@ public class Obstacle
 
         newVertex.isConvex        = true;
         newVertex.unitDirection   = vertexA.unitDirection;
-        
         newVertex.previousVertex  = vertexA;
         newVertex.nextVertex      = vertexB;
         vertexA.nextVertex        = newVertex;

@@ -94,7 +94,7 @@ public class CollisionAvoidanceManager
                 final double[] relativeVelocity = RVO.vectorSubstract(velocity, neighbor.velocity);
 
                 final double distSq = RVO.vectorProduct(relativePosition, relativePosition);
-                final double combinedmaxSpeed = maxSpeed + neighbor.maxSpeed;
+                final double combinedmaxSpeed   = maxSpeed + neighbor.maxSpeed;
                 final double combinedmaxSpeedSq = Math.pow(combinedmaxSpeed, 2);
 
                 Line     line = new Line(new double[2], new double[2]);
@@ -159,7 +159,7 @@ public class CollisionAvoidanceManager
                     line.direction[0] =  unitW[1];
                     line.direction[1] = -unitW[0];
 
-                    u                 = RVO.scalarProduct(unitW, (combinedmaxSpeed * invTimeStep - wLength));
+                    u = RVO.scalarProduct(unitW, (combinedmaxSpeed * invTimeStep - wLength));
                 }
 
                 line.point[0] = velocity[0] + u[0] * 0.5;

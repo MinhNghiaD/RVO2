@@ -97,7 +97,9 @@ public class RVO
     {
         final double dotProduct = vectorProduct(lines.get(lineID).point, lines.get(lineID).direction);
 
-        final double discriminant = Math.pow(dotProduct, 2) + Math.pow(maxSpeed, 2) - vectorProduct(lines.get(lineID).point, lines.get(lineID).point);
+        final double discriminant = Math.pow(dotProduct, 2) + 
+                                    Math.pow(maxSpeed, 2) - 
+                                    vectorProduct(lines.get(lineID).point, lines.get(lineID).point);
 
         if (discriminant < 0.0)
         {
@@ -174,7 +176,7 @@ public class RVO
         {
             // Optimize closest point.
             double scalar = vectorProduct(lines.get(lineID).direction,
-                            vectorSubstract(optimizationVelocity, lines.get(lineID).point));
+                                          vectorSubstract(optimizationVelocity, lines.get(lineID).point));
 
             scalar = Math.max(scalarLeft, scalar);
             scalar = Math.min(scalarRight, scalar);
@@ -245,8 +247,7 @@ public class RVO
                 // collision
                 final Double[] tempResult = newVelocity.clone();
 
-                if (!avoidCollisionWithLine(lines, lineID, maxSpeed, optimizationVelocity, directionOptimal,
-                        newVelocity))
+                if (!avoidCollisionWithLine(lines, lineID, maxSpeed, optimizationVelocity, directionOptimal, newVelocity))
                 {
                     // If can not find another result that satisfy an obstacle i => return the id of
                     // obstacle where it fails
@@ -345,8 +346,7 @@ public class RVO
                 double[] optimizationVelocity = { -lines.get(i).direction[1], lines.get(i).direction[0] };
 
                 // Final check if there will be any collision
-                if (checkCollision(projectedLines, maxSpeed, optimizationVelocity, true, velocity) < projectedLines
-                        .size())
+                if (checkCollision(projectedLines, maxSpeed, optimizationVelocity, true, velocity) < projectedLines.size())
                 {
                     // This should in principle not happen. The result is by
                     // definition already in the feasible region of this linear
