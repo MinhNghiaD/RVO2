@@ -31,6 +31,11 @@ public class KDNodeObstacle
         }
     }
     
+    public ObstacleVertex getVertex()
+    {
+        return vertex;
+    }
+    
     public void getClosestNeighbors(TreeMap<Double, Vector<KDNodeObstacle>> neighborList, 
                                     double[] position0, 
                                     double   sqRange)
