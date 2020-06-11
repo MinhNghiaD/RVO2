@@ -9,6 +9,7 @@ import ec.util.MersenneTwisterFast;
 
 import kdtree.KDNodeAgent;
 import kdtree.KDTreeAgent;
+import kdtree.KDTreeObstacle;
 import model.Constants;
 
 public class CollisionAvoidanceManager
@@ -21,7 +22,8 @@ public class CollisionAvoidanceManager
                               double maxSpeed, 
                               double neighborDistance,
                               int    maxNeighbors, 
-                              KDTreeAgent tree)
+                              KDTreeAgent agentTree,
+                              KDTreeObstacle obstacleTree)
     {
         this.position         = position.clone();
         this.destination      = destination.clone();
@@ -36,7 +38,8 @@ public class CollisionAvoidanceManager
         this.neighborDistance = neighborDistance;
 
         this.orcaLines        = new ArrayList<Line>();
-        this.obstaclesTree    = tree;
+        this.agentsTree       = agentTree;
+        this.obstacleTree     = obstacleTree;
     }
 
     public double[] getPosition() 
@@ -190,7 +193,7 @@ public class CollisionAvoidanceManager
     {
         double searchRange = Math.pow(neighborDistance, 2);
 
-        return obstaclesTree.getClosestNeighbors(position, searchRange, maxNeighbors);
+        return agentsTree.getClosestNeighbors(position, searchRange, maxNeighbors);
     }
 
     // TODO: implement static obstacle and function getClosestObstacles()
@@ -234,6 +237,7 @@ public class CollisionAvoidanceManager
     private double[]   preferenceVelocity;
 
     // constrain lines
-    private List<Line> orcaLines;
-    private KDTreeAgent     obstaclesTree;
+    private List<Line>     orcaLines;
+    private KDTreeAgent    agentsTree;
+    private KDTreeObstacle obstacleTree;
 }

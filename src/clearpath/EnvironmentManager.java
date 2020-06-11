@@ -1,7 +1,9 @@
 package clearpath;
 
+import java.util.List;
 import java.util.Vector;
 import kdtree.KDTreeAgent;
+import kdtree.KDTreeObstacle;
 
 /**
  * 
@@ -45,6 +47,11 @@ public class EnvironmentManager
         return instance;
     }
     
+    public void addObstacles(List<Obstacle> obstacles)
+    {
+        obstaclesTree = new KDTreeObstacle(obstacles);
+    }
+    
     public void setTimeStep(double period)
     {
         timeStep = period;
@@ -60,9 +67,10 @@ public class EnvironmentManager
                                                                         maxSpeed,
                                                                         neighborDistance,
                                                                         maxNeighbors, 
+                                                                        agentsTree,
                                                                         obstaclesTree);
 
-        if(obstaclesTree.add(agent))
+        if(agentsTree.add(agent))
         {
             return agent;
         }
@@ -87,19 +95,21 @@ public class EnvironmentManager
                                                                         maxSpeed,
                                                                         neighborDistance,
                                                                         maxNeighbors, 
+                                                                        agentsTree,
                                                                         obstaclesTree);
 
-        if(obstaclesTree.add(agent))
+        if(agentsTree.add(agent))
         {
             return agent;
         }
         
         return null;
     }
+    
 
     public void doStep() 
     {
-        obstaclesTree.update();
+        agentsTree.update();
 
         globalTime += timeStep;
         
@@ -113,7 +123,7 @@ public class EnvironmentManager
     
     public Vector<CollisionAvoidanceManager> getAgents()
     {
-        return obstaclesTree.getAgents();
+        return agentsTree.getAgents();
     }
     
     // default constructor
@@ -121,7 +131,7 @@ public class EnvironmentManager
     {
         globalTime    = 0;
         timeStep      = 0;
-        obstaclesTree = new KDTreeAgent(2);
+        agentsTree    = new KDTreeAgent(2);
     }
 
     private EnvironmentManager(double timeStep, 
@@ -141,7 +151,7 @@ public class EnvironmentManager
         this.maxSpeed         = maxSpeed;
         this.velocity         = velocity.clone();
 
-        obstaclesTree         = new KDTreeAgent(2);
+        agentsTree            = new KDTreeAgent(2);
     }
 
     // TODO: queryVisibility with static obstacle
@@ -158,7 +168,8 @@ public class EnvironmentManager
     private double[] velocity;
 
     // Partition agents position in space using KD-Tree
-    private KDTreeAgent obstaclesTree;
+    private KDTreeAgent    agentsTree;
+    private KDTreeObstacle obstaclesTree;
     
     private static EnvironmentManager instance = null;
 }
