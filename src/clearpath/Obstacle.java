@@ -51,7 +51,7 @@ public class Obstacle
         }
     }
     
-    public ObstacleVertex splitEdge(ObstacleVertex vertexA, ObstacleVertex vertexB, double ratio)
+    static public ObstacleVertex splitEdge(ObstacleVertex vertexA, ObstacleVertex vertexB, double ratio)
     {
         double[] splitPoint = vertexA.position().clone();
         
@@ -70,14 +70,8 @@ public class Obstacle
         vertexA.nextVertex        = newVertex;
         vertexB.previousVertex    = newVertex;
         
-        int insertPosition        = vertices.indexOf(vertexB);
-        assert(insertPosition > -1);
-
-        vertices.add(insertPosition, newVertex);
-        
         return newVertex;
     }
-    
     
     /**
      * 
