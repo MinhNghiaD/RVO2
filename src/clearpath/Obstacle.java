@@ -51,6 +51,34 @@ public class Obstacle
         }
     }
     
+    public ObstacleVertex splitEdge(ObstacleVertex vertexA, ObstacleVertex vertexB, double ratio)
+    {
+        double[] splitPoint = vertexA.position().clone();
+        
+        for (int i = 0; i < splitPoint.length; ++i)
+        {
+            splitPoint[i] += (vertexB.position()[i] - vertexA.position()[i]) * ratio;
+        }
+
+        ObstacleVertex newVertex  = new ObstacleVertex(splitPoint);
+
+        newVertex.isConvex        = true;
+        newVertex.unitDirection   = vertexA.unitDirection;
+        
+        newVertex.previousVertex  = vertexA;
+        newVertex.nextVertex      = vertexB;
+        vertexA.nextVertex        = newVertex;
+        vertexB.previousVertex    = newVertex;
+        
+        int insertPosition        = vertices.indexOf(vertexB);
+        assert(insertPosition > -1);
+
+        vertices.add(insertPosition, newVertex);
+        
+        return newVertex;
+    }
+    
+    
     /**
      * 
      * @param vertex1

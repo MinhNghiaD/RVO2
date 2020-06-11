@@ -2,7 +2,7 @@ package clearpath;
 
 public class ObstacleVertex
 {
-    ObstacleVertex(double[] position)
+    public ObstacleVertex(double[] position)
     {
         this.position       = position.clone();
         this.unitDirection  = new double[2];
