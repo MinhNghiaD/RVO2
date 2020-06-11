@@ -80,7 +80,7 @@ public class KDTreeAgent
         return agents;
     }
 
-    private KDNodeAgent                            root;
+    private KDNodeAgent                       root;
     private int                               nbDimension;
     private Vector<CollisionAvoidanceManager> agents;
 }

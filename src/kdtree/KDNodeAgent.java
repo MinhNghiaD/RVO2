@@ -92,8 +92,7 @@ public class KDNodeAgent
      * @param maxNbNeighbors
      * @return TreeMap of distance and Node, sorted by distance
      */
-    public double getClosestNeighbors(TreeMap<Double, Vector<KDNodeAgent>> 
-                                      neighborList, 
+    public double getClosestNeighbors(TreeMap<Double, Vector<KDNodeAgent>> neighborList, 
                                       double[] position0, 
                                       double sqRange,
                                       int maxNbNeighbors)
@@ -161,7 +160,7 @@ public class KDNodeAgent
             for (int i = 0; i < nbDimension; i++)
             {
                 sqrDistanceLeftTree += (Math.pow(Math.max(0, (Left.minRange[i] - position0[i])), 2)
-                        + Math.pow(Math.max(0, (position0[i] - Left.maxRange[i])), 2));
+                                      + Math.pow(Math.max(0, (position0[i] - Left.maxRange[i])), 2));
             }
         }
 
@@ -176,7 +175,7 @@ public class KDNodeAgent
             for (int i = 0; i < nbDimension; i++)
             {
                 sqrDistanceRightTree += (Math.pow(Math.max(0, (Right.minRange[i] - position0[i])), 2)
-                        + Math.pow(Math.max(0, (position0[i] - Right.maxRange[i])), 2));
+                                       + Math.pow(Math.max(0, (position0[i] - Right.maxRange[i])), 2));
             }
         }
 

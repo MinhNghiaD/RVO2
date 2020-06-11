@@ -8,9 +8,13 @@ import clearpath.RVO;
 
 public class KDTreeObstacle
 {
-
+    KDTreeObstacle()
+    {
+        
+    }
     
     
+    private KDNodeObstacle root;
     
     private List<Obstacle> obstacles;
 }

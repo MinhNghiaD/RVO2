@@ -2,6 +2,8 @@ package kdtree;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
+import java.util.Vector;
 
 import clearpath.Obstacle;
 import clearpath.ObstacleVertex;
@@ -15,8 +17,83 @@ public class KDNodeObstacle
         
         splitObstacleVertices(vertices, vertex);
         
-        Left  = new KDNodeObstacle(leftVertices);
-        Right = new KDNodeObstacle(rightVertices);
+        Left  = null;
+        Right = null;
+        
+        if (! leftVertices.isEmpty())
+        {
+            Left  = new KDNodeObstacle(leftVertices);
+        }
+        
+        if (! rightVertices.isEmpty())
+        {
+            Right = new KDNodeObstacle(rightVertices);
+        }
+    }
+    
+    public void getClosestNeighbors(TreeMap<Double, Vector<KDNodeObstacle>> neighborList, 
+                                    double[] position0, 
+                                    double sqRange)
+    {
+        final ObstacleVertex nextVertex = vertex.nextVertex;
+
+        final double distanceToLine = Obstacle.distanceToLine(vertex.position(), nextVertex.position(), position0);
+        
+        KDNodeObstacle firstVisit  = null;
+        KDNodeObstacle secondVisit = null;
+        
+        if (distanceToLine >= 0)
+        {
+            firstVisit = Left;
+            secondVisit = Right;
+        }
+        else
+        {
+            firstVisit = Right; 
+            secondVisit = Left;
+        }
+        
+        if (firstVisit != null)
+        {
+            firstVisit.getClosestNeighbors(neighborList, position0, sqRange);
+        }
+        
+        double[] line = RVO.vectorSubstract(nextVertex.position(), vertex.position());
+        
+        final double distSqLine = Math.pow(distanceToLine, 2) / RVO.vectorProduct(line, line);
+        
+        if (distSqLine < sqRange)
+        {
+            if (distanceToLine < 0)
+            {
+                /*
+                 * Try obstacle at this node only if agent is on right side of
+                 * obstacle (and can see obstacle).
+                 */
+                final double sqDistance = sqrDistancePointLineSegment(vertex.position(), nextVertex.position(), position0);
+                
+                if (sqDistance < sqRange)
+                {
+                    // add to list of closest obstacles
+                    if (!neighborList.containsKey(sqDistance))
+                    {
+                        Vector<KDNodeObstacle> nodes = new Vector<KDNodeObstacle>();
+                        nodes.add(this);
+
+                        neighborList.put(sqDistance, nodes);
+                    } 
+                    else
+                    {
+                        neighborList.get(sqDistance).add(this);
+                    }
+                }
+            }
+
+            if (secondVisit != null)
+            {
+                secondVisit.getClosestNeighbors(neighborList, position0, sqRange);
+            }
+        }
     }
     
     private static ObstacleVertex optimalSplitPoint(List<ObstacleVertex> vertices)
@@ -148,6 +225,41 @@ public class KDNodeObstacle
 
             }
         }
+    }
+    
+    /**
+     * Computes the squared distance from a line segment with the  specified end points to a specified point.
+     * @param endpoint1 : The first end point of the line segment.
+     * @param endpoint2 : The second end point of the line segment.
+     * @param point : The point to which the squared distance is to be calculated.
+     * @return The squared distance from the line segment to the point.
+     */
+    private static double sqrDistancePointLineSegment(double[] endpoint1, double[] endpoint2, double[] point)
+    {
+        double[] pointToEndpoint1 = RVO.vectorSubstract(point, endpoint1);
+        double[] pointToEndpoint2 = RVO.vectorSubstract(point, endpoint2);
+        double[] line             =  RVO.vectorSubstract(endpoint2, endpoint1);
+        
+        final double ratio = RVO.vectorProduct(pointToEndpoint1, line) / RVO.vectorProduct(line, line);
+        
+        if (ratio < 0)
+        {
+            return RVO.vectorProduct(pointToEndpoint1, pointToEndpoint1);
+        }
+        else if (ratio > 1)
+        {
+            return RVO.vectorProduct(pointToEndpoint2, pointToEndpoint2);
+        }
+
+        double[] projectionOfPoint = endpoint1.clone();
+        
+        for (int i = 0; i < projectionOfPoint.length; ++i)
+        {
+            projectionOfPoint[i] += (ratio * line[i]);
+        }
+        
+        return RVO.vectorProduct(RVO.vectorSubstract(point, projectionOfPoint), 
+                                 RVO.vectorSubstract(point, projectionOfPoint));
     }
     
     private ObstacleVertex vertex;
