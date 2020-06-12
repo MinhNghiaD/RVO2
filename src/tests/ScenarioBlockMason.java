@@ -1,11 +1,12 @@
 package tests;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import clearpath.EnvironmentManager;
+import clearpath.Obstacle;
 import model.Constants;
 import model.Model;
-import model.Obstacle;
 import sim.display.Console;
 import sim.util.Double2D;
 import view.View;
@@ -17,9 +18,7 @@ public class ScenarioBlockMason
     {
         setupScenario();
         
-        Model   model   = new Model(System.currentTimeMillis());
-        model.setObstacles(addObstacles());
-        
+        Model   model   = new Model(System.currentTimeMillis());        
         View    gui     = new View(model);
         Console console = new Console(gui);
         
@@ -32,19 +31,70 @@ public class ScenarioBlockMason
      * 
      * @return obstacles
      */
-    private static ArrayList<Obstacle> addObstacles() {
-        ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-		obstacles.add(new Obstacle(new Double2D(0,0), 10, 0));
-		obstacles.add(new Obstacle(new Double2D(20,10), 10, 1));
-		obstacles.add(new Obstacle(new Double2D(20,10), 10, 2));
+    private static List<Obstacle> addObstacles()
+    {
+        List<double[]> obstacle1Vertices = new ArrayList<double[]>();
+        double[] vertex11 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(40)};
+        double[] vertex12 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(40)};
+        double[] vertex13 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(10)};
+        double[] vertex14 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(10)};
+        obstacle1Vertices.add(vertex11);
+        obstacle1Vertices.add(vertex12);
+        obstacle1Vertices.add(vertex13);
+        obstacle1Vertices.add(vertex14);
+/*        
+        List<double[]> obstacle2Vertices = new ArrayList<double[]>();
+        double[] vertex21 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(40)};
+        double[] vertex22 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(10)};
+        double[] vertex23 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(10)};
+        double[] vertex24 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(40)};
+        obstacle2Vertices.add(vertex21);
+        obstacle2Vertices.add(vertex22);
+        obstacle2Vertices.add(vertex23);
+        obstacle2Vertices.add(vertex24);
+        
+        List<double[]> obstacle3Vertices = new ArrayList<double[]>();
+        double[] vertex31 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(-40)};
+        double[] vertex32 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(-40)};
+        double[] vertex33 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(-10)};
+        double[] vertex34 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(-10)};
+        obstacle3Vertices.add(vertex31);
+        obstacle3Vertices.add(vertex32);
+        obstacle3Vertices.add(vertex33);
+        obstacle3Vertices.add(vertex34);
+        
+        List<double[]> obstacle4Vertices = new ArrayList<double[]>();
+        double[] vertex41 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(-40)};
+        double[] vertex42 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(-10)};
+        double[] vertex43 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(-10)};
+        double[] vertex44 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(-40)};
+        obstacle4Vertices.add(vertex41);
+        obstacle4Vertices.add(vertex42);
+        obstacle4Vertices.add(vertex43);
+        obstacle4Vertices.add(vertex44);
+*/        
+        List<Obstacle> obstacles = new ArrayList<Obstacle>();
+        
+        obstacles.add(new Obstacle(obstacle1Vertices));
+        //obstacles.add(new Obstacle(obstacle2Vertices));
+        //obstacles.add(new Obstacle(obstacle3Vertices));
+        //obstacles.add(new Obstacle(obstacle4Vertices));
 		
 		return obstacles;
-}
+    }
 
 	static private EnvironmentManager setupScenario()
     {   
         /* Specify the default parameters for agents that are subsequently added. */
-        EnvironmentManager environment = EnvironmentManager.init(Constants.TIME_STEP, Constants.DIST_NEIGHBOR, Constants.MAX_NEIGHBOR,Constants.TIME_HORIZON, Constants.SCALE_AGENT, Constants.MAX_SPEED, Constants.VELOCITY);
+        EnvironmentManager environment = EnvironmentManager.init(Constants.TIME_STEP, 
+                                                                 Constants.DIST_NEIGHBOR, 
+                                                                 Constants.MAX_NEIGHBOR,
+                                                                 Constants.TIME_HORIZON, 
+                                                                 Constants.SCALE_AGENT, 
+                                                                 Constants.MAX_SPEED, 
+                                                                 Constants.VELOCITY);
+        
+        environment.addObstacles(addObstacles());
         
         /*
          * Add agents, specifying their start position, and store their goals on the

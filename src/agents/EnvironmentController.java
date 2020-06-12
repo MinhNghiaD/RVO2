@@ -24,13 +24,13 @@ public class EnvironmentController implements Steppable
         // Simulation finish condition
         if(reachedGoal())
         {
-            System.out.println("Finish !!!");
+            //System.out.println("Finish !!!");
             state.finish();
             
             return;
         }
         
-        System.out.println("Controller at step: " + state.schedule.getSteps());
+        //System.out.println("Controller at step: " + state.schedule.getSteps());
 
         manager.doStep();
     }

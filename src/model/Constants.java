@@ -29,7 +29,8 @@ public final class Constants
     /**
      * Return a case in grid by the percentage
      */
-    public static double pctToIdxGrid(double pct) {
+    public static double pctToIdxGrid(double pct) 
+    {
         return GRID_SIZE * pct * 0.01;
     }
 }

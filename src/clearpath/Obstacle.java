@@ -1,6 +1,7 @@
 package clearpath;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Obstacle
@@ -14,10 +15,13 @@ public class Obstacle
         for (int i = 0; i < points.size(); ++i)
         {
             ObstacleVertex vertex = new ObstacleVertex(points.get(i));
+            
+            System.out.println("create vertex: " + Arrays.toString(points.get(i)));
 
             if (i != 0)
             {
-                vertex.previousVertex             = vertices.get(vertices.size());
+                vertex.previousVertex             = vertices.get(vertices.size() - 1);
+                System.out.println("has previous vertex: " + Arrays.toString(vertex.previousVertex.position)); 
                 vertex.previousVertex.nextVertex  = vertex;
             }
 
@@ -29,7 +33,10 @@ public class Obstacle
             
             double[] nextVertexPosition = points.get((i + 1) % points.size());
             
+            System.out.println("has nex vertex: " + Arrays.toString(nextVertexPosition));
+            
             double[] direction = RVO.vectorSubstract(nextVertexPosition, points.get(i));
+            System.out.println("direction: " + Arrays.toString(direction));
 
             vertex.unitDirection = RVO.scalarProduct(direction, 
                                                      Math.sqrt(RVO.vectorProduct(direction, direction)));
@@ -40,7 +47,16 @@ public class Obstacle
             }
             else
             {
-                double[] previousVertexPosition = vertex.previousVertex.position;
+                double[] previousVertexPosition;
+                
+                if (i == 0)
+                {
+                    previousVertexPosition = points.get(points.size() - 1);
+                }
+                else
+                {
+                    previousVertexPosition = points.get(i - 1);
+                }
                 
                 double distanceNextVertex = distanceToLine(previousVertexPosition, points.get(i), nextVertexPosition);
                 

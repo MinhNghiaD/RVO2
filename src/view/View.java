@@ -20,30 +20,36 @@ import sim.portrayal.simple.RectanglePortrayal2D;
 import sim.portrayal.DrawInfo2D;
 import sim.portrayal.Inspector;
 
-public class View extends GUIState {
+public class View extends GUIState 
+{
 	public Display2D display;
 	public JFrame displayFrame;
 	public ContinuousPortrayal2D yardPortrayal = new ContinuousPortrayal2D();
 
-	public View(SimState state) {
+	public View(SimState state) 
+	{
 		super(state);
 	}
 
-	public static String getName() {
+	public static String getName() 
+	{
 		return "ClearPath";
 	}
 
-	public void start() {
+	public void start() 
+	{
 		super.start();
 		setupPortrayals();
 	}
 
-	public void load(SimState state) {
+	public void load(SimState state) 
+	{
 		super.load(state);
 		setupPortrayals();
 	}
 
-	public void init(Controller c) {
+	public void init(Controller c) 
+	{
 		super.init(c);
 
 		display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this);
@@ -57,51 +63,61 @@ public class View extends GUIState {
 		display.attach(yardPortrayal, "Yard");
 	}
 
-	public void setupPortrayals() {
+	public void setupPortrayals()
+	{
 		Model model = (Model) state;
 		yardPortrayal.setField(model.getYard());
 		
 		// display AgentPeople 
 		yardPortrayal.setPortrayalForClass(AgentPeople.class,
-				new MovablePortrayal2D(new OrientedPortrayal2D(new OvalPortrayal2D() {
+				new MovablePortrayal2D(new OrientedPortrayal2D(new OvalPortrayal2D() 
+				{
 					private static final long serialVersionUID = 1L;
 
-					public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
+					public void draw(Object object, Graphics2D graphics, DrawInfo2D info) 
+					{
 						paint = Color.DARK_GRAY;
 						filled = true;
 						scale = Constants.SCALE_AGENT;
 						super.draw(object, graphics, info);
 					}
-				}) {
+				})
+				{
 					private static final long serialVersionUID = 1L;
 
 					@Override
-					public double getOrientation(Object object, DrawInfo2D info) {
+					public double getOrientation(Object object, DrawInfo2D info)
+					{
 						AgentPeople a = (AgentPeople) object;
 						return a.getAngle();
 					}
 				}));
 
 		// display AgentObstacle
-		yardPortrayal.setPortrayalForClass(AgentObstacle.class, new RectanglePortrayal2D() {
+		yardPortrayal.setPortrayalForClass(AgentObstacle.class, new RectanglePortrayal2D()
+		{
 			private static final long serialVersionUID = 1L;
 
-			public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
+			public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
+			{
 				paint = Color.DARK_GRAY;
 				filled = true;
 				super.draw(object, graphics, info);
 			}
 		});
+		
 		display.reset();
 		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();
 	}
 
-	public Object getSimulationInspectedObject() {
+	public Object getSimulationInspectedObject()
+	{
 		return state;
 	}
 
-	public Inspector getInspector() {
+	public Inspector getInspector() 
+	{
 		Inspector i = super.getInspector();
 		i.setVolatile(true);
 

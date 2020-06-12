@@ -4,9 +4,12 @@ import model.Constants;
 
 import java.util.Vector;
 import java.util.ArrayList;
+import java.util.List;
 
 import agents.*;
 import clearpath.CollisionAvoidanceManager;
+import clearpath.Obstacle;
+import clearpath.ObstacleVertex;
 import sim.engine.ParallelSequence;
 import sim.engine.Sequence;
 import sim.engine.SimState;
@@ -14,188 +17,137 @@ import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;
 import sim.util.Double2D;
 
-public class Model extends SimState {
-	public Model(long seed) {
-		super(seed);
-		yard.clear();
-		numAgents = 0;
-	}
+public class Model extends SimState 
+{
+    public Model(long seed) 
+    {
+        super(seed);
+        yard.clear();
+        numAgents = 0;
+    }
 
-	@Override
-	public void start() {
-		super.start();
-		yard.clear();
+    @Override
+    public void start()
+    {
+        super.start();
+        yard.clear();
 
-		// schedule EnvironmentController execution at before every step
-		EnvironmentController envController = new EnvironmentController();
-		schedule.addBefore(envController);
+        // schedule EnvironmentController execution at before every step
+        EnvironmentController envController = new EnvironmentController();
+        schedule.addBefore(envController);
 
-		Vector<CollisionAvoidanceManager> agentControllers = envController.getEnvironment().getAgents();
+        Vector<CollisionAvoidanceManager> agentControllers = envController.getEnvironment().getAgents();
 
-		addAgents(agentControllers);
+        addAgents(agentControllers);
 
-		// TODO create Vector<CollisionAvoidanceManager> obstaclesControllers
-		for (Obstacle obs : this.obstacles) {
-			addObstacles(obs.getPosition(), obs.getTaille(), obs.getType());
-		}
+        List<Obstacle> obstacles = envController.getEnvironment().getObstacles();
+        
+        for (Obstacle obtacle : obstacles)
+        {
+            addObstacles(obtacle);
+        }
 
-	}
+    }
 
-	/**
-	 * @return the grid
-	 */
-	public Continuous2D getYard() {
-		return yard;
-	}
+    /**
+     * @return the grid
+     */
+    public Continuous2D getYard() 
+    {
+        return yard;
+    }
 
-	public int decrementNumAgents() {
-		return numAgents--;
-	}
+    public int decrementNumAgents() 
+    {
+        return numAgents--;
+    }
 
-	/**
-	 * @return the obstacles ArrayList
-	 */
-	public ArrayList<Obstacle> getObstacles() {
-		return obstacles;
-	}
+    private void addAgents(Vector<CollisionAvoidanceManager> agentControllers) 
+    {
+        if (agentControllers == null || agentControllers.size() == 0) 
+        {
+            System.out.println("agents controllers are null");
+            return;
+        }
 
-	/**
-	 * @param obstacles the obstacles ArrayList to set
-	 */
-	public void setObstacles(ArrayList<Obstacle> obstacles) {
-		this.obstacles = obstacles;
-	}
+        numAgents = agentControllers.size();
 
-	private void addAgents(Vector<CollisionAvoidanceManager> agentControllers) {
-		if (agentControllers == null || agentControllers.size() == 0) {
-			System.out.println("agents controllers are null");
-			return;
-		}
+        Steppable[] agents = new Steppable[numAgents];
 
-		numAgents = agentControllers.size();
+        for (int i = 0; i < numAgents; ++i) 
+        {
+            agents[i] = new AgentPeople(agentControllers.get(i));
 
-		Steppable[] agents = new Steppable[numAgents];
+            Double2D position = new Double2D(agentControllers.get(i).getPosition()[0],
+                                             agentControllers.get(i).getPosition()[1]);
 
-		for (int i = 0; i < numAgents; ++i) {
-			agents[i] = new AgentPeople(agentControllers.get(i));
+            yard.setObjectLocation(agents[i], position);
+        }
 
-			Double2D position = new Double2D(agentControllers.get(i).getPosition()[0],
-					agentControllers.get(i).getPosition()[1]);
+        ParallelSequence parellelAgents = new ParallelSequence(agents);
+        schedule.scheduleRepeating(parellelAgents);
 
-			yard.setObjectLocation(agents[i], position);
-		}
+        // Sequence sequenceAgent = new Sequence(agents);
+        // schedule.scheduleRepeating(sequenceAgent);
+    }
 
-		ParallelSequence parellelAgents = new ParallelSequence(agents);
-		schedule.scheduleRepeating(parellelAgents);
-
-		// Sequence sequenceAgent = new Sequence(agents);
-		// schedule.scheduleRepeating(sequenceAgent);
-	}
-
-	/**
-	 * Create obstacle with position, size and type of obstacle Case 0 : Square
-	 * obstacle Case 1 : Horizontal line Case 2 : Vertical line
-	 */
-	private void addObstacles(Double2D position, int taille, int type) {
-		switch (type) {
-		case 0:
-			for (int i = 0; i <= taille; i++) {
-				for (int j = 0; j <= taille; j++) {
-					AgentType obs = new AgentObstacle(position.x + i, position.y + j);
-					yard.setObjectLocation(obs, new Double2D(position.x + i, position.y + j));
-				}
-			}
-			break;
-		case 1:
-			for (int i = 0; i <= taille; i++) {
-				AgentType obs = new AgentObstacle(position.x + i, position.y);
-				yard.setObjectLocation(obs, new Double2D(position.x + i, position.y));
-			}
-			break;
-		case 2:
-			for (int i = 0; i <= taille; i++) {
-				AgentType obs = new AgentObstacle(position.x, position.y + i);
-				yard.setObjectLocation(obs, new Double2D(position.x, position.y + i));
-			}
-			break;
-		default:
-			break;
-		}
-	}
-
-	// TODO : setup senario in Main
-	// /**
-	// * Initialize the agent according to the scenario Case 0 : The agent moves in
-	// a
-	// * circular orbit Case 1 : Two groups of opposite agents passing through each
-	// * other Case 2 : Fixed obstacles in the middle of the yard Case 3 :
-	// Crossroads
-	// * Default : Agent random move
-	// *
-	// * @param nbScenario
-	// */
-	// private void addRandomAgents(int nbScenario) {
-	// switch (nbScenario) {
-	// case 0:
-	// addAgentInCircle();
-	// break;
-	// case 1:
-	// break;
-	// case 2:
-	// break;
-	// case 3:
-	// break;
-	// default:
-	// for (int i = 0; i < Constants.NUM_AGENT; i++) {
-	// Double2D position = randomPosition();
-	// double angle = this.random.nextInt(360);
-	// AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
-	// yard.setObjectLocation(e, position);
-	// schedule.scheduleRepeating(e);
-	// numAgents++;
-	// }
-	// }
-	// }
-
-	// private void addAgentInCircle() {
-	// double radius = (this.random.nextDouble() + 0.1) * Constants.GRID_SIZE / 2;
-	// Double2D center = new Double2D(yard.getWidth() / 2, yard.getHeight() / 2);
-
-	// for (int i = 0; i < Constants.NUM_AGENT; i++) {
-	// Double2D position = randomPosition(radius, center);
-	// double angle = this.random.nextInt(360);
-	// AgentType e = new AgentPeople(position.x, position.y, 1, 1, angle);
-	// yard.setObjectLocation(e, position);
-	// schedule.scheduleRepeating(e);
-	// numAgents++;
-	// }
-	// }
-
-	// private void addRandomAgents()
-	// {
-	// for (int i = 0; i < Constants.NUM_AGENT; i++)
-	// {
-	// Double2D position = randomPosition();
-	// double angle = this.random.nextInt(360);
-	// AgentType e = new AgentPeople(position.x, position.y, angle);
-	//
-	// yard.setObjectLocation(e, position);
-	// schedule.scheduleRepeating(e);
-	//
-	// numAgents++;
-	// }
-	// }
-	//
-	// private Double2D randomPosition()
-	// {
-	// double x = this.random.nextInt(Constants.GRID_SIZE);
-	// double y = this.random.nextInt(Constants.GRID_SIZE);
-	//
-	// return new Double2D(x, y);
-	// }
-
-	private static final long serialVersionUID = 1L;
-	private Continuous2D yard = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
-	private int numAgents = 0;
-	private ArrayList<Obstacle> obstacles;
+    private void addObstacles(Obstacle obstacle) 
+    {
+        List<ObstacleVertex> vertices = obstacle.getVertices();
+        
+        for (int i = 0; i < vertices.size(); ++i)
+        {
+            ObstacleVertex vertex     = vertices.get(i);
+            ObstacleVertex nextVertex = vertex.nextVertex;
+            
+            if (vertex.unitDirection()[0] == 0)
+            {
+                double y = vertex.position()[1];
+                double direction = (vertex.unitDirection()[1] / Math.abs(vertex.unitDirection()[1]));
+                System.out.println("direction" + i + ": " + direction);
+                
+                while (true)
+                {
+                    if ( (direction > 0 && y > nextVertex.position()[1]) ||
+                         (direction < 0 && y < nextVertex.position()[1]) )
+                    {
+                        break;
+                    }
+                    
+                    AgentType obs = new AgentObstacle(vertex.position()[0], y);
+                    yard.setObjectLocation(obs, new Double2D(vertex.position()[0], y));
+                    
+                    y += direction;
+                }
+            }
+            else
+            {
+                double tan = vertex.unitDirection()[1] / vertex.unitDirection()[0];
+                double direction = (vertex.unitDirection()[0] / Math.abs(vertex.unitDirection()[0]));
+                System.out.println("tan" + i + ": " + tan);
+                
+                double x = vertex.position()[0];
+                
+                while (true)
+                {
+                    if ( (direction > 0 && x > nextVertex.position()[0]) ||
+                         (direction < 0 && x < nextVertex.position()[0]) )
+                    {
+                        break;
+                    }
+                    
+                    AgentType obs = new AgentObstacle(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan);
+                    yard.setObjectLocation(obs, new Double2D(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan));
+                    //System.out.println("Draw obstacle: " + x + "," + x*tan);
+                    
+                    x += direction;
+                }
+                
+            }
+        }
+    }
+    
+    private static final long serialVersionUID = 1L;
+    private Continuous2D yard = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
+    private int numAgents = 0;
 }

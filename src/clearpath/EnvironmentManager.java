@@ -1,5 +1,6 @@
 package clearpath;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import kdtree.KDTreeAgent;
@@ -50,6 +51,16 @@ public class EnvironmentManager
     public void addObstacles(List<Obstacle> obstacles)
     {
         obstaclesTree = new KDTreeObstacle(obstacles);
+    }
+    
+    public List<Obstacle> getObstacles()
+    {
+        if (obstaclesTree == null)
+        {
+            return new ArrayList<Obstacle>();
+        }
+        
+        return obstaclesTree.getObstacles();
     }
     
     public void setTimeStep(double period)
@@ -152,6 +163,7 @@ public class EnvironmentManager
         this.velocity         = velocity.clone();
 
         agentsTree            = new KDTreeAgent(2);
+        obstaclesTree         = null;
     }
 
     // TODO: queryVisibility with static obstacle
