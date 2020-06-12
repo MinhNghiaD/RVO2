@@ -11,6 +11,8 @@ public class Obstacle
         assert(points.size() >= 2);
         
         vertices = new ArrayList<ObstacleVertex>();
+        
+        ObstacleVertex previousVertex = null;
 
         for (int i = 0; i < points.size(); ++i)
         {
@@ -20,7 +22,7 @@ public class Obstacle
 
             if (i != 0)
             {
-                vertex.previousVertex             = vertices.get(vertices.size() - 1);
+                vertex.previousVertex             = previousVertex;
                 vertex.previousVertex.nextVertex  = vertex;
             }
 
@@ -33,8 +35,7 @@ public class Obstacle
             double[] nextVertexPosition = points.get((i + 1) % points.size());     
             double[] direction          = RVO.vectorSubstract(nextVertexPosition, points.get(i));
             
-            vertex.unitDirection = RVO.scalarProduct(direction, 
-                                                     Math.sqrt(RVO.vectorProduct(direction, direction)));
+            vertex.unitDirection = RVO.normalize(direction);
 
             if (points.size() == 2)
             {
@@ -53,10 +54,17 @@ public class Obstacle
                     previousVertexPosition = points.get(i - 1);
                 }
                 
-                double distanceNextVertex = distanceToLine(previousVertexPosition, points.get(i), nextVertexPosition);
+                double distanceNextVertex = distanceToLine(points.get((i == 0 ? points.size() - 1 : i - 1)), 
+                                                           points.get(i), 
+                                                           points.get((i == points.size() - 1 ? 0 : i + 1)));
                 
                 vertex.isConvex = (distanceNextVertex >= 0.0);
+                
+                System.out.println(" distanceNext" + distanceNextVertex + "is Convex" + vertex.isConvex);
+                System.out.println(" unit direction" + Arrays.toString(vertex.unitDirection));
             }
+            
+            previousVertex = vertex;
             
             vertices.add(vertex);
         }
@@ -88,12 +96,12 @@ public class Obstacle
      * @param vertex1
      * @param vertex2
      * @param point
-     * @return the distance from point to a line of 2 vertices
+     * @return  signed distance from a line connecting the specified points to a specified point.
      */
     public static double distanceToLine(double[] vertex1, double[] vertex2, double[] point)
     {
         return RVO.det2D(RVO.vectorSubstract(vertex1, point), 
-                         RVO.vectorSubstract(vertex2, point));
+                         RVO.vectorSubstract(vertex2, vertex1));
     }
     
     public List<ObstacleVertex> getVertices()

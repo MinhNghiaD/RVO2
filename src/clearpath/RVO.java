@@ -51,6 +51,20 @@ public class RVO
 
         return result;
     }
+    
+    static public double[] vectorSum(double[] vector1, double[] vector2) 
+    {
+        assert (vector1.length == vector2.length);
+
+        double[] result = new double[vector1.length];
+
+        for (int i = 0; i < vector1.length; ++i)
+        {
+            result[i] = vector1[i] + vector2[i];
+        }
+
+        return result;
+    }
 
     /**
      * 
@@ -76,6 +90,16 @@ public class RVO
         }
 
         return result;
+    }
+    
+    static public double normSquare(double[] vector)
+    {
+        return vectorProduct(vector, vector);
+    }
+    
+    static public double[] normalize(double[] vector)
+    {
+        return scalarProduct(vector, 1/Math.sqrt(normSquare(vector)));
     }
 
     /**

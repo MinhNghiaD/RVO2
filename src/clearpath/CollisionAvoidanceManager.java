@@ -84,16 +84,16 @@ public class CollisionAvoidanceManager
             position[i] += velocity[i] * timeStep;
         }
         
-        System.out.println("velocity: " + Arrays.toString(velocity));
+        //System.out.println("velocity: " + Arrays.toString(velocity));
     }
     
     private void computeNewVelocity() 
     {
         orcaLines.clear();
         
-        int nbObstacleLine = addObstacleOrcaLine(getClosestObstacle());
+        addObstacleOrcaLine(getClosestObstacle());
         
-        System.out.println("nb of obstacle line: " + orcaLines.size());
+        int nbObstacleLine = orcaLines.size();
         
         addNeighborOrcaLine(getClosestNeighbors());
 
@@ -240,8 +240,9 @@ public class CollisionAvoidanceManager
         }
     }
     
-    private int addObstacleOrcaLine(TreeMap<Double, Vector<KDNodeObstacle>> neighbors) 
+    private void addObstacleOrcaLine(TreeMap<Double, Vector<KDNodeObstacle>> neighbors) 
     {
+    /*    
         int nbObstacleLine = 0;
         
         for (Double key : neighbors.keySet())
@@ -259,6 +260,283 @@ public class CollisionAvoidanceManager
         }
         
         return nbObstacleLine;
+    */
+        final double invTimeHorizonObstacle = 1.0 / timeHorizon;
+        
+        for (Double key : neighbors.keySet())
+        {
+            for (KDNodeObstacle node : neighbors.get(key))
+            {
+                ObstacleVertex obstacle1 = node.getVertex();
+                ObstacleVertex obstacle2 = obstacle1.nextVertex;
+                
+                final double[] relativePosition1 = RVO.vectorSubstract(obstacle1.position, position);
+                final double[] relativePosition2 = RVO.vectorSubstract(obstacle2.position, position);
+                
+                // Check if velocity obstacle of obstacle is already taken care of
+                // by previously constructed obstacle ORCA lines.
+                boolean alreadyCovered = false;
+                
+                for (final Line orcaLine : orcaLines) 
+                {
+                    if (RVO.det2D(RVO.vectorSubstract(RVO.scalarProduct(relativePosition1, invTimeHorizonObstacle), orcaLine.point), 
+                                  orcaLine.direction) - invTimeHorizonObstacle * maxSpeed >= -RVO.EPSILON && 
+                        RVO.det2D(RVO.vectorSubstract(RVO.scalarProduct(relativePosition2, invTimeHorizonObstacle), orcaLine.point), 
+                                  orcaLine.direction) - invTimeHorizonObstacle * maxSpeed >= -RVO.EPSILON)
+                    {
+                        alreadyCovered = true;
+                        
+                        break;
+                    }
+                }
+                
+                if (alreadyCovered)
+                {
+                    continue;
+                }
+                
+                // Not yet covered. Check for collisions.
+                final double distanceSq1 = RVO.normSquare(relativePosition1);
+                final double distanceSq2 = RVO.normSquare(relativePosition2);
+                final double radiusSq    = maxSpeed * maxSpeed;
+                
+                final double[] obstacleVector = RVO.vectorSubstract(obstacle2.position, obstacle1.position);
+                final double s = - RVO.vectorProduct(relativePosition1, obstacleVector) / RVO.normSquare(obstacleVector);
+                final double distanceSqLine = RVO.normSquare(RVO.vectorSum(relativePosition1, RVO.scalarProduct(obstacleVector, s)));
+                
+                if (s < 0.0 && distanceSq1 <= radiusSq)
+                {
+                    // Collision with left vertex. Ignore if non-convex.
+                    if (obstacle1.isConvex)
+                    {
+                        final double[] relativeDirection = {-relativePosition1[1], relativePosition1[0]};
+                        final double[] direction = RVO.normalize(relativeDirection);
+                        final double[] point = {0, 0};
+                        
+                        orcaLines.add(new Line(point, direction));
+                    }
+
+                    continue;
+                }
+                
+                if (s > 1.0 && distanceSq2 <= radiusSq) 
+                {
+                    // Collision with right vertex. Ignore if non-convex or if it
+                    // will be taken care of by neighboring obstacle.
+                    if (obstacle2.isConvex && RVO.det2D(relativePosition2, obstacle2.unitDirection) >= 0.0) 
+                    {
+                        final double[] relativeDirection = {-relativePosition2[1], relativePosition2[0]};
+                        final double[] direction = RVO.normalize(relativeDirection);
+                        final double[] point = {0, 0};
+                        
+                        orcaLines.add(new Line(point, direction));
+                    }
+
+                    continue;
+                }
+                
+                if (s >= 0.0 && s < 1.0 && distanceSqLine <= radiusSq) 
+                {
+                    // Collision with obstacle segment.
+                    final double[] direction = RVO.scalarProduct(obstacle1.unitDirection, -1);
+                    final double[] point = {0, 0};
+                    
+                    orcaLines.add(new Line(point, direction));
+
+                    continue;
+                }
+                
+                // No collision. Compute legs. When obliquely viewed, both legs can
+                // come from a single vertex. Legs extend cut-off line when
+                // non-convex vertex.
+                double[] leftLegDirection = new double[2];
+                double[] rightLegDirection = new double[2];
+                
+                if (s < 0.0 && distanceSqLine <= radiusSq)
+                {
+                    // Obstacle viewed obliquely so that left vertex defines
+                    // velocity obstacle.
+                    if (!obstacle1.isConvex) 
+                    {
+                        // Ignore obstacle.
+                        continue;
+                    }
+
+                    obstacle2 = obstacle1;
+
+                    final double leg1 = Math.sqrt(distanceSq1 - radiusSq);
+                    
+                    leftLegDirection[0] = (relativePosition1[0] * leg1 - relativePosition1[1] * maxSpeed) / distanceSq1;
+                    leftLegDirection[1] = (relativePosition1[0] * maxSpeed + relativePosition1[1] * leg1) / distanceSq1;
+                    
+                    rightLegDirection[0] = (relativePosition1[0] * leg1 + relativePosition1[1] * maxSpeed) / distanceSq1;
+                    rightLegDirection[1] = (-relativePosition1[0] * maxSpeed + relativePosition1[1] * leg1) / distanceSq1;   
+                }
+                else if (s > 1.0 && distanceSqLine <= radiusSq)
+                {
+                    // Obstacle viewed obliquely so that right vertex defines
+                    // velocity obstacle.
+                    if (!obstacle2.isConvex)
+                    {
+                        // Ignore obstacle.
+                        continue;
+                    }
+
+                    obstacle1 = obstacle2;
+
+                    final double leg2 = Math.sqrt(distanceSq2 - radiusSq);
+                    
+                    leftLegDirection[0] = (relativePosition2[0] * leg2 - relativePosition2[1] * maxSpeed) / distanceSq2;
+                    leftLegDirection[1] = (relativePosition2[0] * maxSpeed + relativePosition2[1] * leg2) / distanceSq2;
+                    
+                    rightLegDirection[0] = (relativePosition2[0] * leg2 + relativePosition2[1] * maxSpeed) / distanceSq2;
+                    rightLegDirection[1] = (-relativePosition2[0] * maxSpeed + relativePosition2[1] * leg2) / distanceSq2; 
+                }
+                else 
+                {
+                    // Usual situation.
+                    if (obstacle1.isConvex)
+                    {
+                        final double leg1 = Math.sqrt(distanceSq1 - radiusSq);
+                        
+                        leftLegDirection[0] = (relativePosition1[0] * leg1 - relativePosition1[1] * maxSpeed) / distanceSq1;
+                        leftLegDirection[1] = (relativePosition1[0] * maxSpeed + relativePosition1[1] * leg1) / distanceSq1;
+                    } 
+                    else 
+                    {
+                        // Left vertex non-convex; left leg extends cut-off line.
+                        leftLegDirection = RVO.scalarProduct(obstacle1.unitDirection, -1);
+                    }
+
+                    if (obstacle2.isConvex)
+                    {
+                        final double leg2 = Math.sqrt(distanceSq2 - radiusSq);
+                        
+                        rightLegDirection[0] = (relativePosition2[0] * leg2 + relativePosition2[1] * maxSpeed) / distanceSq2;
+                        rightLegDirection[1] = (-relativePosition2[0] * maxSpeed + relativePosition2[1] * leg2) / distanceSq2;
+                    } 
+                    else 
+                    {
+                        // Right vertex non-convex; right leg extends cut-off line.
+                        rightLegDirection = obstacle1.unitDirection.clone();
+                    }
+                }
+                
+                // Legs can never point into neighboring edge when convex vertex,
+                // take cut-off line of neighboring edge instead. If velocity
+                // projected on "foreign" leg, no constraint is added.
+                boolean leftLegForeign = false;
+                boolean rightLegForeign = false;
+                
+                if (obstacle1.isConvex &&RVO.det2D(leftLegDirection, RVO.scalarProduct(obstacle1.previousVertex.unitDirection, -1)) >= 0.0)
+                {
+                    // Left leg points into obstacle.
+                    leftLegDirection = RVO.scalarProduct(obstacle1.previousVertex.unitDirection, -1);
+                    leftLegForeign = true;
+                }
+
+                if (obstacle2.isConvex && RVO.det2D(rightLegDirection, obstacle2.unitDirection) <= 0.0) 
+                {
+                    // Right leg points into obstacle.
+                    rightLegDirection = obstacle2.unitDirection.clone();
+                    rightLegForeign = true;
+                }
+                
+                // Compute cut-off centers.
+                final double[] leftCutOff = RVO.scalarProduct(RVO.vectorSubstract(obstacle1.position, position), invTimeHorizonObstacle);
+                final double[] rightCutOff = RVO.scalarProduct(RVO.vectorSubstract(obstacle2.position, position), invTimeHorizonObstacle);
+                final double[] cutOffVector = RVO.vectorSubstract(rightCutOff, leftCutOff);
+
+                // Project current velocity on velocity obstacle.
+                // Check if current velocity is projected on cutoff circles.
+                final double t = obstacle1 == obstacle2 ? 0.5 
+                                                        : RVO.vectorProduct(RVO.vectorSubstract(velocity, leftCutOff), cutOffVector) / RVO.normSquare(cutOffVector);
+                final double tLeft = RVO.vectorProduct(RVO.vectorSubstract(velocity, leftCutOff), leftLegDirection);
+                final double tRight = RVO.vectorProduct(RVO.vectorSubstract(velocity, rightCutOff), rightLegDirection); 
+
+                if (t < 0.0 && tLeft < 0.0 || obstacle1 == obstacle2 && tLeft < 0.0 && tRight < 0.0)
+                {
+                    // Project on left cut-off circle.
+                    final double[] unitW = RVO.normalize(RVO.vectorSubstract(velocity, leftCutOff));
+
+                    final double[] direction = {unitW[1], -unitW[0]};
+                    final double[] point = RVO.vectorSum(leftCutOff, RVO.scalarProduct(unitW, maxSpeed*invTimeHorizonObstacle));
+                    
+                    orcaLines.add(new Line(point, direction));
+
+                    continue;
+                }
+                
+                if (t > 1.0 && tRight < 0.0) 
+                {
+                    // Project on right cut-off circle.
+                    final double[] unitW = RVO.normalize(RVO.vectorSubstract(velocity, rightCutOff));
+
+                    final double[] direction = {unitW[1], -unitW[0]};
+                    final double[] point = RVO.vectorSum(rightCutOff, RVO.scalarProduct(unitW, maxSpeed*invTimeHorizonObstacle));
+                    orcaLines.add(new Line(point, direction));
+
+                    continue;
+                }
+                
+                // Project on left leg, right leg, or cut-off line, whichever is
+                // closest to velocity.
+                final double distanceSqCutOff = (t < 0.0 || 
+                                                 t > 1.0 || 
+                                                 obstacle1 == obstacle2) ? Double.POSITIVE_INFINITY
+                                                                         : RVO.normSquare(RVO.vectorSubstract(velocity, RVO.vectorSum(leftCutOff, RVO.scalarProduct(cutOffVector, t))));
+                
+                
+                final double distanceSqLeft = (tLeft < 0.0) ? Double.POSITIVE_INFINITY 
+                                                            : RVO.normSquare(RVO.vectorSubstract(velocity, RVO.vectorSum(leftCutOff, RVO.scalarProduct(leftLegDirection, tLeft))));
+                
+                final double distanceSqRight = (tRight < 0.0) ? Double.POSITIVE_INFINITY
+                                                              : RVO.normSquare(RVO.vectorSubstract(velocity, RVO.vectorSum(rightCutOff, RVO.scalarProduct(rightLegDirection, tRight))));
+                
+                if (distanceSqCutOff <= distanceSqLeft && distanceSqCutOff <= distanceSqRight)
+                {
+                    // Project on cut-off line.
+                    final double[] direction = RVO.scalarProduct(obstacle1.unitDirection, -1);
+                    double[] point = new double[2];
+                    point[0] = leftCutOff[0] + maxSpeed*invTimeHorizonObstacle*(-direction[1]);
+                    point[1] = leftCutOff[1] + maxSpeed*invTimeHorizonObstacle*(direction[0]);
+                    
+                    orcaLines.add(new Line(point, direction));
+
+                    continue;
+                }
+                
+                if (distanceSqLeft <= distanceSqRight) 
+                {
+                    // Project on left leg.
+                    if (leftLegForeign) 
+                    {
+                        continue;
+                    }
+                    
+                    double[] point = new double[2];
+                    point[0] = leftCutOff[0] + maxSpeed*invTimeHorizonObstacle*(-leftLegDirection[1]);
+                    point[1] = leftCutOff[1] + maxSpeed*invTimeHorizonObstacle*(leftLegDirection[0]);
+
+                    orcaLines.add(new Line(point, leftLegDirection));
+
+                    continue;
+                }
+                
+             // Project on right leg.
+                if (rightLegForeign) 
+                {
+                    continue;
+                }
+
+                final double[] direction = RVO.scalarProduct(rightLegDirection, -1);
+                double[] point = new double[2];
+                point[0] = rightCutOff[0] + maxSpeed*invTimeHorizonObstacle*(-direction[1]);
+                point[1] = rightCutOff[1] + maxSpeed*invTimeHorizonObstacle*(direction[0]);
+                
+                orcaLines.add(new Line(point, direction));
+            }
+        }
     }
     
     private Line obstacleOrcaLine(ObstacleVertex vertex)
