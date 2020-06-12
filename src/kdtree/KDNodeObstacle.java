@@ -49,12 +49,12 @@ public class KDNodeObstacle
         
         if (distanceToLine >= 0)
         {
-            firstVisit = Left;
+            firstVisit  = Left;
             secondVisit = Right;
         }
         else
         {
-            firstVisit = Right; 
+            firstVisit  = Right; 
             secondVisit = Left;
         }
         
@@ -156,7 +156,6 @@ public class KDNodeObstacle
                     }
                 }
             }
-
 
             int max = Math.max(leftSize, rightSize);
             int min = Math.min(leftSize, rightSize);

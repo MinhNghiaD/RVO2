@@ -3,7 +3,6 @@ package model;
 import model.Constants;
 
 import java.util.Vector;
-import java.util.ArrayList;
 import java.util.List;
 
 import agents.*;
@@ -11,7 +10,6 @@ import clearpath.CollisionAvoidanceManager;
 import clearpath.Obstacle;
 import clearpath.ObstacleVertex;
 import sim.engine.ParallelSequence;
-import sim.engine.Sequence;
 import sim.engine.SimState;
 import sim.engine.Steppable;
 import sim.field.continuous.Continuous2D;

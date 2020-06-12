@@ -1,6 +1,7 @@
 package clearpath;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -82,12 +83,18 @@ public class CollisionAvoidanceManager
             velocity[i]  = newVelocity[i];
             position[i] += velocity[i] * timeStep;
         }
+        
+        System.out.println("velocity: " + Arrays.toString(velocity));
     }
     
     private void computeNewVelocity() 
     {
         orcaLines.clear();
-        addObstacleOrcaLine(getClosestObstacle());
+        
+        int nbObstacleLine = addObstacleOrcaLine(getClosestObstacle());
+        
+        System.out.println("nb of obstacle line: " + orcaLines.size());
+        
         addNeighborOrcaLine(getClosestNeighbors());
 
         int lineFail = RVO.checkCollision(orcaLines, maxSpeed, preferenceVelocity, false, newVelocity);
@@ -95,7 +102,7 @@ public class CollisionAvoidanceManager
         if (lineFail < orcaLines.size())
         {
             // start optimizing from the first collision
-            newVelocity = RVO.collisionFreeVelocity(orcaLines, lineFail, maxSpeed, 0, newVelocity);
+            newVelocity = RVO.collisionFreeVelocity(orcaLines, lineFail, maxSpeed, nbObstacleLine, newVelocity);
         }
     }
 
@@ -108,12 +115,12 @@ public class CollisionAvoidanceManager
 
     private TreeMap<Double, Vector<KDNodeObstacle>> getClosestObstacle() 
     {
-        double searchRange = Math.pow((timeHorizon * maxSpeed + maxSpeed), 2);
-
         if (obstaclesTree == null)
         {
             return new TreeMap<Double, Vector<KDNodeObstacle>>();
         }
+        
+        double searchRange = Math.pow((timeHorizon * maxSpeed + maxSpeed), 2);
         
         return obstaclesTree.getClosestObstacles(position, searchRange);
     }
@@ -233,8 +240,10 @@ public class CollisionAvoidanceManager
         }
     }
     
-    private void addObstacleOrcaLine(TreeMap<Double, Vector<KDNodeObstacle>> neighbors) 
+    private int addObstacleOrcaLine(TreeMap<Double, Vector<KDNodeObstacle>> neighbors) 
     {
+        int nbObstacleLine = 0;
+        
         for (Double key : neighbors.keySet())
         {
             for (KDNodeObstacle node : neighbors.get(key))
@@ -244,9 +253,12 @@ public class CollisionAvoidanceManager
                 if (line != null)
                 {
                     orcaLines.add(line);
+                    ++nbObstacleLine;
                 }
             }
         }
+        
+        return nbObstacleLine;
     }
     
     private Line obstacleOrcaLine(ObstacleVertex vertex)
@@ -450,7 +462,7 @@ public class CollisionAvoidanceManager
             double[] projection = RVO.vectorSubstract(velocity, leftCutoff);
 
             final double[] unitW = RVO.scalarProduct(projection, 
-                                                     Math.sqrt(RVO.vectorProduct(projection, projection)));
+                                                     1/Math.sqrt(RVO.vectorProduct(projection, projection)));
 
             double[] point     = new double[unitW.length];
             double[] direction = new double[unitW.length];
@@ -471,7 +483,7 @@ public class CollisionAvoidanceManager
             double[] projection = RVO.vectorSubstract(velocity, rightCutoff);
             
             final double[] unitW = RVO.scalarProduct(projection, 
-                                                     Math.sqrt(RVO.vectorProduct(projection, projection)));
+                                                     1/Math.sqrt(RVO.vectorProduct(projection, projection)));
 
             double[] point     = new double[unitW.length];
             double[] direction = new double[unitW.length];

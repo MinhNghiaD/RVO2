@@ -295,7 +295,7 @@ public class RVO
                 final List<Line> projectedLines = new ArrayList<>(lines);
                 projectedLines.subList(numObstacleLines, projectedLines.size()).clear();
 
-                for (int j = numObstacleLines; j < i; j++)
+                for (int j = numObstacleLines; j < i; ++j)
                 {
                     final double determinant = det2D(lines.get(i).direction, lines.get(j).direction);
 

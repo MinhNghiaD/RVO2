@@ -16,12 +16,11 @@ public class Obstacle
         {
             ObstacleVertex vertex = new ObstacleVertex(points.get(i));
             
-            System.out.println("create vertex: " + Arrays.toString(points.get(i)));
+            //System.out.println("create vertex: " + Arrays.toString(points.get(i)));
 
             if (i != 0)
             {
                 vertex.previousVertex             = vertices.get(vertices.size() - 1);
-                System.out.println("has previous vertex: " + Arrays.toString(vertex.previousVertex.position)); 
                 vertex.previousVertex.nextVertex  = vertex;
             }
 
@@ -31,13 +30,9 @@ public class Obstacle
                 vertex.nextVertex.previousVertex = vertex;
             }
             
-            double[] nextVertexPosition = points.get((i + 1) % points.size());
+            double[] nextVertexPosition = points.get((i + 1) % points.size());     
+            double[] direction          = RVO.vectorSubstract(nextVertexPosition, points.get(i));
             
-            System.out.println("has nex vertex: " + Arrays.toString(nextVertexPosition));
-            
-            double[] direction = RVO.vectorSubstract(nextVertexPosition, points.get(i));
-            System.out.println("direction: " + Arrays.toString(direction));
-
             vertex.unitDirection = RVO.scalarProduct(direction, 
                                                      Math.sqrt(RVO.vectorProduct(direction, direction)));
 
