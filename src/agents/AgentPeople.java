@@ -4,15 +4,16 @@ import model.Constants;
 import model.Model;
 import clearpath.*;
 import sim.engine.SimState;
+import sim.engine.Steppable;
 import sim.util.Double2D;
 
 
-public class AgentPeople extends AgentType
+public class AgentPeople implements Steppable
 {
     public AgentPeople(CollisionAvoidanceManager controller)
     {
-        super(controller.getPosition()[0], controller.getPosition()[1]);
-        
+        //super(controller.getPosition()[0], controller.getPosition()[1]);
+        super();
         this.controller = controller;
     }
     
@@ -29,8 +30,8 @@ public class AgentPeople extends AgentType
         controller.update(beings.random);
 
         double[] position = controller.getPosition();
-        x  = Constants.adaptXGui(position[0]);
-        y  = Constants.adaptYGui(position[1]);
+        double x  = Constants.adaptXGui(position[0]);
+        double y  = Constants.adaptYGui(position[1]);
         
         beings.getYard().setObjectLocation(this, new Double2D(x, y));
     }

@@ -92,20 +92,7 @@ public class View extends GUIState
 						return a.getAngle();
 					}
 				}));
-
-		// display AgentObstacle
-		yardPortrayal.setPortrayalForClass(AgentObstacle.class, new RectanglePortrayal2D()
-		{
-			private static final long serialVersionUID = 1L;
-
-			public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
-			{
-				paint = Color.DARK_GRAY;
-				filled = true;
-				super.draw(object, graphics, info);
-			}
-		});
-		
+	
 		display.reset();
 		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();

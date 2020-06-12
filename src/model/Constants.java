@@ -25,7 +25,6 @@ public final class Constants
     
     public static double DIST_NEIGHBOR      = 15;
     public static int    MAX_NEIGHBOR       = 10;
-
     
     public static double adaptXGui(double pct) 
     {

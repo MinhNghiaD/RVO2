@@ -111,8 +111,8 @@ public class Model extends SimState
                         break;
                     }
                     
-                    AgentType obs = new AgentObstacle(vertex.position()[0], y);
-                    yard.setObjectLocation(obs, new Double2D(Constants.adaptXGui(vertex.position()[0]), Constants.adaptYGui(y)));
+                    yard.setObjectLocation(new Object(), new Double2D(Constants.adaptXGui(vertex.position()[0]), 
+                                                                      Constants.adaptYGui(y)));
                     
                     y += direction;
                 }
@@ -132,8 +132,8 @@ public class Model extends SimState
                         break;
                     }
                     
-                    AgentType obs = new AgentObstacle(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan);
-                    yard.setObjectLocation(obs, new Double2D(Constants.adaptXGui(x), Constants.adaptYGui(nextVertex.position()[1] + (x - vertex.position()[0]) * tan)));
+                    yard.setObjectLocation(new Object(), new Double2D(Constants.adaptXGui(x), 
+                                                                      Constants.adaptYGui(nextVertex.position()[1] + (x - vertex.position()[0]) * tan)));
                     
                     x += direction;
                 }

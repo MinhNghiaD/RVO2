@@ -43,25 +43,14 @@ public class Obstacle
             }
             else
             {
-                double[] previousVertexPosition;
-                
-                if (i == 0)
-                {
-                    previousVertexPosition = points.get(points.size() - 1);
-                }
-                else
-                {
-                    previousVertexPosition = points.get(i - 1);
-                }
-                
                 double distanceNextVertex = distanceToLine(points.get((i == 0 ? points.size() - 1 : i - 1)), 
                                                            points.get(i), 
                                                            points.get((i == points.size() - 1 ? 0 : i + 1)));
                 
                 vertex.isConvex = (distanceNextVertex >= 0.0);
                 
-                System.out.println(" distanceNext" + distanceNextVertex + "is Convex" + vertex.isConvex);
-                System.out.println(" unit direction" + Arrays.toString(vertex.unitDirection));
+                //System.out.println(" distanceNext" + distanceNextVertex + "is Convex" + vertex.isConvex);
+                //System.out.println(" unit direction" + Arrays.toString(vertex.unitDirection));
             }
             
             previousVertex = vertex;
