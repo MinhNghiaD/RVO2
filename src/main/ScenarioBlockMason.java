@@ -100,9 +100,9 @@ public class ScenarioBlockMason
          * Add agents, specifying their start position, and store their goals on the
          * opposite side of the environment.
          */
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
-            for (int j = 0; j < 5; ++j) 
+            for (int j = 0; j < 7; ++j) 
             {
                 /** 
                  * Grid view
@@ -110,22 +110,22 @@ public class ScenarioBlockMason
                  * Agent 2          Agent 1
                  */
                 // Agent 1
-                double[] position1 = {55 + i * 10, 55 + j * 10};
+                double[] position1 = {55 + i * 5, 55 + j * 5};
                 double[] destination1 = {-75, -75};
                 environment.addAgent(position1, destination1);
                 
                 // Agent 2
-                double[] position2 = {-55  - i * 10, 55 + j * 10};
+                double[] position2 = {-55  - i * 5, 55 + j * 5};
                 double[] destination2 = {75, -75};
                 environment.addAgent(position2, destination2);
                 
                 // Agent 3
-                double[] position3 = {55 + i * 10, -55 - j * 10};
+                double[] position3 = {55 + i * 5, -55 - j * 5};
                 double[] destination3 = {-75, 75};
                 environment.addAgent(position3, destination3);
 
                 // Agent 4
-                double[] position4 = {-55  - i * 10, -55 - j * 10};
+                double[] position4 = {-55  - i * 5, -55 - j * 5};
                 double[] destination4 = {75, 75};
                 environment.addAgent(position4, destination4);
             }

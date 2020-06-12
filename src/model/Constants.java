@@ -19,12 +19,12 @@ public final class Constants
     public static double PI                 = 3.14159265358979323846f;
 
     public static double TIME_STEP          = 0.25;
-    public static double TIME_HORIZON       = 5;
-    public static double MAX_SPEED          = 1;
+    public static double TIME_HORIZON       = 10;
+    public static double MAX_SPEED          = 2;
     public static double[] VELOCITY         = {0, 0};
     
-    public static double DIST_NEIGHBOR      = 15;
-    public static int    MAX_NEIGHBOR       = 10;
+    public static double DIST_NEIGHBOR      = 20;
+    public static int    MAX_NEIGHBOR       = 20;
     
     public static double adaptXGui(double pct) 
     {

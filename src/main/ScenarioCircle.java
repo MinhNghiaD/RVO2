@@ -34,49 +34,77 @@ public class ScenarioCircle
         double[] vertex11 = {-10, 40};
         double[] vertex12 = {-40, 40};
         double[] vertex13 = {-40, 10};
-        double[] vertex14 = {-10, 10};
+        //double[] vertex14 = {-10, 10};
         obstacle1Vertices.add(vertex11);
         obstacle1Vertices.add(vertex12);
         obstacle1Vertices.add(vertex13);
-        obstacle1Vertices.add(vertex14);
+        //obstacle1Vertices.add(vertex14);
        
         List<double[]> obstacle2Vertices = new ArrayList<double[]>();
         double[] vertex21 = {10, 40};
         double[] vertex22 = {10, 10};
-        double[] vertex23 = {40, 10};
+        //double[] vertex23 = {40, 10};
         double[] vertex24 = {40, 40};
         obstacle2Vertices.add(vertex21);
         obstacle2Vertices.add(vertex22);
-        obstacle2Vertices.add(vertex23);
+        //obstacle2Vertices.add(vertex23);
         obstacle2Vertices.add(vertex24);
         
         List<double[]> obstacle3Vertices = new ArrayList<double[]>();
         double[] vertex31 = {10, -40};
         double[] vertex32 = {40, -40};
         double[] vertex33 = {40, -10};
-        double[] vertex34 = {10, -10};
+        //double[] vertex34 = {10, -10};
         obstacle3Vertices.add(vertex31);
         obstacle3Vertices.add(vertex32);
         obstacle3Vertices.add(vertex33);
-        obstacle3Vertices.add(vertex34);
+        //obstacle3Vertices.add(vertex34);
         
         List<double[]> obstacle4Vertices = new ArrayList<double[]>();
         double[] vertex41 = {-10, -40};
-        double[] vertex42 = {-10, -10};
+        //double[] vertex42 = {-10, -10};
         double[] vertex43 = {-40, -10};
         double[] vertex44 = {-40, -40};
         obstacle4Vertices.add(vertex41);
-        obstacle4Vertices.add(vertex42);
+        //obstacle4Vertices.add(vertex42);
         obstacle4Vertices.add(vertex43);
         obstacle4Vertices.add(vertex44);      
-
+        /* 
+        List<double[]> obstacle5Vertices = new ArrayList<double[]>();
+        double[] vertex51 = {-20, -60};
+        double[] vertex53 = {-50, -20};
+        //double[] vertex54 = {-10, -40};
+        obstacle5Vertices.add(vertex51);
+        obstacle5Vertices.add(vertex53);
+        //obstacle5Vertices.add(vertex54);  
+      
+        List<double[]> obstacle4Vertices = new ArrayList<double[]>();
+        double[] vertex41 = {-10, -40};
+        //double[] vertex42 = {-10, -10};
+        double[] vertex43 = {-40, -10};
+        double[] vertex44 = {-40, -40};
+        obstacle4Vertices.add(vertex41);
+        //obstacle4Vertices.add(vertex42);
+        obstacle4Vertices.add(vertex43);
+        obstacle4Vertices.add(vertex44);  
         
+        List<double[]> obstacle4Vertices = new ArrayList<double[]>();
+        double[] vertex41 = {-10, -40};
+        //double[] vertex42 = {-10, -10};
+        double[] vertex43 = {-40, -10};
+        double[] vertex44 = {-40, -40};
+        obstacle4Vertices.add(vertex41);
+        //obstacle4Vertices.add(vertex42);
+        obstacle4Vertices.add(vertex43);
+        obstacle4Vertices.add(vertex44);  
+      */  
         List<Obstacle> obstacles = new ArrayList<Obstacle>();
         
         obstacles.add(new Obstacle(obstacle1Vertices));
         obstacles.add(new Obstacle(obstacle2Vertices));
         obstacles.add(new Obstacle(obstacle3Vertices));
         obstacles.add(new Obstacle(obstacle4Vertices));
+        //obstacles.add(new Obstacle(obstacle5Vertices));
         
         return obstacles;
     }

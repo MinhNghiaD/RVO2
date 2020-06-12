@@ -133,7 +133,7 @@ public class Model extends SimState
                     }
                     
                     yard.setObjectLocation(new Object(), new Double2D(Constants.adaptXGui(x), 
-                                                                      Constants.adaptYGui(nextVertex.position()[1] + (x - vertex.position()[0]) * tan)));
+                                                                      Constants.adaptYGui(vertex.position()[1] + (x - vertex.position()[0]) * tan)));
                     
                     x += direction;
                 }
