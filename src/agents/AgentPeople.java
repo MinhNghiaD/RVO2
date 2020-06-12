@@ -39,7 +39,8 @@ public class AgentPeople extends AgentType
     {
         double[] velocity = controller.getVelocity();
         
-        return Math.atan2(velocity[1], velocity[0]);
+        // NOTE : coordinate of algo has Oy inverse with MASON
+        return Math.atan2(-velocity[1], velocity[0]);
     }
     
     private static final long serialVersionUID = 1L;
