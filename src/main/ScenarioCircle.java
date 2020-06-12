@@ -10,9 +10,8 @@ import model.Model;
 import sim.display.Console;
 import view.View;
 
-public class ScenarioBlockMason
+public class ScenarioCircle
 {
- // TODO: add obstacles
     public static void main(String[] args) 
     {
         setupScenario();
@@ -23,7 +22,6 @@ public class ScenarioBlockMason
         
         console.setVisible(true);
     }
-    
     
     /**
      * Create a list of obstacles with defined positions and defined types
@@ -79,11 +77,11 @@ public class ScenarioBlockMason
         obstacles.add(new Obstacle(obstacle2Vertices));
         obstacles.add(new Obstacle(obstacle3Vertices));
         obstacles.add(new Obstacle(obstacle4Vertices));
-		
-		return obstacles;
+        
+        return obstacles;
     }
-
-	static private EnvironmentManager setupScenario()
+    
+    static private EnvironmentManager setupScenario()
     {   
         /* Specify the default parameters for agents that are subsequently added. */
         EnvironmentManager environment = EnvironmentManager.init(Constants.TIME_STEP, 
@@ -96,39 +94,11 @@ public class ScenarioBlockMason
         
         environment.addObstacles(addObstacles());
         
-        /*
-         * Add agents, specifying their start position, and store their goals on the
-         * opposite side of the environment.
-         */
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 150; ++i) 
         {
-            for (int j = 0; j < 5; ++j) 
-            {
-                /** 
-                 * Grid view
-                 * Agent 4          Agent 3
-                 * Agent 2          Agent 1
-                 */
-                // Agent 1
-                double[] position1 = {55 + i * 10, 55 + j * 10};
-                double[] destination1 = {-75, -75};
-                environment.addAgent(position1, destination1);
-                
-                // Agent 2
-                double[] position2 = {-55  - i * 10, 55 + j * 10};
-                double[] destination2 = {75, -75};
-                environment.addAgent(position2, destination2);
-                
-                // Agent 3
-                double[] position3 = {55 + i * 10, -55 - j * 10};
-                double[] destination3 = {-75, 75};
-                environment.addAgent(position3, destination3);
-
-                // Agent 4
-                double[] position4 = {-55  - i * 10, -55 - j * 10};
-                double[] destination4 = {75, 75};
-                environment.addAgent(position4, destination4);
-            }
+            double[] position = {100 * Math.cos(2*i*Constants.PI/150), 100 * Math.sin(2*i*Constants.PI/150)};
+            double[] destination = {-100 * Math.cos(2*i*Constants.PI/150), -100 * Math.sin(2*i*Constants.PI/150)};
+            environment.addAgent(position, destination);
         }
         
         return environment;
