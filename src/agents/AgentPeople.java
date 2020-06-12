@@ -29,8 +29,8 @@ public class AgentPeople extends AgentType
         controller.update(beings.random);
 
         double[] position = controller.getPosition();
-        x  = position[0];
-        y  = position[1];
+        x  = Constants.adaptXGui(position[0]);
+        y  = Constants.adaptYGui(position[1]);
         
         beings.getYard().setObjectLocation(this, new Double2D(x, y));
     }

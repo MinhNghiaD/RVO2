@@ -26,11 +26,15 @@ public final class Constants
     public static double DIST_NEIGHBOR      = 15;
     public static int    MAX_NEIGHBOR       = 10;
 
-    /**
-     * Return a case in grid by the percentage
-     */
-    public static double pctToIdxGrid(double pct) 
+    
+    public static double adaptXGui(double pct) 
     {
-        return GRID_SIZE * pct * 0.01;
+        return GRID_SIZE/2  + GRID_SIZE * pct * 0.005;
     }
+    
+    public static double adaptYGui(double pct) 
+    {
+        return GRID_SIZE/2 - GRID_SIZE * pct * 0.005;
+    }
+    
 }

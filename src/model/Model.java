@@ -76,8 +76,8 @@ public class Model extends SimState
         {
             agents[i] = new AgentPeople(agentControllers.get(i));
 
-            Double2D position = new Double2D(agentControllers.get(i).getPosition()[0],
-                                             agentControllers.get(i).getPosition()[1]);
+            Double2D position = new Double2D(Constants.adaptXGui(agentControllers.get(i).getPosition()[0]),
+                                             Constants.adaptYGui(agentControllers.get(i).getPosition()[1]) );
 
             yard.setObjectLocation(agents[i], position);
         }
@@ -112,7 +112,7 @@ public class Model extends SimState
                     }
                     
                     AgentType obs = new AgentObstacle(vertex.position()[0], y);
-                    yard.setObjectLocation(obs, new Double2D(vertex.position()[0], y));
+                    yard.setObjectLocation(obs, new Double2D(Constants.adaptXGui(vertex.position()[0]), Constants.adaptYGui(y)));
                     
                     y += direction;
                 }
@@ -133,7 +133,7 @@ public class Model extends SimState
                     }
                     
                     AgentType obs = new AgentObstacle(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan);
-                    yard.setObjectLocation(obs, new Double2D(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan));
+                    yard.setObjectLocation(obs, new Double2D(Constants.adaptXGui(x), Constants.adaptYGui(nextVertex.position()[1] + (x - vertex.position()[0]) * tan)));
                     
                     x += direction;
                 }
