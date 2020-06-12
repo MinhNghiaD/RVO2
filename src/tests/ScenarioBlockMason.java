@@ -34,51 +34,51 @@ public class ScenarioBlockMason
     private static List<Obstacle> addObstacles()
     {
         List<double[]> obstacle1Vertices = new ArrayList<double[]>();
-        double[] vertex11 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(40)};
-        double[] vertex12 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(40)};
-        double[] vertex13 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(10)};
-        double[] vertex14 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(10)};
+        double[] vertex11 = {Constants.pctToIdxGrid(50-7), Constants.pctToIdxGrid(50-15)};
+        double[] vertex12 = {Constants.pctToIdxGrid(50-15), Constants.pctToIdxGrid(50-15)};
+        double[] vertex13 = {Constants.pctToIdxGrid(50-15), Constants.pctToIdxGrid(50-7)};
+        double[] vertex14 = {Constants.pctToIdxGrid(50-7), Constants.pctToIdxGrid(50-7)};
         obstacle1Vertices.add(vertex11);
         obstacle1Vertices.add(vertex12);
         obstacle1Vertices.add(vertex13);
         obstacle1Vertices.add(vertex14);
-/*        
+        
         List<double[]> obstacle2Vertices = new ArrayList<double[]>();
-        double[] vertex21 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(40)};
-        double[] vertex22 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(10)};
-        double[] vertex23 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(10)};
-        double[] vertex24 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(40)};
+        double[] vertex21 = {Constants.pctToIdxGrid(50+7), Constants.pctToIdxGrid(50-15)};
+        double[] vertex22 = {Constants.pctToIdxGrid(50+7), Constants.pctToIdxGrid(50-7)};
+        double[] vertex23 = {Constants.pctToIdxGrid(50+15), Constants.pctToIdxGrid(50-7)};
+        double[] vertex24 = {Constants.pctToIdxGrid(50+15), Constants.pctToIdxGrid(50-15)};
         obstacle2Vertices.add(vertex21);
         obstacle2Vertices.add(vertex22);
         obstacle2Vertices.add(vertex23);
         obstacle2Vertices.add(vertex24);
         
         List<double[]> obstacle3Vertices = new ArrayList<double[]>();
-        double[] vertex31 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(-40)};
-        double[] vertex32 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(-40)};
-        double[] vertex33 = {Constants.pctToIdxGrid(40), Constants.pctToIdxGrid(-10)};
-        double[] vertex34 = {Constants.pctToIdxGrid(10), Constants.pctToIdxGrid(-10)};
+        double[] vertex31 = {Constants.pctToIdxGrid(50+7), Constants.pctToIdxGrid(50+15)};
+        double[] vertex32 = {Constants.pctToIdxGrid(50+15), Constants.pctToIdxGrid(50+15)};
+        double[] vertex33 = {Constants.pctToIdxGrid(50+15), Constants.pctToIdxGrid(50+7)};
+        double[] vertex34 = {Constants.pctToIdxGrid(50+7), Constants.pctToIdxGrid(50+7)};
         obstacle3Vertices.add(vertex31);
         obstacle3Vertices.add(vertex32);
         obstacle3Vertices.add(vertex33);
         obstacle3Vertices.add(vertex34);
         
         List<double[]> obstacle4Vertices = new ArrayList<double[]>();
-        double[] vertex41 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(-40)};
-        double[] vertex42 = {Constants.pctToIdxGrid(-10), Constants.pctToIdxGrid(-10)};
-        double[] vertex43 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(-10)};
-        double[] vertex44 = {Constants.pctToIdxGrid(-40), Constants.pctToIdxGrid(-40)};
+        double[] vertex41 = {Constants.pctToIdxGrid(50-7), Constants.pctToIdxGrid(50+15)};
+        double[] vertex42 = {Constants.pctToIdxGrid(50-7), Constants.pctToIdxGrid(50+7)};
+        double[] vertex43 = {Constants.pctToIdxGrid(50-15), Constants.pctToIdxGrid(50+7)};
+        double[] vertex44 = {Constants.pctToIdxGrid(50-15), Constants.pctToIdxGrid(50+15)};
         obstacle4Vertices.add(vertex41);
         obstacle4Vertices.add(vertex42);
         obstacle4Vertices.add(vertex43);
         obstacle4Vertices.add(vertex44);
-*/        
+        
         List<Obstacle> obstacles = new ArrayList<Obstacle>();
         
         obstacles.add(new Obstacle(obstacle1Vertices));
-        //obstacles.add(new Obstacle(obstacle2Vertices));
-        //obstacles.add(new Obstacle(obstacle3Vertices));
-        //obstacles.add(new Obstacle(obstacle4Vertices));
+        obstacles.add(new Obstacle(obstacle2Vertices));
+        obstacles.add(new Obstacle(obstacle3Vertices));
+        obstacles.add(new Obstacle(obstacle4Vertices));
 		
 		return obstacles;
     }

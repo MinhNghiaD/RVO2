@@ -104,7 +104,6 @@ public class Model extends SimState
             {
                 double y = vertex.position()[1];
                 double direction = (vertex.unitDirection()[1] / Math.abs(vertex.unitDirection()[1]));
-                System.out.println("direction" + i + ": " + direction);
                 
                 while (true)
                 {
@@ -124,7 +123,6 @@ public class Model extends SimState
             {
                 double tan = vertex.unitDirection()[1] / vertex.unitDirection()[0];
                 double direction = (vertex.unitDirection()[0] / Math.abs(vertex.unitDirection()[0]));
-                System.out.println("tan" + i + ": " + tan);
                 
                 double x = vertex.position()[0];
                 
@@ -138,7 +136,6 @@ public class Model extends SimState
                     
                     AgentType obs = new AgentObstacle(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan);
                     yard.setObjectLocation(obs, new Double2D(x, nextVertex.position()[1] + (x - vertex.position()[0]) * tan));
-                    //System.out.println("Draw obstacle: " + x + "," + x*tan);
                     
                     x += direction;
                 }
