@@ -1,8 +1,20 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.Toolkit;
+import java.awt.image.ImageObserver;
+import java.io.File;
+import java.io.IOException;
+import java.text.AttributedCharacterIterator;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 
 import agents.*;
@@ -46,7 +58,23 @@ public class View extends GUIState {
 	public void init(Controller c) {
 		super.init(c);
 
-		display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this);
+		try {
+			display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this) {
+				private static final long serialVersionUID = 1L;
+				// The Image to store the background image in.
+			    Image img = ImageIO.read(new File("src/images/shibuya.jpg"));
+			    @Override
+			    public void paintComponent(Graphics g)
+			    {
+			        super.paintComponent(g);
+			    	g.drawImage(img, 0, 0, null);
+			    }
+			    
+			};
+		} catch (IOException e) {
+			display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this);
+			e.printStackTrace();
+		}
 		display.setClipping(false);
 
 		displayFrame = display.createFrame();
@@ -63,25 +91,31 @@ public class View extends GUIState {
 		
 		// display AgentPeople 
 		yardPortrayal.setPortrayalForClass(AgentPeople.class,
-				new MovablePortrayal2D(new OrientedPortrayal2D(new OvalPortrayal2D() {
-					private static final long serialVersionUID = 1L;
-
-					public void draw(Object object, Graphics2D graphics, DrawInfo2D info) {
-						AgentPeople a = (AgentPeople) object;
-						paint = a.getColorType();
-						filled = true;
-						scale = Constants.SCALE_AGENT;
-						super.draw(object, graphics, info);
-					}
-				}) {
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public double getOrientation(Object object, DrawInfo2D info) {
-						AgentPeople a = (AgentPeople) object;
-						return a.getAngle();
-					}
-				}));
+				new MovablePortrayal2D(
+						new OrientedPortrayal2D(
+								new OvalPortrayal2D()
+								{
+									private static final long serialVersionUID = 1L;
+				
+									public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
+									{
+										AgentPeople a = (AgentPeople) object;
+										paint = a.getColorType();
+										filled = true;
+										scale = Constants.SCALE_AGENT;
+										super.draw(object, graphics, info);
+									}
+								})
+						{
+							private static final long serialVersionUID = 1L;
+		
+							@Override
+							public double getOrientation(Object object, DrawInfo2D info)
+							{
+								AgentPeople a = (AgentPeople) object;
+								return a.getAngle();
+							}
+						}));
 
 		// display AgentObstacle
 		yardPortrayal.setPortrayalForClass(AgentObstacle.class, new RectanglePortrayal2D() {
@@ -94,7 +128,6 @@ public class View extends GUIState {
 			}
 		});
 		display.reset();
-		display.setBackdrop(Color.LIGHT_GRAY);
 		display.repaint();
 	}
 

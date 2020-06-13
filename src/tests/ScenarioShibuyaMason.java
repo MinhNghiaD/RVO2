@@ -10,7 +10,7 @@ import sim.display.Console;
 import sim.util.Double2D;
 import view.View;
 
-public class ScenarioBlockMason
+public class ScenarioShibuyaMason
 {
  // TODO: add obstacles
     public static void main(String[] args) 
