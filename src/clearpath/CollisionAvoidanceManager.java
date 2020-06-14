@@ -25,7 +25,7 @@ public class CollisionAvoidanceManager
                               double neighborDistance,
                               int    maxNeighbors, 
                               KDTreeAgent agentTree,
-                              KDTreeObstacle obstacleTree)
+                              KDTreeObstacle obstacleTree,
                               int 	 type)
     {
         this.position         = position.clone();

@@ -101,9 +101,9 @@ public class ScenarioShibuya
          * Add agents, specifying their start position, and store their goals on the
          * opposite side of the environment.
          */
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 5; i++)
         {
-            for (int j = 0; j < 7; ++j) 
+            for (int j = 0; j < 5; ++j) 
             {
                 /** 
                  * Grid view
@@ -115,22 +115,22 @@ public class ScenarioShibuya
             	
                 double[] position1 = {65 + i * 5, -15 + j * 5};
                 double[] destination1 = {-90, 0};
-                environment.addAgent(position1, destination1);
+                environment.addAgent(position1, destination1, 6);
                 
                 // Agent 2
                 double[] position2 = {-65 - i * 5, -15 + j * 5};
                 double[] destination2 = {90, 0};
-                environment.addAgent(position2, destination2);
+                environment.addAgent(position2, destination2, 1);
                 
                 // Agent 3
                 double[] position3 = {-15 + i * 5, 65 + j * 5};
                 double[] destination3 = {0, -90};
-                environment.addAgent(position3, destination3);
+                environment.addAgent(position3, destination3, 2);
 
                 // Agent 4
                 double[] position4 = {-15 + i * 5, -65 - j * 5};
                 double[] destination4 = {0, 90};
-                environment.addAgent(position4, destination4);
+                environment.addAgent(position4, destination4, 3);
             }
         }
         

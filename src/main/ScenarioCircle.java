@@ -126,7 +126,7 @@ public class ScenarioCircle
         {
             double[] position = {100 * Math.cos(2*i*Constants.PI/150), 100 * Math.sin(2*i*Constants.PI/150)};
             double[] destination = {-100 * Math.cos(2*i*Constants.PI/150), -100 * Math.sin(2*i*Constants.PI/150)};
-            environment.addAgent(position, destination);
+            environment.addAgent(position, destination, 3);
         }
         
         return environment;

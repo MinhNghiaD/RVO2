@@ -112,22 +112,22 @@ public class ScenarioBlockMason
                 // Agent 1
                 double[] position1 = {55 + i * 5, 55 + j * 5};
                 double[] destination1 = {-75, -75};
-                environment.addAgent(position1, destination1);
+                environment.addAgent(position1, destination1, 6);
                 
                 // Agent 2
                 double[] position2 = {-55  - i * 5, 55 + j * 5};
                 double[] destination2 = {75, -75};
-                environment.addAgent(position2, destination2);
+                environment.addAgent(position2, destination2, 1);
                 
                 // Agent 3
                 double[] position3 = {55 + i * 5, -55 - j * 5};
                 double[] destination3 = {-75, 75};
-                environment.addAgent(position3, destination3);
+                environment.addAgent(position3, destination3, 2);
 
                 // Agent 4
                 double[] position4 = {-55  - i * 5, -55 - j * 5};
                 double[] destination4 = {75, 75};
-                environment.addAgent(position4, destination4);
+                environment.addAgent(position4, destination4, 3);
             }
         }
         
