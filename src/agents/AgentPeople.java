@@ -2,6 +2,9 @@ package agents;
 
 import model.Constants;
 import model.Model;
+
+import java.awt.Color;
+
 import clearpath.*;
 import sim.engine.SimState;
 import sim.engine.Steppable;
@@ -44,8 +47,29 @@ public class AgentPeople implements Steppable
         return Math.atan2(-velocity[1], velocity[0]);
     }
     
+    public Color getColorType()
+    {
+    	int type = controller.getType();
+    	if (type >= colorType.length || type < 0)
+    	{
+    		type = 0;
+    	}
+    	return colorType[type];
+    }
+    
     private static final long serialVersionUID = 1L;
     private CollisionAvoidanceManager controller;
     
     public static double SCALE =  Constants.SCALE_AGENT;
+    
+    public static Color [] colorType = 
+    {
+    	Color.DARK_GRAY,
+    	Color.RED,
+    	Color.GREEN,
+    	Color.BLUE,
+    	Color.CYAN,
+    	Color.MAGENTA,
+    	Color.YELLOW,
+    };
 }

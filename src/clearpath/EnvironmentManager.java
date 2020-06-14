@@ -96,7 +96,8 @@ public class EnvironmentManager
                                               double timeStep,
                                               double maxSpeed,
                                               double neighborDistance,
-                                              int    maxNeighbors) 
+                                              int    maxNeighbors,
+                                              int	 type) 
     {
         CollisionAvoidanceManager agent = new CollisionAvoidanceManager(position, 
                                                                         destination,
@@ -106,8 +107,10 @@ public class EnvironmentManager
                                                                         maxSpeed,
                                                                         neighborDistance,
                                                                         maxNeighbors, 
+                                                                        obstaclesTree
                                                                         agentsTree,
-                                                                        obstaclesTree);
+                                                                        obstaclesTree,
+                                                                        type);
 
         if(agentsTree.add(agent))
         {
@@ -117,6 +120,44 @@ public class EnvironmentManager
         return null;
     }
     
+    
+    public CollisionAvoidanceManager addAgent(double[] position, double[] destination, int type) 
+    {
+    	return addAgent(position, 
+                destination,
+                velocity, 
+                timeHorizon,
+                timeStep,
+                maxSpeed,
+                neighborDistance,
+                maxNeighbors,
+                type);
+    }
+
+    public CollisionAvoidanceManager addAgent(double[] position, double[] destination) 
+    {
+        return addAgent(position,destination,0);
+    } 
+    
+    public CollisionAvoidanceManager addAgent(double[] position, 
+								            double[] destination,
+								            double[] velocity, 
+								            double timeHorizon,
+								            double timeStep,
+								            double maxSpeed,
+								            double neighborDistance,
+								            int    maxNeighbors) 
+    {
+    	return addAgent(position, 
+                destination,
+                velocity, 
+                timeHorizon,
+                timeStep,
+                maxSpeed,
+                neighborDistance,
+                maxNeighbors,
+                0);
+    }
 
     public void doStep() 
     {
