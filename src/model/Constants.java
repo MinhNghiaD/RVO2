@@ -8,7 +8,7 @@ public final class Constants
 
     public static int    FRAME_SIZE         = 700;
     public static int    GRID_SIZE          = 70;
-    public static int    DISCRETIZATION     = 10;
+    public static int    DISCRETIZATION     = 50;
 
     public static double POS_HEAD_GRID      = GRID_SIZE * 0.1;
     public static double POS_MIDDLE_GRID    = GRID_SIZE * 0.5;
