@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import javax.swing.JFrame;
 
 import agents.*;
+import clearpath.Obstacle;
 import model.Model;
 import model.*;
 import sim.display.Controller;
@@ -69,33 +70,37 @@ public class View extends GUIState
 		yardPortrayal.setField(model.getYard());
 		
 		// display AgentPeople 
-		yardPortrayal.setPortrayalForClass(AgentPeople.class,
-				new MovablePortrayal2D(new OrientedPortrayal2D(new OvalPortrayal2D() 
-				{
-					private static final long serialVersionUID = 1L;
+				yardPortrayal.setPortrayalForClass(AgentPeople.class,
+						new MovablePortrayal2D(
+								new OrientedPortrayal2D(
+										new OvalPortrayal2D()
+										{
+											private static final long serialVersionUID = 1L;
+						
+											public void draw(Object object, Graphics2D graphics, DrawInfo2D info)
+											{
+												AgentPeople a = (AgentPeople) object;
+//												paint = a.getColor();
+												paint = Color.DARK_GRAY;
+												filled = true;
+												scale = Constants.SCALE_AGENT;
+												super.draw(object, graphics, info);
+											}
+										})
+								{
+									private static final long serialVersionUID = 1L;
+				
+									@Override
+									public double getOrientation(Object object, DrawInfo2D info)
+									{
+										AgentPeople a = (AgentPeople) object;
+										return a.getAngle();
+									}
+								}));
 
-					public void draw(Object object, Graphics2D graphics, DrawInfo2D info) 
-					{
-						paint = Color.DARK_GRAY;
-						filled = true;
-						scale = Constants.SCALE_AGENT;
-						super.draw(object, graphics, info);
-					}
-				})
-				{
-					private static final long serialVersionUID = 1L;
-
-					@Override
-					public double getOrientation(Object object, DrawInfo2D info)
-					{
-						AgentPeople a = (AgentPeople) object;
-						return a.getAngle();
-					}
-				}));
-	
-		display.reset();
-		display.setBackdrop(Color.LIGHT_GRAY);
-		display.repaint();
+				display.reset();
+				display.setBackground(Color.LIGHT_GRAY);
+				display.repaint();
 	}
 
 	public Object getSimulationInspectedObject()
