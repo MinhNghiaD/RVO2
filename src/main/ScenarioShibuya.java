@@ -17,7 +17,8 @@ public class ScenarioShibuya
     {
         setupScenario();
         
-        Model   model   = new Model(System.currentTimeMillis());        
+        Model   model   = new Model(System.currentTimeMillis());
+        model.setScenarionId(3);
         View    gui     = new View(model);
         Console console = new Console(gui);
         

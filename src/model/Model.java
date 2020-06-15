@@ -60,7 +60,15 @@ public class Model extends SimState
         return numAgents--;
     }
 
-    private void addAgents(Vector<CollisionAvoidanceManager> agentControllers) 
+    public int getScenarionId() {
+		return scenarionId;
+	}
+
+	public void setScenarionId(int scenarionId) {
+		this.scenarionId = scenarionId;
+	}
+
+	private void addAgents(Vector<CollisionAvoidanceManager> agentControllers) 
     {
         if (agentControllers == null || agentControllers.size() == 0) 
         {
@@ -145,4 +153,5 @@ public class Model extends SimState
     private static final long serialVersionUID = 1L;
     private Continuous2D yard = new Continuous2D(Constants.DISCRETIZATION, Constants.GRID_SIZE, Constants.GRID_SIZE);
     private int numAgents = 0;
+    private int scenarionId = 0;
 }
