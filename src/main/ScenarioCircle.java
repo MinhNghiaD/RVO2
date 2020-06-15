@@ -17,7 +17,7 @@ public class ScenarioCircle
         setupScenario();
         
         Model   model   = new Model(System.currentTimeMillis());
-        model.setScenarionId(1);
+        model.setScenarionId(2);
         View    gui     = new View(model);
         Console console = new Console(gui);
         

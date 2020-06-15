@@ -119,7 +119,7 @@ public class View extends GUIState
 		
 		// display background		
 		int scenarioId = model.getScenarionId();		
-		if(scenarioId < backgroundPath.length && scenarioId >= 0)
+		if(scenarioId <= backgroundPath.length && scenarioId >= 0)
 		{
 			String path = backgroundPath[scenarioId];		
 			Image i = new ImageIcon(getClass().getResource(path)).getImage();
@@ -146,12 +146,14 @@ public class View extends GUIState
 		return i;
 	}
 	
+	// TODO : Draw / find background images
 	public static String [] backgroundPath = 
 	{
-		"/images/shibuya.jpg",
-		"/images/shibuya.jpg",
-		"/images/shibuya.jpg",
-		"/images/shibuya.jpg",
+		"/images/blank.png",
+		"/images/blank.png",
+		"/images/blank.png",
+		"/images/blank.png",
+		"/images/blank.png",
 	};
 
 }

@@ -18,7 +18,7 @@ public class ScenarioBlockMason
         setupScenario();
         
         Model   model   = new Model(System.currentTimeMillis());
-        model.setScenarionId(0);
+        model.setScenarionId(1);
         View    gui     = new View(model);
         Console console = new Console(gui);
         

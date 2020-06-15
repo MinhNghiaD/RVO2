@@ -18,7 +18,7 @@ public class ScenarioOfficeEnv
         setupScenario();
         
         Model   model   = new Model(System.currentTimeMillis());  
-        model.setScenarionId(2);
+        model.setScenarionId(3);
         View    gui     = new View(model);
         Console console = new Console(gui);
         
