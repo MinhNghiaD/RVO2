@@ -19,12 +19,15 @@ import sim.display.Controller;
 import sim.display.Display2D;
 import sim.display.GUIState;
 import sim.engine.SimState;
+import sim.field.continuous.Continuous2D;
 import sim.portrayal.continuous.ContinuousPortrayal2D;
 import sim.portrayal.simple.MovablePortrayal2D;
 import sim.portrayal.simple.OrientedPortrayal2D;
 import sim.portrayal.simple.OvalPortrayal2D;
 import sim.portrayal.DrawInfo2D;
+import sim.portrayal.FieldPortrayal2D;
 import sim.portrayal.Inspector;
+import sim.portrayal.Portrayal2D;
 
 public class View extends GUIState 
 {
@@ -87,6 +90,7 @@ public class View extends GUIState
 	public void setupPortrayals()
 	{
 		Model model = (Model) state;
+		
 		yardPortrayal.setField(model.getYard());
 		
 		// display AgentPeople 
