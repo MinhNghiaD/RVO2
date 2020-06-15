@@ -125,8 +125,12 @@ public class ScenarioCircle
         for (int i = 0; i < 150; ++i) 
         {
             double[] position = {100 * Math.cos(2*i*Constants.PI/150), 100 * Math.sin(2*i*Constants.PI/150)};
-            double[] destination = {-100 * Math.cos(2*i*Constants.PI/150), -100 * Math.sin(2*i*Constants.PI/150)};
-            environment.addAgent(position, destination, 3);
+            double[] destination1 = {-100 * Math.cos(2*i*Constants.PI/150), -100 * Math.sin(2*i*Constants.PI/150)};
+            List<double[]> destinations = new ArrayList<double[]>();
+            destinations.add(destination1);
+            destinations.add(position);
+            
+            environment.addAgent(position, destinations, 3);
         }
         
         return environment;

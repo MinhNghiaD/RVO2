@@ -68,7 +68,7 @@ public class EnvironmentManager
         timeStep = period;
     }
 
-    public CollisionAvoidanceManager addAgent(double[] position, double[] destination, int type) 
+    public CollisionAvoidanceManager addAgent(double[] position, List<double[]> destination, int type) 
     {
 		CollisionAvoidanceManager agent = new CollisionAvoidanceManager(position, 
                                                                         destination,
@@ -91,7 +91,7 @@ public class EnvironmentManager
     }
 
     public CollisionAvoidanceManager addAgent(double[] position, 
-                                              double[] destination,
+                                              List<double[]> destination,
                                               double[] velocity, 
                                               double timeHorizon,
                                               double timeStep,

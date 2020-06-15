@@ -262,7 +262,7 @@ public class ScenarioOfficeEnv
      * List destination to get the exit
      * @return
      */
-    private List<double[]> setDestinations1()
+    static private List<double[]> setDestinations1()
     {
     	double[] dest1 = {60, 20};
     	double[] dest2 = {70, 5};
@@ -281,7 +281,7 @@ public class ScenarioOfficeEnv
     	
     }
     
-    private List<double[]> setDestinations2()
+    static private List<double[]> setDestinations2()
     {
     	double[] dest1 = {60, -20};
     	double[] dest2 = {70, -35};
@@ -326,9 +326,7 @@ public class ScenarioOfficeEnv
             for (int j = 0; j < 5; ++j) 
             {
                 double[] position1 = {i * 5, j * 5};
-                //TODO use setDirections1 or setDirections2
-                //double[] destination1 = {-90, -65};
-                //environment.addAgent(position1, destination1, 6);
+                environment.addAgent(position1, setDestinations2(), 2);
                 
             }
         }

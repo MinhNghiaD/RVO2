@@ -17,7 +17,7 @@ import model.Constants;
 public class CollisionAvoidanceManager
 {
     CollisionAvoidanceManager(double[] position, 
-                              double[] destination,
+                              List<double[]> destination,
                               double[] velocity, 
                               double timeHorizon, 
                               double timeStep,                       
@@ -29,7 +29,7 @@ public class CollisionAvoidanceManager
                               int 	 type)
     {
         this.position         = position.clone();
-        this.destination      = destination.clone();
+        this.destination      = destination;
         this.velocity         = velocity.clone();
         this.newVelocity      = new Double[2];
         this.newVelocity[0]   = 0.0;
@@ -43,7 +43,7 @@ public class CollisionAvoidanceManager
         this.orcaLines        = new ArrayList<Line>();
         this.agentsTree       = agentTree;
         this.obstaclesTree    = obstacleTree;
-        
+        this.finished         = false;
         this.type			  = type;
     }
 
@@ -61,23 +61,14 @@ public class CollisionAvoidanceManager
 		return type;
 	}
 
-	public void setDestination(double[] goal)
+	public void addDestination(double[] goal)
     {
-        destination = goal.clone();
+        destination.add(goal);
     }
     
     public boolean reachedGoal()
     {
-        double[] distanceToGoal = RVO.vectorSubstract(position, destination);
-        
-        final double sqrDistance = RVO.vectorProduct(distanceToGoal, distanceToGoal);
-        
-        if (sqrDistance > 400) 
-        {
-            return false;
-        }
-        
-        return true;
+        return finished;
     }
     
     public void update(MersenneTwisterFast random)
@@ -134,9 +125,17 @@ public class CollisionAvoidanceManager
     
     private void orient(MersenneTwisterFast random)
     {   
-        preferenceVelocity = RVO.vectorSubstract(destination, position);
+        preferenceVelocity = RVO.vectorSubstract(destination.get(0), position);
 
         double absSqrGoalVector = RVO.vectorProduct(preferenceVelocity, preferenceVelocity);
+        
+        if (absSqrGoalVector < 200 && destination.size() > 1)
+        {
+        }
+        else if (absSqrGoalVector < 400 && destination.size() == 1)
+        {
+            finished = true;
+        }
         
         if (absSqrGoalVector > 1) 
         {
@@ -154,7 +153,7 @@ public class CollisionAvoidanceManager
             
             preferenceVelocity[0] += distance * Math.cos(angle);
             preferenceVelocity[1] += distance * Math.sin(angle);
-        }
+        }    
     }
 
     private void addNeighborOrcaLine(TreeMap<Double, Vector<KDNodeAgent>> neighbors) 
@@ -541,7 +540,7 @@ public class CollisionAvoidanceManager
     private int        maxNeighbors;
 
     private double[]   position;
-    private double[]   destination;
+    private List<double[]> destination;
     private double[]   velocity;
     private Double[]   newVelocity;
     private double[]   preferenceVelocity;
@@ -550,7 +549,7 @@ public class CollisionAvoidanceManager
     private List<Line>     orcaLines;
     private KDTreeAgent    agentsTree;
     private KDTreeObstacle obstaclesTree;
-    
+    private boolean    finished;
     // type of agent
     private int		   type;
 }

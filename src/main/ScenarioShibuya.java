@@ -101,9 +101,9 @@ public class ScenarioShibuya
          * Add agents, specifying their start position, and store their goals on the
          * opposite side of the environment.
          */
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
-            for (int j = 0; j < 5; ++j) 
+            for (int j = 0; j < 7; ++j) 
             {
                 /** 
                  * Grid view
@@ -114,23 +114,39 @@ public class ScenarioShibuya
                 // Agent 1
             	
                 double[] position1 = {65 + i * 5, -15 + j * 5};
-                double[] destination1 = {-90, 0};
-                environment.addAgent(position1, destination1, 6);
+                List<double[]> destinations1 = new ArrayList<double[]>();
+                double[] destination11= {-90, 0};
+                double[] destination12= {90, 0};
+                destinations1.add(destination11);
+                destinations1.add(destination12);
+                environment.addAgent(position1, destinations1, 4);
                 
                 // Agent 2
                 double[] position2 = {-65 - i * 5, -15 + j * 5};
-                double[] destination2 = {90, 0};
-                environment.addAgent(position2, destination2, 1);
+                List<double[]> destinations2 = new ArrayList<double[]>();
+                double[] destination21 = {90, 0};
+                double[] destination22 = {-90, 0};
+                destinations2.add(destination21);
+                destinations2.add(destination22);
+                environment.addAgent(position2, destinations2, 1);
                 
                 // Agent 3
                 double[] position3 = {-15 + i * 5, 65 + j * 5};
-                double[] destination3 = {0, -90};
-                environment.addAgent(position3, destination3, 2);
+                List<double[]> destinations3 = new ArrayList<double[]>();
+                double[] destination31 = {0, -90};
+                double[] destination32 = {0, 90};
+                destinations3.add(destination31);
+                destinations3.add(destination32);
+                environment.addAgent(position3, destinations3, 2);
 
                 // Agent 4
                 double[] position4 = {-15 + i * 5, -65 - j * 5};
-                double[] destination4 = {0, 90};
-                environment.addAgent(position4, destination4, 3);
+                List<double[]> destinations4 = new ArrayList<double[]>();
+                double[] destination41 = {0, 90};
+                double[] destination42 = {0, -90};
+                destinations4.add(destination41);
+                destinations4.add(destination42);
+                environment.addAgent(position4, destinations4, 3);
             }
         }
         
