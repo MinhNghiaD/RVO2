@@ -6,10 +6,14 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.TexturePaint;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 import agents.*;
@@ -39,6 +43,11 @@ public class View extends GUIState
 	{
 		super(state);
 	}
+	
+//	public View(SimState state, String backgroundPath)
+//	{
+//		
+//	}
 
 	public static String getName() 
 	{
@@ -61,22 +70,7 @@ public class View extends GUIState
 	{
 		super.init(c);
 
-		try {
-			display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this) {
-				private static final long serialVersionUID = 1L;
-				// The Image to store the background image in.
-			    Image img = ImageIO.read(getClass().getResource("/images/shibuya.jpg"));
-			    @Override
-			    public void paintComponent(Graphics g)
-			    {
-			        super.paintComponent(g);
-			    	g.drawImage(img, 0, 0, null);
-			    }
-			};
-		} catch (IOException e) {
-			display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this);
-			e.printStackTrace();
-		}
+		display = new Display2D(Constants.FRAME_SIZE, Constants.FRAME_SIZE, this);
 		display.setClipping(false);
 
 		displayFrame = display.createFrame();
@@ -122,6 +116,20 @@ public class View extends GUIState
 						}));
 
 		display.reset();
+		
+		// display background		
+		int scenarioId = model.getScenarionId();		
+		if(scenarioId < backgroundPath.length && scenarioId >= 0)
+		{
+			String path = backgroundPath[scenarioId];		
+			Image i = new ImageIcon(getClass().getResource(path)).getImage();
+			BufferedImage b = display.getGraphicsConfiguration().createCompatibleImage(i.getWidth(null), i.getHeight(null));
+			Graphics g = b.getGraphics();
+			g.drawImage(i,0,0,i.getWidth(null),i.getHeight(null),null);
+			g.dispose();
+			display.setBackdrop(new TexturePaint(b, new Rectangle(0,0,i.getWidth(null),i.getHeight(null))));
+		}
+		
 		display.repaint();
 	}
 
@@ -137,5 +145,13 @@ public class View extends GUIState
 
 		return i;
 	}
+	
+	public static String [] backgroundPath = 
+	{
+		"/images/shibuya.jpg",
+		"/images/shibuya.jpg",
+		"/images/shibuya.jpg",
+		"/images/shibuya.jpg",
+	};
 
 }
