@@ -112,16 +112,16 @@ public class ScenarioOfficeEnv
         // Room 5 - Center
         List<double[]> mur13Vertices = new ArrayList<double[]>();
         double[] vertex131 = {-30, 35};
-        double[] vertex132 = {-5, 35};
+        double[] vertex132 = {60, 35};
         mur13Vertices.add(vertex131);
         mur13Vertices.add(vertex132);
         
-        List<double[]> mur14Vertices = new ArrayList<double[]>();
-        double[] vertex141 = {15, 35};
-        double[] vertex142 = {60, 35};
-        mur14Vertices.add(vertex141);
-        mur14Vertices.add(vertex142);
-        
+//        List<double[]> mur14Vertices = new ArrayList<double[]>();
+//        double[] vertex141 = {15, 35};
+//        double[] vertex142 = {60, 35};
+//        mur14Vertices.add(vertex141);
+//        mur14Vertices.add(vertex142);
+//        
         List<double[]> mur15Vertices = new ArrayList<double[]>();
         double[] vertex151 = {60, 35};
         double[] vertex152 = {60, -15};
@@ -134,14 +134,8 @@ public class ScenarioOfficeEnv
         mur16Vertices.add(vertex161);
         mur16Vertices.add(vertex162);
         
-        List<double[]> mur17Vertices = new ArrayList<double[]>();
-        double[] vertex171 = {60, -55};
-        double[] vertex172 = {30, -55};
-        mur17Vertices.add(vertex171);
-        mur17Vertices.add(vertex172);
-        
         List<double[]> mur18Vertices = new ArrayList<double[]>();
-        double[] vertex181 = {10, -55};
+        double[] vertex181 = {60, -55};
         double[] vertex182 = {-30, -55};
         mur18Vertices.add(vertex181);
         mur18Vertices.add(vertex182);
@@ -152,8 +146,8 @@ public class ScenarioOfficeEnv
         
         //Room 6
         List<double[]> mur20Vertices = new ArrayList<double[]>();
-        double[] vertex201 = {60, -5};
-        double[] vertex202 = {100, -5};
+        double[] vertex201 = {60, 5};
+        double[] vertex202 = {80, 5};
         mur20Vertices.add(vertex202);
         mur20Vertices.add(vertex201);
         
@@ -243,10 +237,9 @@ public class ScenarioOfficeEnv
         obstacles.add(new Obstacle(mur11Vertices));
         obstacles.add(new Obstacle(mur12Vertices));
         obstacles.add(new Obstacle(mur13Vertices));
-        obstacles.add(new Obstacle(mur14Vertices));
+//        obstacles.add(new Obstacle(mur14Vertices));
         obstacles.add(new Obstacle(mur15Vertices));
         obstacles.add(new Obstacle(mur16Vertices));
-        obstacles.add(new Obstacle(mur17Vertices));
         obstacles.add(new Obstacle(mur18Vertices));
         obstacles.add(new Obstacle(mur19Vertices));
         obstacles.add(new Obstacle(mur20Vertices));
@@ -263,6 +256,52 @@ public class ScenarioOfficeEnv
         obstacles.add(new Obstacle(mur31Vertices));
 		
 		return obstacles;
+    }
+    
+    /**
+     * List destination to get the exit
+     * @return
+     */
+    private List<double[]> setDestinations1()
+    {
+    	double[] dest1 = {60, 20};
+    	double[] dest2 = {70, 5};
+    	double[] dest3 = {-40, 40};
+    	double[] dest4 = {-40, -60};
+    	double[] dest5 = {-90, -65};
+    	
+    	List<double[]> destinationsList = new ArrayList<>();
+    	destinationsList.add(dest1);
+    	destinationsList.add(dest2);
+    	destinationsList.add(dest3);
+    	destinationsList.add(dest4);
+    	destinationsList.add(dest5);
+		
+    	return destinationsList;
+    	
+    }
+    
+    private List<double[]> setDestinations2()
+    {
+    	double[] dest1 = {60, -20};
+    	double[] dest2 = {70, -35};
+    	double[] dest3 = {70, -90};
+    	double[] dest4 = {50, -70};
+    	double[] dest5 = {50, -60};
+    	double[] dest6 = {-40, -60};
+    	double[] dest7 = {-90, -65};
+    	
+    	List<double[]> destinationsList = new ArrayList<>();
+    	destinationsList.add(dest1);
+    	destinationsList.add(dest2);
+    	destinationsList.add(dest3);
+    	destinationsList.add(dest4);
+    	destinationsList.add(dest5);
+    	destinationsList.add(dest6);
+    	destinationsList.add(dest7);
+		
+    	return destinationsList;
+    	
     }
 
 	static private EnvironmentManager setupScenario()
@@ -286,32 +325,11 @@ public class ScenarioOfficeEnv
         {
             for (int j = 0; j < 5; ++j) 
             {
-                /** 
-                 * Grid view
-                 * 			Agent 4          
-                 * Agent 2          Agent 1
-                 * 			Agent 3
-                 */
-                // Agent 1
-            	
                 double[] position1 = {i * 5, j * 5};
-                double[] destination1 = {-90, -65};
-                environment.addAgent(position1, destination1, 6);
+                //TODO use setDirections1 or setDirections2
+                //double[] destination1 = {-90, -65};
+                //environment.addAgent(position1, destination1, 6);
                 
-//                // Agent 2
-//                double[] position2 = {-65 - i * 5, -15 + j * 5};
-//                double[] destination2 = {90, 0};
-//                environment.addAgent(position2, destination2, 1);
-//                
-//                // Agent 3
-//                double[] position3 = {-15 + i * 5, 65 + j * 5};
-//                double[] destination3 = {0, -90};
-//                environment.addAgent(position3, destination3, 2);
-//
-//                // Agent 4
-//                double[] position4 = {-15 + i * 5, -65 - j * 5};
-//                double[] destination4 = {0, 90};
-//                environment.addAgent(position4, destination4, 3);
             }
         }
         
