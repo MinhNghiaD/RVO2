@@ -128,8 +128,9 @@ public class CollisionAvoidanceManager
 
         double absSqrGoalVector = RVO.vectorProduct(preferenceVelocity, preferenceVelocity);
         
-        if (absSqrGoalVector < 200 && destination.size() > 1)
+        if (absSqrGoalVector < 400 && destination.size() > 1)
         {
+            destination.remove(0);
         }
         else if (absSqrGoalVector < 400 && destination.size() == 1)
         {

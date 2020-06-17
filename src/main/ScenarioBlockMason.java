@@ -115,8 +115,12 @@ public class ScenarioBlockMason
                 List<double[]> destinations1 = new ArrayList<double[]>();
                 double[] destination11= {-75, -75};
                 double[] destination12= {75, -75};
+                double[] destination13= {75, 75};
+                double[] destination14= {-75, 75};
                 destinations1.add(destination11);
                 destinations1.add(destination12);
+                destinations1.add(destination13);
+                destinations1.add(destination14);
                 environment.addAgent(position1, destinations1, 4);
                 
                 // Agent 2
@@ -124,8 +128,12 @@ public class ScenarioBlockMason
                 List<double[]> destinations2 = new ArrayList<double[]>();
                 double[] destination21 = {75, -75};
                 double[] destination22 = {-75, -75};
+                double[] destination23 = {-75, 75};
+                double[] destination24 = {75, 75};
                 destinations2.add(destination21);
                 destinations2.add(destination22);
+                destinations2.add(destination23);
+                destinations2.add(destination24);
                 environment.addAgent(position2, destinations2, 1);
                 
                 // Agent 3
@@ -133,8 +141,12 @@ public class ScenarioBlockMason
                 List<double[]> destinations3 = new ArrayList<double[]>();
                 double[] destination31 = {-75, 75};
                 double[] destination32 = {75, 75};
+                double[] destination33 = {-75, -75};
+                double[] destination34 = {75, -75};
                 destinations3.add(destination31);
                 destinations3.add(destination32);
+                destinations3.add(destination33);
+                destinations3.add(destination34);
                 environment.addAgent(position3, destinations3, 2);
 
                 // Agent 4
@@ -142,8 +154,12 @@ public class ScenarioBlockMason
                 List<double[]> destinations4 = new ArrayList<double[]>();
                 double[] destination41 = {75, 75};
                 double[] destination42 = {-75, 75};
+                double[] destination43 = {75, -75};
+                double[] destination44 = {-75, -75};
                 destinations4.add(destination41);
                 destinations4.add(destination42);
+                destinations4.add(destination43);
+                destinations4.add(destination44);
                 environment.addAgent(position4, destinations4, 3);
             }
         }
